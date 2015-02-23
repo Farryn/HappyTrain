@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import util.HibernateUtil;
 import entities.*;
 
 public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
@@ -26,12 +27,12 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	private Transaction currentTransaction;
 	
 	public Session openCurrentSession() {
-		currentSession = getSessionFactory().openSession();
+		currentSession = HibernateUtil.getSessionFactory().openSession();
 		return currentSession;
 	}
 
 	public Session openCurrentSessionwithTransaction() {
-		currentSession = getSessionFactory().openSession();
+		currentSession = HibernateUtil.getSessionFactory().openSession();
 		currentTransaction = currentSession.beginTransaction();
 		return currentSession;
 	}
@@ -45,12 +46,12 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 		currentSession.close();
 	}
 	
-	private static SessionFactory getSessionFactory() {
+	/*private static SessionFactory getSessionFactory() {
 		Configuration configuration = new Configuration().configure();
 		StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
 		SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
 		return sessionFactory;
-	}
+	}*/
 
 	public Session getCurrentSession() {
 		return currentSession;

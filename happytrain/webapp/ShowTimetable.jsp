@@ -5,38 +5,25 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Поиск поезда</title>
+<title>Расписание</title>
 </head>
 <body>
 <table width="100%">
 	<tr>
 		<td width="80%">
-			<form  action="showtrain" method="GET">
+			<form  action="showtimetable" method="GET">
 			    
 			 <table  border="0" >
-				
-			   <caption>Поиск поезда</caption>
-			
 			   <tr>
-				    <td align="right" valign="top">От станции</td>
+				    <td align="right" valign="top">Станция</td>
 				    <td>
-				    	<select name="stationFrom" >
+				    	<select name="station" >
 				    		  <c:forEach var="item" items="${stationList}">
-							  	<option value="${item.name}" ${item.name == stationFrom.name ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
+							  	<option value="${item.name}" ${item.name == station.name ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
 							  </c:forEach>
 						</select>
-					</td>
-				    <td align="right" valign="top">До станции</td>
-				    <td>
-						<select name="stationTo" >
-				    		  <c:forEach var="item" items="${stationList}">
-							  	<option value="${item.name}" ${item.name == stationTo.name ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
-							  </c:forEach>
-						</select>
-				
 					</td>
 			   </tr>
-			
 			   <tr>
 				    <td align="right" valign="top">Время от</td>
 				    <td><input type="text" name="from" size="25" value="01-01-2015 00:00:00"></td>
@@ -61,9 +48,6 @@
 						    <td align="center" valign="top">Номер поезда</td>
 						    <td align="center" valign="top">Отправление</td>
 						    <td align="center" valign="top">Прибытие</td>
-						    <td align="center" valign="top">Места</td>
-						    <td align="center" valign="top">Маршрут</td>
-						    <td align="center" valign="top">Покупка</td>
 					   </tr>
 				   </thead>
 				   <tbody>
@@ -72,9 +56,6 @@
 								<td ><c:out value="${item.trainId.number}" /></td>
 								<td ><c:out value="${departureDateTime[status.index]}" /></td>
 								<td ><c:out value="${arrivalDateTime[status.index]}" /></td>
-								<td ><c:out value="${availableSeats[status.index]}" /></td>
-								<td ><a href="route?train=${item.trainId.id}&run=${item.id}">Список станций</a></td>
-								<td ><a href="buyTicket?">Купить билет</a></td>
 							</tr>
 					   </c:forEach>
 				   </tbody>
@@ -85,9 +66,7 @@
 			 </c:if>
 			
 		</td>
-		<td valign="top">
-			<a href="showtimetable">Показать расписание</a>
-		</td>
+		
 	</tr>
 </table>
 </body>

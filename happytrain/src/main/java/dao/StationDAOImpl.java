@@ -15,7 +15,7 @@ import entities.Train;
 
 public class StationDAOImpl extends GenericDAOImpl<Integer, Station> implements StationDAO {
 
-	@Override
+	
 	public Station findByName(String str) {
 		
 		String hql="SELECT s FROM Station s WHERE s.name=:name";

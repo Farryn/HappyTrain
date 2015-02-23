@@ -1,6 +1,7 @@
 package services;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import entities.Station;
 public class ClientService {
 	
 	public List<Run> searchTrain(Station beginStation, Station endStation, Date from, Date to) {
-		List<Run> runList = null;
+		List<Run> runList = new ArrayList<Run>();
 		RouteDAOImpl routeDao = new RouteDAOImpl();
 		routeDao.openCurrentSessionwithTransaction();
 		List<Route> routeList = routeDao.findRouteFromAtoB(beginStation, endStation);

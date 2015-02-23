@@ -17,20 +17,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import services.ClientService;
 import services.StationService;
+import services.TimetableService;
 import entities.Run;
 import entities.Station;
+import entities.Train;
 
 /**
- * Servlet implementation class ShowFoundTrainsServlet
+ * Servlet implementation class ShowTimetable
  */
 @WebServlet
-public class ShowFoundTrainsServlet extends HttpServlet {
+public class ShowTimetableServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ShowFoundTrainsServlet() {
+    public ShowTimetableServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -63,62 +65,56 @@ public class ShowFoundTrainsServlet extends HttpServlet {
     	return station;
     }
     
-    /**
-     * Get data from request and process it
-     * @param req Request Object
-     * @param res Response Object 
-     */
     private void processRequest(HttpServletRequest req, HttpServletResponse res){
-    	String stationA = req.getParameter("stationFrom");
-		String stationB = req.getParameter("stationTo");
+    	StationService ss=new StationService();
+		List<Station> stationList = ss.getAllStations();
+		req.setAttribute("stationList",stationList);
+		
+		String station=req.getParameter("station");
+		if(station==null){
+			req.setAttribute("haveResult", 0);
+		}else{
+			processForm(req,res);
+		}
+		req.setAttribute("stationList", stationList);
+    	
+    }
+	private void processForm(HttpServletRequest req, HttpServletResponse res) {
+		String stationA = req.getParameter("station");
 		Date from = getDateFromString(req.getParameter("from"));
 		Date to = getDateFromString(req.getParameter("to"));
 		
-		Station stationFrom = getStationFromString(req.getParameter("stationFrom"));
-		Station stationTo = getStationFromString(req.getParameter("stationTo"));
-		
-		StationService ss=new StationService();
-		List<Station> stationList = ss.getAllStations();
+		Station station = getStationFromString(stationA);
 		
 		List<Date> departureDateTime = new ArrayList<Date>(); 
 		List<Date> arrivalDateTime = new ArrayList<Date>();
-		List<Integer> availableSeats = new ArrayList<Integer>();
-		List<Long> timeInTrip = new ArrayList<Long>();
 		ClientService cs = new ClientService();
-		List<Run> runList = cs.searchTrain(stationFrom, stationTo, from, to);
+		TimetableService ts = new TimetableService();
+		List<Run> runList = ts.getTimetableFromStation(station, from, to);
 		if (!runList.isEmpty()) {
-			for (Run run:runList) {
-				Date departureTime=cs.getStationDepTime(stationFrom, run);
-				Date arrivalTime=cs.getStationArrTime(stationTo, run);
-				int count=cs.getStationAvailableSeats(stationFrom, run);
-				long duration=arrivalTime.getTime()-departureTime.getTime();
-				long difference=TimeUnit.MILLISECONDS.toHours(duration);
-				
+			for (Run run: runList) {
+				Date departureTime=cs.getStationDepTime(station, run);
+				Date arrivalTime=cs.getStationArrTime(station, run);
 				departureDateTime.add(departureTime);
 				arrivalDateTime.add(arrivalTime);
-				availableSeats.add(count);
-				timeInTrip.add(difference);
+				
 			}
 		}
 		req.setAttribute("haveResult", 1);
-		req.setAttribute("stationFrom", stationFrom);
-		req.setAttribute("stationTo", stationTo);
-    	req.setAttribute("runList", runList);
+		req.setAttribute("station", station);
+		req.setAttribute("runList", runList);
     	req.setAttribute("departureDateTime", departureDateTime);
     	req.setAttribute("arrivalDateTime", arrivalDateTime);
-    	req.setAttribute("availableSeats", availableSeats);
-    	req.setAttribute("timeInTrip", timeInTrip);
-    	req.setAttribute("stationList", stationList);
-    }
+	}
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request,response);
-		
 		ServletContext sc = getServletContext();
 		//RequestDispatcher rd = sc.getRequestDispatcher("/ShowFoundTrain.jsp");
-		RequestDispatcher rd = sc.getRequestDispatcher("/FindTrain.jsp");
+		RequestDispatcher rd = sc.getRequestDispatcher("/ShowTimetable.jsp");
 		rd.forward(request, response);
 	}
 

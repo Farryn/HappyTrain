@@ -54,13 +54,15 @@ public class ShowRouteServlet extends HttpServlet {
 		List<Date> arrivalDateTime = new ArrayList<Date>();
 		ClientService clientService = new ClientService();
 		
-		for(Station station:stationList){
-			Date departureTime=clientService.getStationDepTime(station, run);
-			Date arrivalTime=clientService.getStationArrTime(station, run);
-			
-			departureDateTime.add(departureTime);
-			arrivalDateTime.add(arrivalTime);
-			
+		if (!stationList.isEmpty()) {
+			for (Station station:stationList) {
+				Date departureTime=clientService.getStationDepTime(station, run);
+				Date arrivalTime=clientService.getStationArrTime(station, run);
+				
+				departureDateTime.add(departureTime);
+				arrivalDateTime.add(arrivalTime);
+				
+			}
 		}
 		req.setAttribute("stationList", stationList);
 		req.setAttribute("departureDateTime", departureDateTime);

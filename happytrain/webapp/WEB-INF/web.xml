@@ -12,6 +12,10 @@
     <servlet-name>ShowRouteServlet</servlet-name>
     <servlet-class>servlets.ShowRouteServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ShowTimetableServlet</servlet-name>
+    <servlet-class>servlets.ShowTimetableServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>FindTrainServlet</servlet-name>
     <url-pattern>/findtrain</url-pattern>
@@ -23,6 +27,10 @@
   <servlet-mapping>
     <servlet-name>ShowRouteServlet</servlet-name>
     <url-pattern>/route</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowTimetableServlet</servlet-name>
+    <url-pattern>/showtimetable</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>findtrain</welcome-file>

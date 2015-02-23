@@ -42,6 +42,7 @@ public class FindTrainServlet extends HttpServlet {
 		StationService ss=new StationService();
 		List<Station> stationList = ss.getAllStations();
 		request.setAttribute("stationList",stationList);
+		request.setAttribute("haveResult", 0);
 		ServletContext sc = getServletContext();
 		RequestDispatcher rd = sc.getRequestDispatcher("/FindTrain.jsp");
 		rd.forward(request, response);
