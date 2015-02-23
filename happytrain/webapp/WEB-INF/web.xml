@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <servlet>
+    <servlet-name>FindTrainServlet</servlet-name>
+    <servlet-class>servlets.FindTrainServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ShowFoundTrainsServlet</servlet-name>
+    <servlet-class>servlets.ShowFoundTrainsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ShowRouteServlet</servlet-name>
+    <servlet-class>servlets.ShowRouteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FindTrainServlet</servlet-name>
+    <url-pattern>/findtrain</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowFoundTrainsServlet</servlet-name>
+    <url-pattern>/showtrain</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowRouteServlet</servlet-name>
+    <url-pattern>/route</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>findtrain</welcome-file>
+  </welcome-file-list>
+</web-app>
