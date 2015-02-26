@@ -88,8 +88,10 @@ public class ShowTimetableServlet extends HttpServlet {
 		
 		List<Date> departureDateTime = new ArrayList<Date>(); 
 		List<Date> arrivalDateTime = new ArrayList<Date>();
+		
 		ClientService cs = new ClientService();
 		TimetableService ts = new TimetableService();
+		
 		List<Run> runList = ts.getTimetableFromStation(station, from, to);
 		if (!runList.isEmpty()) {
 			for (Run run: runList) {

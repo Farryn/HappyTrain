@@ -18,12 +18,14 @@ public class StationDAOImpl extends GenericDAOImpl<Integer, Station> implements 
 	
 	public Station findByName(String str) {
 		
-		String hql="SELECT s FROM Station s WHERE s.name=:name";
-		Station station=(Station) getCurrentSession().createQuery(hql)
+		String hql = "SELECT s FROM Station s WHERE s.name=:name";
+		Station station = (Station) getCurrentSession().createQuery(hql)
 				.setParameter("name", str)
 				.uniqueResult();
 		return station;
 	}
+
+	
 
 	
 }

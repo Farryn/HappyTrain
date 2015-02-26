@@ -17,16 +17,20 @@
   <thead>
 	   <tr>
 	    <td align="center" valign="top">Название станции</td>
-	    <td align="center" valign="top">Прибытие</td>
-	    <td align="center" valign="top">Отправление</td>
+	    <c:if test="${haveRun > 0}">
+		    <td align="center" valign="top">Прибытие</td>
+		    <td align="center" valign="top">Отправление</td>
+	    </c:if>
 	   </tr>
    </thead>
    <tbody>
 	   <c:forEach var="item" items="${stationList}" varStatus="status">
 			<tr>
 				<td ><c:out value="${item.name}" /></td>
-				<td ><c:out value="${arrivalDateTime[status.index]}" /></td>
-				<td ><c:out value="${departureDateTime[status.index]}" /></td>
+				<c:if test="${haveRun > 0}">
+					<td ><c:out value="${arrivalDateTime[status.index]}" /></td>
+					<td ><c:out value="${departureDateTime[status.index]}" /></td>
+				</c:if>
 			</tr>
 	   </c:forEach>
    </tbody>

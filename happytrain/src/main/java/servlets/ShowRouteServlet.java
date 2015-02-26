@@ -38,35 +38,43 @@ public class ShowRouteServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
-		int trainId = Integer.parseInt(req.getParameter("train"));
-		int runId = Integer.parseInt(req.getParameter("run"));
-		
+    	String trainStr = req.getParameter("train");
+		int trainId = Integer.parseInt(trainStr);
 		TrainService trainService = new TrainService();
 		Train train = trainService.getTrainById(trainId);
-		
-		RunService runService = new RunService();
-		Run run = runService.getRunById(runId);
-		
+    	
 		RouteService routeService = new RouteService();
 		List<Station> stationList = routeService.getStationsByTrain(train);
-		
-		List<Date> departureDateTime = new ArrayList<Date>(); 
-		List<Date> arrivalDateTime = new ArrayList<Date>();
-		ClientService clientService = new ClientService();
-		
-		if (!stationList.isEmpty()) {
-			for (Station station:stationList) {
-				Date departureTime=clientService.getStationDepTime(station, run);
-				Date arrivalTime=clientService.getStationArrTime(station, run);
-				
-				departureDateTime.add(departureTime);
-				arrivalDateTime.add(arrivalTime);
-				
-			}
-		}
+		req.setAttribute("haveRun", 0);
 		req.setAttribute("stationList", stationList);
-		req.setAttribute("departureDateTime", departureDateTime);
-    	req.setAttribute("arrivalDateTime", arrivalDateTime);
+		
+		String runStr = req.getParameter("run");
+		if (runStr != null) {
+			int runId = Integer.parseInt(runStr);
+			RunService runService = new RunService();
+			Run run = runService.getRunById(runId);
+			
+			List<Date> departureDateTime = new ArrayList<Date>(); 
+			List<Date> arrivalDateTime = new ArrayList<Date>();
+			ClientService clientService = new ClientService();
+			
+			if (!stationList.isEmpty()) {
+				for (Station station:stationList) {
+					Date departureTime = clientService.getStationDepTime(station, run);
+					Date arrivalTime = clientService.getStationArrTime(station, run);
+					
+					departureDateTime.add(departureTime);
+					arrivalDateTime.add(arrivalTime);
+					
+				}
+			}
+			req.setAttribute("departureDateTime", departureDateTime);
+	    	req.setAttribute("arrivalDateTime", arrivalDateTime);
+	    	req.setAttribute("haveRun", 1);
+		}
+		
+		
+		
 	}
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

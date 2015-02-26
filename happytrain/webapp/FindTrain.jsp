@@ -86,7 +86,11 @@
 			
 		</td>
 		<td valign="top">
-			<a href="showtimetable">Показать расписание</a>
+			<a href="timetable">Показать расписание</a>
+			<a href="alltrains">Показать поезда</a>
+			<a href="passengers">Показать пассажиров</a>
+			<a href="AddStation.jsp">Добавить станцию</a>
+			<a href="AddTrain.jsp">Добавить поезд</a>
 		</td>
 	</tr>
 </table>

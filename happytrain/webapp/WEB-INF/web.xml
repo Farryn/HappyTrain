@@ -16,6 +16,18 @@
     <servlet-name>ShowTimetableServlet</servlet-name>
     <servlet-class>servlets.ShowTimetableServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ShowAllTrainsServlet</servlet-name>
+    <servlet-class>servlets.ShowAllTrainsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AddStationServlet</servlet-name>
+    <servlet-class>servlets.AddStationServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AddTrainServlet</servlet-name>
+    <servlet-class>servlets.AddTrainServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>FindTrainServlet</servlet-name>
     <url-pattern>/findtrain</url-pattern>
@@ -30,7 +42,19 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ShowTimetableServlet</servlet-name>
-    <url-pattern>/showtimetable</url-pattern>
+    <url-pattern>/timetable</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowAllTrainsServlet</servlet-name>
+    <url-pattern>/alltrains</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddStationServlet</servlet-name>
+    <url-pattern>/addstation</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddTrainServlet</servlet-name>
+    <url-pattern>/addtrain</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>findtrain</welcome-file>

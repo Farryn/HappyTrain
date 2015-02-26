@@ -84,6 +84,7 @@ public class ShowFoundTrainsServlet extends HttpServlet {
 		List<Date> arrivalDateTime = new ArrayList<Date>();
 		List<Integer> availableSeats = new ArrayList<Integer>();
 		List<Long> timeInTrip = new ArrayList<Long>();
+		
 		ClientService cs = new ClientService();
 		List<Run> runList = cs.searchTrain(stationFrom, stationTo, from, to);
 		if (!runList.isEmpty()) {
