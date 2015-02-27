@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import valueobjects.StationVO;
+
 @Entity
 @Table(name = "station")
 public class Station {
@@ -30,6 +32,8 @@ public class Station {
 	public Station( String name) {
 		this.name = name;
 	}
+
+	
 
 	/**
 	 * @return the id

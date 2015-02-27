@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import valueobjects.RouteVO;
+import valueobjects.StationVO;
+import valueobjects.TrainVO;
+
 @Entity
 @Table(name = "route")
 public class Route {
@@ -29,10 +33,18 @@ public class Route {
 	public Route() {
 	}
 	
-	public Route(Train trainId,Station stationId,int stationOrdinalNumber ) {
-		this.trainId = trainId;
-		this.stationId = stationId;
+	public Route(Train train, Station station, int stationOrdinalNumber ) {
+		this.trainId = train;
+		this.stationId = station;
 		this.stationOrdinalNumber = stationOrdinalNumber;
+	}
+
+	
+
+	public Route(RouteVO routeVO) {
+		this.trainId = routeVO.getTrainId();
+		this.stationId = routeVO.getStationId();
+		this.stationOrdinalNumber = routeVO.getStationOrdinalNumber();
 	}
 
 	/**

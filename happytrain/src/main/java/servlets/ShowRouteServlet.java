@@ -18,6 +18,9 @@ import services.ClientService;
 import services.RouteService;
 import services.RunService;
 import services.TrainService;
+import valueobjects.RunVO;
+import valueobjects.StationVO;
+import valueobjects.TrainVO;
 import entities.Run;
 import entities.Station;
 import entities.Train;
@@ -41,10 +44,10 @@ public class ShowRouteServlet extends HttpServlet {
     	String trainStr = req.getParameter("train");
 		int trainId = Integer.parseInt(trainStr);
 		TrainService trainService = new TrainService();
-		Train train = trainService.getTrainById(trainId);
+		TrainVO train = trainService.getTrainVOById(trainId);
     	
 		RouteService routeService = new RouteService();
-		List<Station> stationList = routeService.getStationsByTrain(train);
+		List<StationVO> stationList = routeService.getStationsByTrain(train);
 		req.setAttribute("haveRun", 0);
 		req.setAttribute("stationList", stationList);
 		
@@ -52,14 +55,14 @@ public class ShowRouteServlet extends HttpServlet {
 		if (runStr != null) {
 			int runId = Integer.parseInt(runStr);
 			RunService runService = new RunService();
-			Run run = runService.getRunById(runId);
+			RunVO run = runService.getRunVOById(runId);
 			
 			List<Date> departureDateTime = new ArrayList<Date>(); 
 			List<Date> arrivalDateTime = new ArrayList<Date>();
 			ClientService clientService = new ClientService();
 			
 			if (!stationList.isEmpty()) {
-				for (Station station:stationList) {
+				for (StationVO station:stationList) {
 					Date departureTime = clientService.getStationDepTime(station, run);
 					Date arrivalTime = clientService.getStationArrTime(station, run);
 					

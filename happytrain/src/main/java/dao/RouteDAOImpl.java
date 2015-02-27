@@ -7,6 +7,8 @@ import java.util.List;
 
 
 
+
+import util.HibernateUtil;
 import entities.Route;
 import entities.Station;
 import entities.Train;
@@ -20,7 +22,7 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 					+ "and r.stationId=:stationA "
 					+ "and r2.stationId=:stationB "
 					+ "and r.stationOrdinalNumber<r2.stationOrdinalNumber";
-		routeList = getCurrentSession().createQuery(hql)
+		routeList = HibernateUtil.getCurrentSession().createQuery(hql)
 				.setParameter("stationA", A)
 				.setParameter("stationB", B)
 				.list();
@@ -32,7 +34,7 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 		String hql = "SELECT r.stationId FROM Route r "
 					+ "WHERE r.trainId=:train "
 					+ "ORDER BY r.stationOrdinalNumber";
-		stationList = getCurrentSession().createQuery(hql)
+		stationList = HibernateUtil.getCurrentSession().createQuery(hql)
 			.setParameter("train", train)
 			.list();
 		return stationList;

@@ -23,7 +23,7 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 		this.entityClass = (Class<E>) genericSuperclass.getActualTypeArguments()[1];
 	}
 	
-	private Session currentSession;
+	/*private Session currentSession;
 	private Transaction currentTransaction;
 	
 	public Session openCurrentSession() {
@@ -44,7 +44,7 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	public void closeCurrentSessionwithTransaction() {
 		currentTransaction.commit();
 		currentSession.close();
-	}
+	}*/
 	
 	/*private static SessionFactory getSessionFactory() {
 		Configuration configuration = new Configuration().configure();
@@ -53,7 +53,7 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 		return sessionFactory;
 	}*/
 
-	public Session getCurrentSession() {
+	/*public Session getCurrentSession() {
 		return currentSession;
 	}
 
@@ -67,32 +67,32 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 
 	public void setCurrentTransaction(Transaction currentTransaction) {
 		this.currentTransaction = currentTransaction;
-	}
+	}*/
 	
 	public void persist(E entity) {
-		getCurrentSession().save(entity);
+		HibernateUtil.getCurrentSession().save(entity);
 	}
 
 	
 	public void update(E entity) {
-		getCurrentSession().update(entity);
+		HibernateUtil.getCurrentSession().update(entity);
 	}
 
 	
 	public E findById(K id) {
-		E entity = (E) getCurrentSession().get(entityClass, (Serializable) id);
+		E entity = (E) HibernateUtil.getCurrentSession().get(entityClass, (Serializable) id);
 		return entity; 
 	}
 
 	
 	public void remove(E entity) {
-		getCurrentSession().delete(entity);
+		HibernateUtil.getCurrentSession().delete(entity);
 	}
 
  
 	public List<E> findAll() {
 		//List<E> list = (List<E>) getCurrentSession().createQuery("from :entity").setParameter("entity", entityClass).list();
-		List<E> list = (List<E>) getCurrentSession().createQuery("from "+entityClass.getName()).list();
+		List<E> list = (List<E>) HibernateUtil.getCurrentSession().createQuery("from "+entityClass.getName()).list();
 		return list;
 	}
 }

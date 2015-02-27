@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import valueobjects.RunVO;
+
 @Entity
 @Table(name = "run")
 public class Run {
@@ -39,6 +41,8 @@ public class Run {
 		this.startTime = startTime;
 		this.finishTime = finishTime;
 	}
+
+	
 
 	/**
 	 * @return the id

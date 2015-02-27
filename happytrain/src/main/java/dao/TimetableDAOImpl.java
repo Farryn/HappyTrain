@@ -3,6 +3,7 @@ package dao;
 import java.util.Date;
 import java.util.List;
 
+import util.HibernateUtil;
 import entities.Role;
 import entities.Route;
 import entities.Run;
@@ -15,7 +16,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	
 	public List<Run> findTrainWithDepTimeBetweenPeriodOfTime(List<Route> routes, Date from, Date to) {
 		String hql="SELECT t.runId FROM Timetable t WHERE (t.depTime BETWEEN :from and :to) and t.routeId IN (:routes)";
-		List<Run> runList=getCurrentSession().createQuery(hql)
+		List<Run> runList=HibernateUtil.getCurrentSession().createQuery(hql)
 				.setParameter("from", from)
 				.setParameter("to", to)
 				.setParameterList("routes", routes)
@@ -29,7 +30,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 					+ "WHERE t.runId=:run "
 					+ "and t.routeId.stationId=:station "
 					+ "and t.routeId.trainId=t.runId.trainId";
-		Date date = (Date) getCurrentSession().createQuery(hql)
+		Date date = (Date) HibernateUtil.getCurrentSession().createQuery(hql)
 				.setParameter("run", run)
 				.setParameter("station", station)
 				.uniqueResult();
@@ -42,7 +43,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 				   + "WHERE t.runId=:run "
 				   + "and t.routeId.stationId=:station "
 				   + "and t.routeId.trainId=t.runId.trainId";
-		Date date = (Date) getCurrentSession().createQuery(hql)
+		Date date = (Date) HibernateUtil.getCurrentSession().createQuery(hql)
 				.setParameter("run", run)
 				.setParameter("station", station)
 				.uniqueResult();
@@ -55,7 +56,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 				    + "WHERE t.runId=:run "
 			      	+ "and t.routeId.stationId=:station "
 					+ "and t.routeId.trainId=t.runId.trainId";
-		int count = (Integer) getCurrentSession().createQuery(hql)
+		int count = (Integer) HibernateUtil.getCurrentSession().createQuery(hql)
 				.setParameter("run", run)
 				.setParameter("station", station)
 				.uniqueResult();
@@ -67,7 +68,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 		String hql = "SELECT t.runId FROM Timetable t "
 			    + "WHERE t.routeId.stationId=:station "
 		      	+ "and (t.arrTime BETWEEN  :from and :to) ";
-		List<Run> list =  getCurrentSession().createQuery(hql)
+		List<Run> list =  HibernateUtil.getCurrentSession().createQuery(hql)
 				.setParameter("station", station)
 				.setParameter("from", from)
 				.setParameter("to", to)

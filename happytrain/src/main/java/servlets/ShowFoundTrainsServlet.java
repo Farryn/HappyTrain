@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import services.ClientService;
 import services.StationService;
+import valueobjects.RunVO;
+import valueobjects.StationVO;
 import entities.Run;
 import entities.Station;
 
@@ -56,10 +58,10 @@ public class ShowFoundTrainsServlet extends HttpServlet {
      * @param str String with datetime from request parameter
      * @return This is String converted into Date Object
      */
-    private Station getStationFromString(String str){
-    	Station station = new Station();
+    private StationVO getStationFromString(String str){
+    	StationVO station = new StationVO();
     	StationService ss=new StationService();
-    	station=ss.getStationByName(str);
+    	station=ss.getStationVOByName(str);
     	return station;
     }
     
@@ -74,11 +76,11 @@ public class ShowFoundTrainsServlet extends HttpServlet {
 		Date from = getDateFromString(req.getParameter("from"));
 		Date to = getDateFromString(req.getParameter("to"));
 		
-		Station stationFrom = getStationFromString(req.getParameter("stationFrom"));
-		Station stationTo = getStationFromString(req.getParameter("stationTo"));
+		StationVO stationFrom = getStationFromString(req.getParameter("stationFrom"));
+		StationVO stationTo = getStationFromString(req.getParameter("stationTo"));
 		
 		StationService ss=new StationService();
-		List<Station> stationList = ss.getAllStations();
+		List<StationVO> stationList = ss.getAllStationVO();
 		
 		List<Date> departureDateTime = new ArrayList<Date>(); 
 		List<Date> arrivalDateTime = new ArrayList<Date>();
@@ -86,9 +88,9 @@ public class ShowFoundTrainsServlet extends HttpServlet {
 		List<Long> timeInTrip = new ArrayList<Long>();
 		
 		ClientService cs = new ClientService();
-		List<Run> runList = cs.searchTrain(stationFrom, stationTo, from, to);
+		List<RunVO> runList = cs.searchTrain(stationA, stationB, from, to);
 		if (!runList.isEmpty()) {
-			for (Run run:runList) {
+			for (RunVO run:runList) {
 				Date departureTime=cs.getStationDepTime(stationFrom, run);
 				Date arrivalTime=cs.getStationArrTime(stationTo, run);
 				int count=cs.getStationAvailableSeats(stationFrom, run);

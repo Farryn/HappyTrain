@@ -11,7 +11,7 @@
 <table width="100%">
 	<tr>
 		<td width="80%">
-			<form  action="showtimetable" method="GET">
+			<form  action="timetable" method="GET">
 			    
 			 <table  border="0" >
 			   <tr>

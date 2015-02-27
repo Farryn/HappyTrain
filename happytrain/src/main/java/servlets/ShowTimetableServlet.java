@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import services.ClientService;
 import services.StationService;
 import services.TimetableService;
+import valueobjects.RunVO;
+import valueobjects.StationVO;
 import entities.Run;
 import entities.Station;
 import entities.Train;
@@ -58,20 +60,20 @@ public class ShowTimetableServlet extends HttpServlet {
      * @param str String with datetime from request parameter
      * @return This is String converted into Date Object
      */
-    private Station getStationFromString(String str){
-    	Station station = new Station();
+    private StationVO getStationFromString(String str){
+    	StationVO station = new StationVO();
     	StationService ss=new StationService();
-    	station=ss.getStationByName(str);
+    	station=ss.getStationVOByName(str);
     	return station;
     }
     
     private void processRequest(HttpServletRequest req, HttpServletResponse res){
     	StationService ss=new StationService();
-		List<Station> stationList = ss.getAllStations();
+		List<StationVO> stationList = ss.getAllStationVO();
 		req.setAttribute("stationList",stationList);
 		
 		String station=req.getParameter("station");
-		if(station==null){
+		if (station == null) {
 			req.setAttribute("haveResult", 0);
 		}else{
 			processForm(req,res);
@@ -79,22 +81,23 @@ public class ShowTimetableServlet extends HttpServlet {
 		req.setAttribute("stationList", stationList);
     	
     }
+    
 	private void processForm(HttpServletRequest req, HttpServletResponse res) {
 		String stationA = req.getParameter("station");
 		Date from = getDateFromString(req.getParameter("from"));
 		Date to = getDateFromString(req.getParameter("to"));
 		
-		Station station = getStationFromString(stationA);
+		StationVO station = getStationFromString(stationA);
 		
 		List<Date> departureDateTime = new ArrayList<Date>(); 
 		List<Date> arrivalDateTime = new ArrayList<Date>();
 		
 		ClientService cs = new ClientService();
 		TimetableService ts = new TimetableService();
-		
-		List<Run> runList = ts.getTimetableFromStation(station, from, to);
+
+		List<RunVO> runList = ts.getTimetableFromStation(station, from, to);
 		if (!runList.isEmpty()) {
-			for (Run run: runList) {
+			for (RunVO run: runList) {
 				Date departureTime=cs.getStationDepTime(station, run);
 				Date arrivalTime=cs.getStationArrTime(station, run);
 				departureDateTime.add(departureTime);
@@ -124,7 +127,10 @@ public class ShowTimetableServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		processForm(request,response);
+		ServletContext sc = getServletContext();
+		RequestDispatcher rd = sc.getRequestDispatcher("/ShowTimetable.jsp");
+		rd.forward(request, response);
 	}
 
 }

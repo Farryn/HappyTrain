@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import valueobjects.TrainVO;
+
 @Entity
 @Table(name = "train")
 public class Train {
@@ -31,6 +33,8 @@ public class Train {
 		this.number = number;
 		this.seatsCount = seatsCount;
 	}
+
+	
 
 	/**
 	 * @return the id
