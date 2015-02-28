@@ -11,9 +11,16 @@ public class RunService {
 	
 	public Run getRunById(int id){
 		RunDAOImpl dao = new RunDAOImpl();
-		HibernateUtil.openCurrentSessionwithTransaction();
-		Run run = dao.findById(id);
-		HibernateUtil.closeCurrentSessionwithTransaction();
+		Run run = null;
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			run = dao.findById(id);
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+		}
+		HibernateUtil.closeCurrentSession();
 		return run;
 		
 	}

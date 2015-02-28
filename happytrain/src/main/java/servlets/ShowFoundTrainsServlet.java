@@ -42,7 +42,7 @@ public class ShowFoundTrainsServlet extends HttpServlet {
      * @param str String with datetime from request parameter
      * @return This is String converted into Date Object
      */
-    private Date getDateFromString(String str){
+    private Date getDateFromString(String str) {
     	Date date = new Date();
     	try {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
@@ -58,10 +58,10 @@ public class ShowFoundTrainsServlet extends HttpServlet {
      * @param str String with datetime from request parameter
      * @return This is String converted into Date Object
      */
-    private StationVO getStationFromString(String str){
+    private StationVO getStationFromString(String str) {
     	StationVO station = new StationVO();
-    	StationService ss=new StationService();
-    	station=ss.getStationVOByName(str);
+    	StationService ss = new StationService();
+    	station = ss.getStationVOByName(str);
     	return station;
     }
     
@@ -79,8 +79,8 @@ public class ShowFoundTrainsServlet extends HttpServlet {
 		StationVO stationFrom = getStationFromString(req.getParameter("stationFrom"));
 		StationVO stationTo = getStationFromString(req.getParameter("stationTo"));
 		
-		StationService ss=new StationService();
-		List<StationVO> stationList = ss.getAllStationVO();
+		//StationService ss = new StationService();
+		//List<StationVO> stationList = ss.getAllStationVO();
 		
 		List<Date> departureDateTime = new ArrayList<Date>(); 
 		List<Date> arrivalDateTime = new ArrayList<Date>();
@@ -91,11 +91,11 @@ public class ShowFoundTrainsServlet extends HttpServlet {
 		List<RunVO> runList = cs.searchTrain(stationA, stationB, from, to);
 		if (!runList.isEmpty()) {
 			for (RunVO run:runList) {
-				Date departureTime=cs.getStationDepTime(stationFrom, run);
-				Date arrivalTime=cs.getStationArrTime(stationTo, run);
-				int count=cs.getStationAvailableSeats(stationFrom, run);
-				long duration=arrivalTime.getTime()-departureTime.getTime();
-				long difference=TimeUnit.MILLISECONDS.toHours(duration);
+				Date departureTime = cs.getStationDepTime(stationFrom, run);
+				Date arrivalTime = cs.getStationArrTime(stationTo, run);
+				int count = cs.getStationAvailableSeats(stationFrom, run);
+				long duration = arrivalTime.getTime() - departureTime.getTime();
+				long difference = TimeUnit.MILLISECONDS.toHours(duration);
 				
 				departureDateTime.add(departureTime);
 				arrivalDateTime.add(arrivalTime);
@@ -111,16 +111,18 @@ public class ShowFoundTrainsServlet extends HttpServlet {
     	req.setAttribute("arrivalDateTime", arrivalDateTime);
     	req.setAttribute("availableSeats", availableSeats);
     	req.setAttribute("timeInTrip", timeInTrip);
-    	req.setAttribute("stationList", stationList);
+    	//req.setAttribute("stationList", stationList);
     }
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request,response);
-		
+		if(request.getParameter("stationFrom") != null){
+			processRequest(request, response);
+		}else{
+			request.setAttribute("haveResult", 0);
+		}
 		ServletContext sc = getServletContext();
-		//RequestDispatcher rd = sc.getRequestDispatcher("/ShowFoundTrain.jsp");
 		RequestDispatcher rd = sc.getRequestDispatcher("/FindTrain.jsp");
 		rd.forward(request, response);
 	}

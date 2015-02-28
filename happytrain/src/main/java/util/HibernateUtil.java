@@ -57,19 +57,32 @@ public class HibernateUtil {
 		currentSession = HibernateUtil.getSessionFactory().openSession();
 		return currentSession;
 	}
-
+	
+	public static void closeCurrentSession() {
+			currentSession.close();
+	}
+	
+	public static void beginTransaction() {
+		currentTransaction = currentSession.beginTransaction();
+	}
+	
+	public static void commitTransaction() {
+		currentTransaction.commit();
+	}
+	
+	public static void rollbackTransaction() {
+		currentTransaction.rollback();
+	}
+	
+	/*
 	public static Session openCurrentSessionwithTransaction() {
 		currentSession = HibernateUtil.getSessionFactory().openSession();
 		currentTransaction = currentSession.beginTransaction();
 		return currentSession;
-	}
+	}*/
 	
-	public static void closeCurrentSession() {
-		currentSession.close();
-	}
-	
-	public static void closeCurrentSessionwithTransaction() {
+	/*public static void closeCurrentSessionwithTransaction() {
 		currentTransaction.commit();
 		currentSession.close();
-	}
+	}*/
 }

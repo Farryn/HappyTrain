@@ -23,9 +23,17 @@ public class TrainService {
 	public Train getTrainById(int id){
 		
 		TrainDAOImpl dao = new TrainDAOImpl();
-		HibernateUtil.openCurrentSessionwithTransaction();
-		Train train = dao.findById(id);
-		HibernateUtil.closeCurrentSessionwithTransaction();
+		Train train = null;
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			train = dao.findById(id);
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeCurrentSession();
+		}
 		return train;
 		
 	}
@@ -33,10 +41,19 @@ public class TrainService {
 	public List<TrainVO> getAllTrains(){
 		List<Train> trainList = new ArrayList<Train>();
 		List<TrainVO> trainVOList = new ArrayList<TrainVO>();
+		
 		TrainDAOImpl dao = new TrainDAOImpl();
-		HibernateUtil.openCurrentSessionwithTransaction();
-		trainList = dao.findAll();
-		HibernateUtil.closeCurrentSessionwithTransaction();
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			trainList = dao.findAll();
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeCurrentSession();
+		}
+		
 		for (Train train: trainList) {
 			trainVOList.add(new TrainVO(train));
 		}
@@ -44,11 +61,24 @@ public class TrainService {
 		
 	}
 	
+	/*public void addTrain(Train train){
+		TrainDAOImpl dao = new TrainDAOImpl();
+		
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			dao.persist(train);
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeCurrentSession();
+		}
+		
+	}*/
+	
 	public void addTrain(Train train){
 		TrainDAOImpl dao = new TrainDAOImpl();
-		HibernateUtil.openCurrentSessionwithTransaction();
 		dao.persist(train);
-		HibernateUtil.closeCurrentSessionwithTransaction();
-		
 	}
 }

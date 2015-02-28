@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -42,10 +44,10 @@ public class AddTrainServlet extends HttpServlet {
      * @param str String with datetime from request parameter
      * @return This is String converted into Date Object
      */
-    private StationVO getStationFromString(String str){
+    private StationVO getStationFromString(String str) {
     	StationVO station = new StationVO();
-    	StationService ss=new StationService();
-    	station=ss.getStationVOByName(str);
+    	StationService ss = new StationService();
+    	station = ss.getStationVOByName(str);
     	return station;
     }
     
@@ -53,6 +55,7 @@ public class AddTrainServlet extends HttpServlet {
 		String trainNumber = req.getParameter("trainNumber");
 		int seatsCount = Integer.parseInt(req.getParameter("seatsCount"));
 		String[] stationArray = req.getParameterValues("stationList[]");
+		
 		List<StationVO> stationList = new ArrayList<StationVO>();
 		if (stationArray.length > 0) {
 			for (String str: stationArray) {
@@ -75,6 +78,9 @@ public class AddTrainServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request,response);
+		ServletContext sc = getServletContext();
+		RequestDispatcher rd = sc.getRequestDispatcher("/FindTrain.jsp");
+		rd.forward(request, response);
 	}
 
 	

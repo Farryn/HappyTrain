@@ -14,9 +14,16 @@ public class StationService {
 	public List<Station> getAllStations() {
 		List<Station> stationList = new ArrayList<Station>();
 		StationDAOImpl dao = new StationDAOImpl();
-		HibernateUtil.openCurrentSessionwithTransaction();
-		stationList = dao.findAll();
-		HibernateUtil.closeCurrentSessionwithTransaction();
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			stationList = dao.findAll();
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeCurrentSession();
+		}
 		
 		return stationList;
 	}
@@ -36,9 +43,17 @@ public class StationService {
 	
 	public Station getStationByName(String str){
 		StationDAOImpl dao = new StationDAOImpl();
-		HibernateUtil.openCurrentSessionwithTransaction();
-		Station station = dao.findByName(str);
-		HibernateUtil.closeCurrentSessionwithTransaction();
+		Station station = null;
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			station = dao.findByName(str);
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeCurrentSession();
+		}
 		return station;
 	}
 	
@@ -51,10 +66,17 @@ public class StationService {
 	
 	public void addStation(String stationName){
 		StationDAOImpl dao = new StationDAOImpl();
-		HibernateUtil.openCurrentSessionwithTransaction();
-		Station station = new Station(stationName);
-		dao.persist(station);
-		HibernateUtil.closeCurrentSessionwithTransaction();
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			Station station = new Station(stationName);
+			dao.persist(station);
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeCurrentSession();
+		}
 	}
 
 	

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <servlet>
-    <servlet-name>FindTrainServlet</servlet-name>
-    <servlet-class>servlets.FindTrainServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>ShowFoundTrainsServlet</servlet-name>
     <servlet-class>servlets.ShowFoundTrainsServlet</servlet-class>
   </servlet>
@@ -28,10 +24,22 @@
     <servlet-name>AddTrainServlet</servlet-name>
     <servlet-class>servlets.AddTrainServlet</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>FindTrainServlet</servlet-name>
-    <url-pattern>/findtrain</url-pattern>
-  </servlet-mapping>
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>servlets.LoginServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>servlets.LogoutServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>RegisterServlet</servlet-name>
+    <servlet-class>servlets.RegisterServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>BuyTicketServlet</servlet-name>
+    <servlet-class>servlets.BuyTicketServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>ShowFoundTrainsServlet</servlet-name>
     <url-pattern>/showtrain</url-pattern>
@@ -56,7 +64,45 @@
     <servlet-name>AddTrainServlet</servlet-name>
     <url-pattern>/addtrain</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RegisterServlet</servlet-name>
+    <url-pattern>/register</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BuyTicketServlet</servlet-name>
+    <url-pattern>/buyticket</url-pattern>
+  </servlet-mapping>
+  <filter>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>filters.LoginFilter</filter-class>
+    <init-param>
+      <param-name>admin</param-name>
+      <param-value>/protected/AddStation.jsp, /protected/AddTrain.jsp, /protected/ShowAllTrains.jsp, /protected/BuyTicket.jsp</param-value>
+    </init-param>
+    <init-param>
+      <param-name>employee</param-name>
+      <param-value>/protected/AddStation.jsp, /protected/AddTrain.jsp, /protected/ShowAllTrains.jsp, /protected/BuyTicket.jsp</param-value>
+    </init-param>
+    <init-param>
+      <param-name>client</param-name>
+      <param-value>/protected/BuyTicket.jsp</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <url-pattern>/protected/*</url-pattern>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
   <welcome-file-list>
-    <welcome-file>findtrain</welcome-file>
+    <welcome-file>showtrain</welcome-file>
   </welcome-file-list>
 </web-app>

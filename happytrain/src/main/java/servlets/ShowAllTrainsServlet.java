@@ -41,6 +41,8 @@ public class ShowAllTrainsServlet extends HttpServlet {
     	TrainService ts = new TrainService();
     	List<TrainVO> trainList = ts.getAllTrains();
     	req.setAttribute("trainList", trainList);
+    	StringBuffer url = req.getRequestURL();
+    	req.setAttribute("servletUrl", url);
     	
     }
 	/**
@@ -49,7 +51,7 @@ public class ShowAllTrainsServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request, response);
 		ServletContext sc = getServletContext();
-		RequestDispatcher rd = sc.getRequestDispatcher("/ShowAllTrains.jsp");
+		RequestDispatcher rd = sc.getRequestDispatcher("/protected/ShowAllTrains.jsp");
 		rd.forward(request, response);
 	}
 

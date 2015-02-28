@@ -1,16 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html >
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Поиск поезда</title>
 </head>
 <body>
-<table width="100%">
-	<tr>
-		<td width="80%">
+<header>
+	<div style="float:right">
+					<span>Добро пожаловать, <c:out value="${user.login}" default="Гость" /></span>
+					<c:if test="${user == null}">
+						<br/><span><a href="Login.jsp">Войдите</a> или <a href="Register.jsp">зарегистрируйтесь</a></span>
+					</c:if>
+					<c:if test="${user != null}">
+						<br/><span><a href="logout">Выйти</a></span>
+					</c:if>
+	</div>
+</header>
+	<div >
 			<form  action="showtrain" method="GET">
 			    
 			 <table  border="0" >
@@ -63,7 +72,10 @@
 						    <td align="center" valign="top">Прибытие</td>
 						    <td align="center" valign="top">Места</td>
 						    <td align="center" valign="top">Маршрут</td>
-						    <td align="center" valign="top">Покупка</td>
+						    <c:if test="${user != null}">
+						    	<td align="center" valign="top">Покупка</td>
+						    </c:if>
+						    
 					   </tr>
 				   </thead>
 				   <tbody>
@@ -74,7 +86,13 @@
 								<td ><c:out value="${arrivalDateTime[status.index]}" /></td>
 								<td ><c:out value="${availableSeats[status.index]}" /></td>
 								<td ><a href="route?train=${item.trainId.id}&run=${item.id}">Список станций</a></td>
-								<td ><a href="buyTicket?">Купить билет</a></td>
+								<c:if test="${user != null}">
+									<td >
+										<a href="protected/BuyTicket.jsp?train=${item.trainId.number}&run=${item.id}&stationFrom=${stationFrom.name}&stationTo=${stationTo.name}&depTime=${departureDateTime[status.index]}">
+											Купить билет
+										</a
+									></td>
+								</c:if>
 							</tr>
 					   </c:forEach>
 				   </tbody>
@@ -83,16 +101,18 @@
 				
 				 </table>
 			 </c:if>
+		</div>	
+		<div style="float:right">
 			
-		</td>
-		<td valign="top">
-			<a href="timetable">Показать расписание</a>
-			<a href="alltrains">Показать поезда</a>
-			<a href="passengers">Показать пассажиров</a>
-			<a href="AddStation.jsp">Добавить станцию</a>
-			<a href="AddTrain.jsp">Добавить поезд</a>
-		</td>
-	</tr>
-</table>
+			<div>
+				<ul>
+					<li><a href="timetable">Показать расписание</a></li>
+					<li><a href="alltrains">Показать поезда</a></li>
+					<li><a href="passengers">Показать пассажиров</a></li>
+					<li><a href="protected/AddStation.jsp">Добавить станцию</a></li>
+					<li><a href="protected/AddTrain.jsp">Добавить поезд</a></li>
+				</ul>
+			</div>
+		</div>
 </body>
 </html>

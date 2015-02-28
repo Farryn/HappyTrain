@@ -1,10 +1,7 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.List;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,27 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
-
-import dao.GenericDAOImpl;
-import dao.StationDAOImpl;
-import entities.Station;
-import services.ClientService;
-import services.StationService;
-import valueobjects.StationVO;
-
-
 /**
- * Servlet implementation class FindTrainServlet
+ * Servlet implementation class LogoutServlet
  */
 @WebServlet
-public class FindTrainServlet extends HttpServlet {
+public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FindTrainServlet() {
+    public LogoutServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,14 +28,11 @@ public class FindTrainServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		StationService ss=new StationService();
-		List<StationVO> stationList = ss.getAllStationVO();
-		request.setAttribute("stationList",stationList);
-		request.setAttribute("haveResult", 0);
-		ServletContext sc = getServletContext();
-		RequestDispatcher rd = sc.getRequestDispatcher("/FindTrain.jsp");
-		rd.forward(request, response);
-		
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+		    session.invalidate();
+		}
+		request.getRequestDispatcher("/").forward(request, response);
 	}
 
 	/**

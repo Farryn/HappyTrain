@@ -62,23 +62,23 @@ public class ShowTimetableServlet extends HttpServlet {
      */
     private StationVO getStationFromString(String str){
     	StationVO station = new StationVO();
-    	StationService ss=new StationService();
-    	station=ss.getStationVOByName(str);
+    	StationService ss = new StationService();
+    	station = ss.getStationVOByName(str);
     	return station;
     }
     
     private void processRequest(HttpServletRequest req, HttpServletResponse res){
-    	StationService ss=new StationService();
+    	/*StationService ss = new StationService();
 		List<StationVO> stationList = ss.getAllStationVO();
-		req.setAttribute("stationList",stationList);
+		req.setAttribute("stationList", stationList);*/
 		
-		String station=req.getParameter("station");
+		String station = req.getParameter("station");
 		if (station == null) {
 			req.setAttribute("haveResult", 0);
-		}else{
-			processForm(req,res);
+		} else {
+			processForm(req, res);
 		}
-		req.setAttribute("stationList", stationList);
+		//req.setAttribute("stationList", stationList);
     	
     }
     

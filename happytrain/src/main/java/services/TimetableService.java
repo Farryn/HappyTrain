@@ -18,12 +18,22 @@ public class TimetableService {
 	public List<RunVO> getTimetableFromStation(StationVO stationVO, Date from, Date to){
 		StationService ss = new StationService();
 		Station station = ss.getStationByName(stationVO.getName());
+		
 		List<Run> runList = new ArrayList<Run>();
 		List<RunVO> runVOList = new ArrayList<RunVO>();
+		
 		TimetableDAOImpl dao = new TimetableDAOImpl();
-		HibernateUtil.openCurrentSessionwithTransaction();
-		runList = dao.getTimetableFromStation(station, from, to);
-		HibernateUtil.closeCurrentSessionwithTransaction();
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			runList = dao.getTimetableFromStation(station, from, to);
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+		} finally {
+			HibernateUtil.closeCurrentSession();
+		}
+		
 		for (Run run: runList) {
 			runVOList.add(new RunVO(run));
 		}
