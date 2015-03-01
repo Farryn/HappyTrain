@@ -43,11 +43,11 @@ public class ShowRouteServlet extends HttpServlet {
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
     	String trainStr = req.getParameter("train");
 		int trainId = Integer.parseInt(trainStr);
-		TrainService trainService = new TrainService();
-		TrainVO train = trainService.getTrainVOById(trainId);
+		//TrainService trainService = new TrainService();
+		//TrainVO train = trainService.getTrainVOById(trainId);
     	
 		RouteService routeService = new RouteService();
-		List<StationVO> stationList = routeService.getStationsByTrain(train);
+		List<StationVO> stationList = routeService.getStationsByTrain(trainId);
 		req.setAttribute("haveRun", 0);
 		req.setAttribute("stationList", stationList);
 		

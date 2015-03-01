@@ -29,21 +29,21 @@
 	    <td align="center" valign="top">Номер поезда</td>
 	    <td align="center" valign="top">Количество мест</td>
 	    <td align="center" valign="top">Маршрут</td>
+	    <td align="center" valign="top">Список рейсов</td>
 	    <td align="center" valign="top">Добавить рейс</td>
+	    <td></td>
 	   </tr>
    </thead>
    <tbody>
 	   <c:forEach var="item" items="${trainList}" varStatus="status">
-	   		
 					<tr>
 					
 						<td ><c:out value="${item.number}" /></td>
 						<td ><c:out value="${item.seatsCount}" /></td>
 						<td ><a href="route?train=${item.id}">Список станций</a></td>
-						<td ><a href="AddRun.jsp?train=${item.id}">Добавить рейс</a></td>
+						<td ><a href="run?train=${item.id}">Рейсы</a></td>
+						<td ><a href="addrun?train=${item.id}">Добавить рейс</a></td>
 					</tr>
-				
-			
 	   </c:forEach>
    </tbody>
    

@@ -108,7 +108,6 @@
 				<ul>
 					<li><a href="timetable">Показать расписание</a></li>
 					<li><a href="alltrains">Показать поезда</a></li>
-					<li><a href="passengers">Показать пассажиров</a></li>
 					<li><a href="protected/AddStation.jsp">Добавить станцию</a></li>
 					<li><a href="protected/AddTrain.jsp">Добавить поезд</a></li>
 				</ul>

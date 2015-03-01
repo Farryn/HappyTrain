@@ -15,18 +15,18 @@ import entities.Train;
 
 public class RouteService {
 	
-	public List<StationVO> getStationsByTrain(TrainVO trainVO){
+	public List<StationVO> getStationsByTrain(int id){
 		List<Station> stationList = new ArrayList<Station>();
 		List<StationVO> stationVOList = new ArrayList<StationVO>();
 		
-		TrainService ts = new TrainService();
-		Train train = ts.getTrainById(trainVO.getId());
+		//TrainService ts = new TrainService();
+		//Train train = ts.getTrainById(id.getId());
 		
 		RouteDAOImpl routeDao = new RouteDAOImpl();
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		try {
-			stationList = routeDao.findStationsByTrain(train);
+			stationList = routeDao.findStationsByTrain(id);
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
 			HibernateUtil.rollbackTransaction();

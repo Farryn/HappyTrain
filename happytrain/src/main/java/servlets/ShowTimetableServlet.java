@@ -95,7 +95,7 @@ public class ShowTimetableServlet extends HttpServlet {
 		ClientService cs = new ClientService();
 		TimetableService ts = new TimetableService();
 
-		List<RunVO> runList = ts.getTimetableFromStation(station, from, to);
+		List<RunVO> runList = ts.getRunFromTimetableByStation(station, from, to);
 		if (!runList.isEmpty()) {
 			for (RunVO run: runList) {
 				Date departureTime=cs.getStationDepTime(station, run);

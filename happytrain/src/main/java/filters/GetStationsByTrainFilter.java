@@ -23,8 +23,7 @@ import valueobjects.TrainVO;
 /**
  * Servlet Filter implementation class GetStationsByTrainFilter
  */
-@WebFilter(dispatcherTypes = {DispatcherType.REQUEST }
-					, urlPatterns = { "/AddRun.jsp" })
+@WebFilter//(dispatcherTypes = {DispatcherType.REQUEST }, urlPatterns = { "/AddRun.jsp" })
 public class GetStationsByTrainFilter implements Filter {
 
     /**
@@ -51,7 +50,7 @@ public class GetStationsByTrainFilter implements Filter {
 		TrainService ts = new TrainService();
 		TrainVO train = ts.getTrainVOById(trainId);
 		RouteService rs = new RouteService();
-		List<StationVO> stationList = rs.getStationsByTrain(train);
+		List<StationVO> stationList = rs.getStationsByTrain(trainId);
 		request.setAttribute("stationList", stationList);
 		request.setAttribute("train", train);
 		// pass the request along the filter chain

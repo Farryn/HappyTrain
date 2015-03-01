@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 
 import util.HibernateUtil;
+import entities.Run;
 import entities.User;
 
 public class UserDAOImpl extends GenericDAOImpl<Integer, User> implements UserDAO {
@@ -15,6 +16,8 @@ public class UserDAOImpl extends GenericDAOImpl<Integer, User> implements UserDA
 				.uniqueResult();
 		return user;
 	}
+
+	
 	
 	
 

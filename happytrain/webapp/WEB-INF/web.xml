@@ -40,6 +40,18 @@
     <servlet-name>BuyTicketServlet</servlet-name>
     <servlet-class>servlets.BuyTicketServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ShowRunServlet</servlet-name>
+    <servlet-class>servlets.ShowRunServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ShowPassengerServlet</servlet-name>
+    <servlet-class>servlets.ShowPassengerServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AddRunServlet</servlet-name>
+    <servlet-class>servlets.AddRunServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>ShowFoundTrainsServlet</servlet-name>
     <url-pattern>/showtrain</url-pattern>
@@ -80,16 +92,28 @@
     <servlet-name>BuyTicketServlet</servlet-name>
     <url-pattern>/buyticket</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowRunServlet</servlet-name>
+    <url-pattern>/run</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowPassengerServlet</servlet-name>
+    <url-pattern>/passenger</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddRunServlet</servlet-name>
+    <url-pattern>/addrun</url-pattern>
+  </servlet-mapping>
   <filter>
     <filter-name>LoginFilter</filter-name>
     <filter-class>filters.LoginFilter</filter-class>
     <init-param>
       <param-name>admin</param-name>
-      <param-value>/protected/AddStation.jsp, /protected/AddTrain.jsp, /protected/ShowAllTrains.jsp, /protected/BuyTicket.jsp</param-value>
+      <param-value>/protected/AddStation.jsp, /protected/AddTrain.jsp, /protected/ShowAllTrains.jsp, /protected/BuyTicket.jsp, /protected/ShowRun.jsp, /protected/ShowPassenger.jsp, /protected/AddRun.jsp</param-value>
     </init-param>
     <init-param>
       <param-name>employee</param-name>
-      <param-value>/protected/AddStation.jsp, /protected/AddTrain.jsp, /protected/ShowAllTrains.jsp, /protected/BuyTicket.jsp</param-value>
+      <param-value>/protected/AddStation.jsp, /protected/AddTrain.jsp, /protected/ShowAllTrains.jsp, /protected/BuyTicket.jsp, /protected/ShowRun.jsp, /protected/ShowPassenger.jsp, /protected/AddRun.jsp</param-value>
     </init-param>
     <init-param>
       <param-name>client</param-name>

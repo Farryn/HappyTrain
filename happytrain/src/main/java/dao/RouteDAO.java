@@ -9,5 +9,5 @@ import entities.Train;
 
 public interface RouteDAO extends GenericDAO<Integer, Route> {
 	List<Route> findRouteFromAtoB(Station A, Station B);
-	List<Station> findStationsByTrain(Train train);
+	List<Station> findStationsByTrain(int id);
 }
