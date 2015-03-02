@@ -38,23 +38,41 @@ $(document).ready(function() {
 
 </script>
 <title>Добавить поезд</title>
+<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 </head>
 <body>
-<header>
-	<div style="float:right">
-					<span>Добро пожаловать, <c:out value="${user.login}" default="Гость" /></span>
+<div id="wrapper">
+	<div id="header-wrapper">
+		<div id="header" class="container">
+			<div id="logo">
+				<h1><a href="/"><span>HappyTrain</span></a></h1>
+			</div>
+			<div id="login">
+				<span>Добро пожаловать, </span>
+				<span id="name"><c:out value="${user.login}" default="Гость" /></span>
 					<c:if test="${user == null}">
 						<br/><span><a href="Login.jsp">Войдите</a> или <a href="Register.jsp">зарегистрируйтесь</a></span>
 					</c:if>
 					<c:if test="${user != null}">
 						<br/><span><a href="logout">Выйти</a></span>
 					</c:if>
+			</div>
+		</div>
+		<div id="menu" class="container">
+			<ul>
+				<li class="current_page_item"><a href="#" accesskey="1" title="">Поиск поезда</a></li>
+				<li><a href="timetable" accesskey="1" title="">Расписание</a></li>
+				<li><a href="alltrains" accesskey="2" title="">Все поезда</a></li>
+				<li><a href="protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
+				<li><a href="protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
+			</ul>
+		</div>
 	</div>
-</header>
 
 			<form  action="/happytrain/addtrain" method="POST">
 			    
-			 <table  border="0"  class="input_fields_wrap">
+			 <table    class="input_fields_wrap">
 				
 				<tr>
 				    <td align="right" valign="top">Номер поезда</td>
@@ -92,7 +110,7 @@ $(document).ready(function() {
 			<input type="submit"  value="Отправить" >
 			</form>
 			
-			
+	</div>		
 
 </body>
 </html>
