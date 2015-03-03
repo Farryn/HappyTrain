@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,9 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import services.TicketService;
 import services.UserService;
 import valueobjects.TicketVO;
+import valueobjects.TimetableVO;
 import valueobjects.UserVO;
 
 /**
@@ -20,7 +24,8 @@ import valueobjects.UserVO;
 @WebServlet
 public class ShowPassengerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private static Logger log = Logger.getLogger(ShowPassengerServlet.class);
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -31,8 +36,18 @@ public class ShowPassengerServlet extends HttpServlet {
 
     
     private void processRequest(HttpServletRequest req, HttpServletResponse res) {
+    	log.info("Getting parameters from GET");
 		int runId = Integer.parseInt(req.getParameter("run"));
-		List<TicketVO> passengerList = new TicketService().getTicketsByRunId(runId);
+		
+		log.info("Getting passenger list from TicketService");
+		List<TicketVO> passengerList = new ArrayList<TicketVO>();
+		try {
+			passengerList = new TicketService().getTicketsByRunId(runId);
+		} catch (Exception e) {
+			log.warn("Exception: " + e);
+			log.info("No result was found");
+			req.setAttribute("emptyList", 1);
+		}
 		req.setAttribute("passengerList", passengerList);
 	}
 	/**

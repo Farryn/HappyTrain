@@ -6,9 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+
+import servlets.ShowFoundTrainsServlet;
 import util.HibernateUtil;
 import valueobjects.RunVO;
 import valueobjects.StationVO;
+import valueobjects.TimetableVO;
 import valueobjects.UserVO;
 import dao.RouteDAOImpl;
 import dao.RunDAOImpl;
@@ -25,140 +30,66 @@ import entities.User;
 
 public class ClientService {
 	
-	/*public List<RunVO> searchTrain(String stationA, String stationB, Date from, Date to) {
-		StationService ss = new StationService();
-		Station beginStation = ss.getStationByName(stationA);
-		Station endStation = ss.getStationByName(stationB);
-		List<RunVO> runVOList = new ArrayList<RunVO>();
-		List<Run> runList = new ArrayList<Run>();
-		List<Route> routeList = new ArrayList<Route>();
-		RouteDAOImpl routeDao = new RouteDAOImpl();
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		try {
-			routeList = routeDao.findRouteFromAtoB(beginStation, endStation);
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction();
-		}
-		HibernateUtil.closeCurrentSession();
-		
-		if (!routeList.isEmpty()) {
-			TimetableDAOImpl tdao = new TimetableDAOImpl();
-			HibernateUtil.openCurrentSession();
-			HibernateUtil.beginTransaction();
-			try {
-				runList = tdao.findTrainWithDepTimeBetweenPeriodOfTime(routeList, from, to);
-				HibernateUtil.commitTransaction();
-			} catch (Exception e) {
-				HibernateUtil.rollbackTransaction();
-			}
-			HibernateUtil.closeCurrentSession();
-		}
-		for (Run run: runList) {
-			runVOList.add(new RunVO(run));
-		}
-		return runVOList;
-	}*/
-	
-	public List<RunVO> searchTrain(String stationA, String stationB, Date from, Date to) {
-		StationService ss = new StationService();
-		Station beginStation = ss.getStationByName(stationA);
-		Station endStation = ss.getStationByName(stationB);
-		
-		List<RunVO> runVOList = new ArrayList<RunVO>();
-		List<Run> runList = new ArrayList<Run>();
-		List<Route> routeList = new ArrayList<Route>();
-		
-		RouteDAOImpl routeDao = new RouteDAOImpl();
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		try {
-			routeList = routeDao.findRouteFromAtoB(beginStation, endStation);
-			if (!routeList.isEmpty()) {
-				TimetableDAOImpl tdao = new TimetableDAOImpl();
-				runList = tdao.findTrainWithDepTimeBetweenPeriodOfTime(routeList, from, to);
-			}
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction();
-		} finally {
-			HibernateUtil.closeCurrentSession();
-		}
-		
-		for (Run run: runList) {
-			runVOList.add(new RunVO(run));
-		}
-		return runVOList;
-	}
-	
-	public Date getStationDepTime(StationVO stationVO, RunVO runVO){
-		StationService ss = new StationService();
-		RunService rs = new RunService();
-		
-		Station station = ss.getStationByName(stationVO.getName());
-		Run run = rs.getRunById(runVO.getId());
-		
-		TimetableDAOImpl tdao = new TimetableDAOImpl();
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		Date depTime = new Date();
-		try {
-			depTime = tdao.findDepTimeFromStation(station, run);
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction();
-		} finally {
-			HibernateUtil.closeCurrentSession();
-		}
-		
-		return depTime;
-	}
-	
-	public Date getStationArrTime(StationVO stationVO, RunVO runVO){
-		StationService ss = new StationService();
-		RunService rs = new RunService();
-		
-		Station station = ss.getStationByName(stationVO.getName());
-		Run run = rs.getRunById(runVO.getId());
-		
-		TimetableDAOImpl tdao = new TimetableDAOImpl();
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		Date arrTime = new Date();
-		try {
-			arrTime = tdao.findArrTimeToStation(station, run);
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction();
-		} finally {
-			HibernateUtil.closeCurrentSession();
-		}
-		return arrTime;
-	}
-	
-	public int getStationAvailableSeats(StationVO stationVO, RunVO runVO){
-		StationService ss = new StationService();
-		RunService rs = new RunService();
-		
-		Station station = ss.getStationByName(stationVO.getName());
-		Run run = rs.getRunById(runVO.getId());
-		
-		TimetableDAOImpl tdao = new TimetableDAOImpl();
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		int count = 0;
-		try {
-			count = tdao.findAvailableSeatsCount(station, run);
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction();
-		} finally {
-			HibernateUtil.closeCurrentSession();
-		}
-		return count;
-	}
+	private static Logger log = Logger.getLogger(ClientService.class);
 
+	
+	public List<TimetableVO> searchTrain(String stationA, String stationB, Date from, Date to) throws Exception {
+		
+		log.info("Checking input parameters");
+		if (stationA == null || stationB == null || from == null || to == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		List<TimetableVO> timetableVOList = new ArrayList<TimetableVO>();
+		List<Run> runList = new ArrayList<Run>();
+		List<Route> routeList = new ArrayList<Route>();
+		
+		TimetableDAOImpl tdao = new TimetableDAOImpl();
+		RouteDAOImpl routeDao = new RouteDAOImpl();
+		
+		log.info("Opening Hibernate Session with transaction");
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			log.info("Getting Route between " + stationA + " and " + stationB);
+			routeList = routeDao.findRouteFromAtoB(stationA, stationB);
+			if (routeList.isEmpty()) {
+				throw new IllegalStateException();
+			} 
+			
+			log.info("Getting Runs between period of time from" + from + " to " + to);
+			runList = tdao.findTrainWithDepTimeBetweenPeriodOfTime(routeList, from, to);
+			if (runList.isEmpty()) {
+				throw new IllegalStateException();
+			}
+			
+			log.info("Creating TimetableVO on every found Run ");
+			for (Run run:runList) {
+				Date departureTime = tdao.findDepTimeFromStation(stationA, run);
+				Date arrivalTime = tdao.findArrTimeToStation(stationB, run);
+				int count = tdao.findAvailableSeatsCount(stationA, run);
+				if (departureTime == null || arrivalTime == null) {
+					throw new NullPointerException();
+				}
+				TimetableVO timetable = new TimetableVO(run.getTrainId().getId() ,run.getTrainId().getNumber(), run.getId(), departureTime, arrivalTime, count);
+				timetableVOList.add(timetable);
+			}
+			log.info("Commiting transaction");
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			log.warn("Transaction was rollbacked");
+			HibernateUtil.rollbackTransaction();
+			throw e;
+		} finally {
+			log.info("Closing Hibernate Session");
+			HibernateUtil.closeCurrentSession();
+		}
+		
+		
+		return timetableVOList;
+	}
+	
+	
 	 private Date getDateFromString(String str) {
 	    	Date date = new Date();
 	    	try {
@@ -258,7 +189,7 @@ public class ClientService {
 		try {
 			Station station = sdao.findByName(stationFrom);
 			Run run = rdao.findById(Integer.parseInt(runId));
-			availableSeats = tdao.findAvailableSeatsCount(station, run);
+			availableSeats = tdao.findAvailableSeatsCount(stationFrom, run);
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
 			HibernateUtil.rollbackTransaction();
@@ -269,5 +200,48 @@ public class ClientService {
 			return true;
 		}
 		return false;
+	}
+
+
+	public List<TimetableVO> getTimesFromStationList(int runId, List<StationVO> stationList) throws Exception {
+		log.info("Checking input parameters");
+		if (stationList.isEmpty()) {
+			throw new IllegalArgumentException();
+		}
+		
+		List<TimetableVO> timetableVOList = new ArrayList<TimetableVO>();
+		TimetableDAOImpl tdao = new TimetableDAOImpl();
+		
+		log.info("Getting Run by id " + runId);
+		RunService runService = new RunService();
+		Run run = runService.getRunById(runId);
+		
+		log.info("Opening Hibernate Session with transaction");
+		HibernateUtil.openCurrentSession();
+		HibernateUtil.beginTransaction();
+		try {
+			log.info("Creating TimetableVO on every Station");
+			for (StationVO station: stationList) {
+				Date departureTime = tdao.findDepTimeFromStation(station.getName(), run);
+				Date arrivalTime = tdao.findArrTimeToStation(station.getName(), run);
+				if (departureTime == null || arrivalTime == null) {
+					throw new NullPointerException();
+				}
+				TimetableVO timetable = new TimetableVO(departureTime, arrivalTime);
+				timetableVOList.add(timetable);
+			}
+			log.info("Commiting transaction");
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			log.warn("Transaction was rollbacked");
+			HibernateUtil.rollbackTransaction();
+			throw e;
+		} finally {
+			log.info("Closing Hibernate Session");
+			HibernateUtil.closeCurrentSession();
+		}
+		
+		
+		return timetableVOList;
 	}
 }

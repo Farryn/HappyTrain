@@ -6,8 +6,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Добавить рейс</title>
-<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="./css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="./css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 </head>
 <body>
 <div id="wrapper">
@@ -37,39 +37,47 @@
 			</ul>
 		</div>
 	</div>
-
- <form action="/happytrain/addrun" method="post">   
-	 <table  border="1" >
-	   <caption>Добавить рейс</caption>
-	   <thead>
-		   <tr>
-		    	<td align="center" valign="top">Станция</td>
-			    <td align="center" valign="top">Прибытие</td>
-			    <td align="center" valign="top">Отправление</td>
-		   </tr>
-	   </thead>
-	   <tbody>
-	       
-			   <c:forEach var="item" items="${stationList}" varStatus="status">
-					<tr>
-						<td >
-							<c:out value="${item.name}" />
-							<input type="hidden" name="stationList[]" value="${item.name}"/>
-						</td>
-						<td ><input type="text" name=arrivalTime[] /> </td>
-						<td ><input type="text" name=departureTime[] /></td>
-					</tr>
-			   </c:forEach>
-			   <tr>
-			   		<td>
-						<input type="hidden" name="train" value="${train}"/>			   			
-			   			<input type="submit" value="Добавить" />
-			   		</td>
-			   </tr>
-		   
-	   </tbody>
-	 </table>
-</form>
+	<div id="portfolio" class="container">
+		<c:if test="${fail == null}">
+			 <form action="/happytrain/addrun" method="post">   
+				 <table  id="beauty-table" >
+				   <thead>
+					   <tr>
+					    	<td align="center" valign="top">Станция</td>
+						    <td align="center" valign="top">Прибытие</td>
+						    <td align="center" valign="top">Отправление</td>
+					   </tr>
+				   </thead>
+				   <tbody>
+				       
+						   <c:forEach var="item" items="${stationList}" varStatus="status">
+								<tr>
+									<td >
+										<c:out value="${item.name}" />
+										<input type="hidden" name="stationList[]" value="${item.name}"/>
+									</td>
+									<td ><input type="text" name=arrivalTime[] /> </td>
+									<td ><input type="text" name=departureTime[] /></td>
+								</tr>
+						   </c:forEach>
+						   <tr>
+						   		<td colspan="3">
+									<input type="hidden" name="train" value="${train}"/>			   			
+						   			<input type="submit" value="Добавить" class="button" />
+						   		</td>
+						   </tr>
+					   
+				   </tbody>
+				 </table>
+			 </form>
+		</c:if>
+		<c:if test="${fail == 0}">
+			<span> Операция завершена успешно</span>
+		</c:if>
+		<c:if test="${fail == 1}">
+			<span> Ошибка при добавлении данных</span>
+		</c:if>
+	</div>
 </div>
 </body>
 </html>

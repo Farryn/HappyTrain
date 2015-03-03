@@ -39,8 +39,7 @@
 	</div>
 
     
- <table  border="1" >
-   <caption>Список пассажиров</caption>
+ <table  id="beauty-table">
    <thead>
 	   <tr>
 	    	<td align="center" valign="top">Имя</td>
@@ -51,6 +50,9 @@
 	   </tr>
    </thead>
    <tbody>
+   		<c:if test="${emptyList == 1}">
+			<tr><td colspan="5">Нет результатов</td></tr>
+		</c:if>
 	   <c:forEach var="item" items="${passengerList}" varStatus="status">
 			<tr>
 				<td ><c:out value="${item.userId.firstName}" /></td>

@@ -10,7 +10,7 @@ import entities.Timetable;
 
 public interface TimetableDAO extends GenericDAO<Integer, Timetable> {
 	List<Run> findTrainWithDepTimeBetweenPeriodOfTime(List<Route> routes, Date from, Date to);
-	Date findDepTimeFromStation(Station station, Run run);
-	Date findArrTimeToStation(Station station, Run run);
-	int findAvailableSeatsCount(Station station, Run run);
+	Date findDepTimeFromStation(String stationA, Run run);
+	Date findArrTimeToStation(String stationB, Run run);
+	int findAvailableSeatsCount(String stationA, Run run);
 }

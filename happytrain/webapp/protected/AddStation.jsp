@@ -5,9 +5,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="../css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <title>Добавить станцию</title>
-<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+
 </head>
 <body>
 <div id="wrapper">

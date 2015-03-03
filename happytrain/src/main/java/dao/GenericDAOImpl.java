@@ -91,7 +91,6 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 
  
 	public List<E> findAll() {
-		//List<E> list = (List<E>) getCurrentSession().createQuery("from :entity").setParameter("entity", entityClass).list();
 		List<E> list = (List<E>) HibernateUtil.getCurrentSession().createQuery("from "+entityClass.getName()).list();
 		return list;
 	}

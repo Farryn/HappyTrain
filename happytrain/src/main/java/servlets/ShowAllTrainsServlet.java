@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import entities.Train;
 import services.TrainService;
 import valueobjects.TrainVO;
@@ -22,7 +24,8 @@ import valueobjects.TrainVO;
 @WebServlet
 public class ShowAllTrainsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private static Logger log = Logger.getLogger(ShowAllTrainsServlet.class);
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -37,10 +40,18 @@ public class ShowAllTrainsServlet extends HttpServlet {
      * @param res Response Object 
      */
     private void processRequest(HttpServletRequest req, HttpServletResponse res){
-    	
+    	log.info("Getting all trains from db");
     	TrainService ts = new TrainService();
-    	List<TrainVO> trainList = ts.getAllTrains();
+    	List<TrainVO> trainList = new ArrayList<TrainVO>();
+		try {
+			trainList = ts.getAllTrains();
+		} catch (Exception e) {
+			log.warn("Exception: " + e);
+			log.info("No result was found");
+			req.setAttribute("emptyList", 1);
+		}
     	req.setAttribute("trainList", trainList);
+    	
     	StringBuffer url = req.getRequestURL();
     	req.setAttribute("servletUrl", url);
     	

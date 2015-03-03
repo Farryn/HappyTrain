@@ -1,45 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html >
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="../css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-    var max_fields      = 10; //maximum input boxes allowed
-    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
-    var add_button      = $(".add_field_button"); //Add button ID
-    var remove_button   = $(".remove_field_button"); //Add button ID
-    var td_to_remove    = $(".td_to_remove");
-    
-    var x = 1; //initlal text box count
-    $(add_button).click(function(e){ //on add input button click
-        e.preventDefault();
-        if(x < max_fields){ //max input box allowed
-            x++; //text box increment
-            $(wrapper).append('<tr class="td_to_remove">'+
-				            		'<td ><select name="stationList[]" >'+
-				            			'<c:forEach var="item" items="${stationList}">'+
-						  					'<option value="${item.name}" ><c:out value="${item.name}" /></option>'+
-						  				'</c:forEach></select></td>'+
-				            		'<td><input type="button" value="Удалить станцию" class="remove_field_button"></td>'+
-			            		'</tr>'); 
-        }
-    });
-    $(remove_button).on("click", function(e) {
-    	e.preventDefault();
-        $('tr').remove();
-  });
-
-   
-});
-
-</script>
+<script src="../js/global.js" type="text/javascript"></script>
 <title>Добавить поезд</title>
-<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+
 </head>
 <body>
 <div id="wrapper">
@@ -64,53 +34,29 @@ $(document).ready(function() {
 				<li class="current_page_item"><a href="#" accesskey="1" title="">Поиск поезда</a></li>
 				<li><a href="timetable" accesskey="1" title="">Расписание</a></li>
 				<li><a href="alltrains" accesskey="2" title="">Все поезда</a></li>
-				<li><a href="protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
-				<li><a href="protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
+				<li><a href="protected/AddStation.jsp" accesskey="3" title="">Добавить станцию</a></li>
+				<li><a href="protected/AddTrain.jsp" accesskey="4" title="">Добавить поезд</a></li>
 			</ul>
 		</div>
 	</div>
-
-			<form  action="/happytrain/addtrain" method="POST">
-			    
-			 <table    class="input_fields_wrap">
-				
-				<tr>
-				    <td align="right" valign="top">Номер поезда</td>
-				</tr>
-			    <tr>
-				    <td><input type="text" name="trainNumber" ></td>
-			    </tr>
-			    <tr>
-				    <td align="right" valign="top">Число мест</td>
-				</tr>
-			    <tr>
-				    <td><input type="text" name="seatsCount"  ></td>
-			    </tr>
-			    <tr>
-				    <td align="right" valign="top">Маршрут</td>
-				</tr>
-				<tr>
-					<td><input type="button" value="Добавить станцию" class="add_field_button"></td>
-				</tr>
-				<tr>
-					<td>
-						<select name="stationList[]" >
-				    		  <c:forEach var="item" items="${stationList}">
+		<div id="portfolio" class="container">
+			<form  action="/happytrain/addtrain" method="POST" id="input-form">
+				<label>Номер поезда</label>
+				<input type="text" name="trainNumber" >
+				<label>Число мест</label>
+				<input type="text" name="seatsCount"  >
+				<label>Маршрут</label>
+				<input type="button" value="Добавить станцию" class="add_field_button">
+				<select name="stationList[]" >
+				    	<c:forEach var="item" items="${stationList}">
 							  	<option value="${item.name}" ${item.name == stationFrom.name ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
-							  </c:forEach>
-						</select>
-					</td>
-				</tr>
+						</c:forEach>
+				</select>
 				
-			   
-			
-			  
-			
-			 </table>
-			<input type="submit"  value="Отправить" >
+				<input type="submit"  value="Отправить" >
 			</form>
-			
-	</div>		
+		</div>	
+</div>		
 
 </body>
 </html>

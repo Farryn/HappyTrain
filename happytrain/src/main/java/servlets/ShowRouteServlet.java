@@ -14,12 +14,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import services.ClientService;
 import services.RouteService;
 import services.RunService;
 import services.TrainService;
 import valueobjects.RunVO;
 import valueobjects.StationVO;
+import valueobjects.TimetableVO;
 import valueobjects.TrainVO;
 import entities.Run;
 import entities.Station;
@@ -31,7 +34,7 @@ import entities.Train;
 @WebServlet
 public class ShowRouteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private static Logger log = Logger.getLogger(ShowRouteServlet.class);   
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -41,38 +44,41 @@ public class ShowRouteServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
+    	log.info("Getting parameters from GET");
     	String trainStr = req.getParameter("train");
 		int trainId = Integer.parseInt(trainStr);
-		//TrainService trainService = new TrainService();
-		//TrainVO train = trainService.getTrainVOById(trainId);
-    	
+		
+		log.info("Getting Stations from RouteService");
 		RouteService routeService = new RouteService();
-		List<StationVO> stationList = routeService.getStationsByTrain(trainId);
+		List<StationVO> stationList = new ArrayList<StationVO>();
+		try {
+			stationList = routeService.getStationsByTrain(trainId);
+		} catch (Exception e) {
+			log.warn("Exception: " + e);
+			log.info("No result was found");
+			req.setAttribute("emptyList", 1);
+		}
 		req.setAttribute("haveRun", 0);
 		req.setAttribute("stationList", stationList);
 		
+		
 		String runStr = req.getParameter("run");
 		if (runStr != null) {
+			log.info("We have Run parameter");
 			int runId = Integer.parseInt(runStr);
-			RunService runService = new RunService();
-			RunVO run = runService.getRunVOById(runId);
 			
-			List<Date> departureDateTime = new ArrayList<Date>(); 
-			List<Date> arrivalDateTime = new ArrayList<Date>();
+			log.info("Getting Timetable with Run.Id "+ runId + " on every Station");
 			ClientService clientService = new ClientService();
-			
-			if (!stationList.isEmpty()) {
-				for (StationVO station:stationList) {
-					Date departureTime = clientService.getStationDepTime(station, run);
-					Date arrivalTime = clientService.getStationArrTime(station, run);
-					
-					departureDateTime.add(departureTime);
-					arrivalDateTime.add(arrivalTime);
-					
-				}
+			List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
+			try {
+				timetableList = clientService.getTimesFromStationList(runId, stationList);
+			} catch (Exception e) {
+				log.warn("Exception: " + e);
+				log.info("No time was found");
+				req.setAttribute("emptyList", 1);
 			}
-			req.setAttribute("departureDateTime", departureDateTime);
-	    	req.setAttribute("arrivalDateTime", arrivalDateTime);
+			
+			req.setAttribute("timetableList", timetableList);
 	    	req.setAttribute("haveRun", 1);
 		}
 		

@@ -39,9 +39,7 @@
 		</div>
 	</div>
    
- <table  border="1" >
-
-   <caption>Список поездов</caption>
+ <table  id="beauty-table" >
   <thead>
 	   <tr>
 	    <td align="center" valign="top">Номер поезда</td>
@@ -49,10 +47,12 @@
 	    <td align="center" valign="top">Маршрут</td>
 	    <td align="center" valign="top">Список рейсов</td>
 	    <td align="center" valign="top">Добавить рейс</td>
-	    <td></td>
 	   </tr>
    </thead>
    <tbody>
+  		 <c:if test="${emptyList == 1}">
+				<tr><td colspan="5">Нет результатов</td></tr>
+		</c:if>
 	   <c:forEach var="item" items="${trainList}" varStatus="status">
 					<tr>
 					

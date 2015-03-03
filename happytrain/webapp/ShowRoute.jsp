@@ -39,9 +39,8 @@
 	</div>
 
     
- <table  border="1" >
+ <table  id="beauty-table" >
 
-   <caption>Список станций</caption>
   <thead>
 	   <tr>
 	    <td align="center" valign="top">Название станции</td>
@@ -52,12 +51,15 @@
 	   </tr>
    </thead>
    <tbody>
+   		<c:if test="${emptyList == 1}">
+			<tr><td colspan="3">Нет результатов</td></tr>
+		</c:if>
 	   <c:forEach var="item" items="${stationList}" varStatus="status">
 			<tr>
 				<td ><c:out value="${item.name}" /></td>
 				<c:if test="${haveRun > 0}">
-					<td ><c:out value="${arrivalDateTime[status.index]}" /></td>
-					<td ><c:out value="${departureDateTime[status.index]}" /></td>
+					<td ><c:out value="${timetableList[status.index].arrivalDateTime}" /></td>
+					<td ><c:out value="${timetableList[status.index].departureDateTime}" /></td>
 				</c:if>
 			</tr>
 	   </c:forEach>

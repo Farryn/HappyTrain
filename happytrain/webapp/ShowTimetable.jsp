@@ -37,38 +37,27 @@
 			</ul>
 		</div>
 	</div>
-	
-<form  action="timetable" method="GET">
+	<div id="portfolio" class="container">
+		<form  action="timetable" method="GET" id="main-form">
 			    
-			 <table  border="0" >
-			   <tr>
-				    <td align="right" valign="top">Станция</td>
-				    <td>
-				    	<select name="station" >
-				    		  <c:forEach var="item" items="${stationList}">
-							  	<option value="${item.name}" ${item.name == station.name ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
-							  </c:forEach>
-						</select>
-					</td>
-			   </tr>
-			   <tr>
-				    <td align="right" valign="top">Время от</td>
-				    <td><input type="text" name="from" size="25" value="01-01-2015 00:00:00"></td>
-				    <td align="right" valign="top">Время до</td>
-				    <td><input type="text" name="to" size="25" value="01-01-2015 00:09:00"></td>
-			   </tr>
-			   <tr>
-				    <td align="right" colspan="2"></td>
-				    <td align="right" colspan="2">
-				     	<input type="submit" name="submit" value="Отправить">
-				    </td>
-			   </tr>
+			 	<label>Станция</label>
+				<select name="station" >
+				    	<c:forEach var="item" items="${stationList}">
+							<option value="${item.name}" ${item.name == station ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
+						</c:forEach>
+				</select>
+				
+			    <label>Время от</label>
+			 	<input type="text" name="from" size="25" value="01-01-2015 00:00:00">
+			 	<label>Время до</label>
+			 	<input type="text" name="to" size="25" value="01-01-2015 00:09:00">
+			 	<input type="submit" name="submit" value="Найти" class="button">
 			
-			 </table>
+			
 			
 			</form>
 			<c:if test="${haveResult > 0}">
-				<table  border="1" >
+				<table  id="beauty-table" >
 				
 				  <thead>
 					   <tr>
@@ -78,11 +67,14 @@
 					   </tr>
 				   </thead>
 				   <tbody>
-					   <c:forEach var="item" items="${runList}" varStatus="status">
+				   		<c:if test="${emptyList == 1}">
+				   			<tr><td colspan="3">Нет результатов</td></tr>
+				   		</c:if>
+					   <c:forEach var="item" items="${timetableList}" varStatus="status">
 							<tr>
-								<td ><c:out value="${item.trainId.number}" /></td>
-								<td ><c:out value="${departureDateTime[status.index]}" /></td>
-								<td ><c:out value="${arrivalDateTime[status.index]}" /></td>
+								<td ><c:out value="${item.trainNumber}" /></td>
+								<td ><c:out value="${item.departureDateTime}" /></td>
+								<td ><c:out value="${item.arrivalDateTime}" /></td>
 							</tr>
 					   </c:forEach>
 				   </tbody>
@@ -91,6 +83,7 @@
 				
 				 </table>
 			 </c:if>
-</div>
+		</div>
+	</div>
 </body>
 </html>

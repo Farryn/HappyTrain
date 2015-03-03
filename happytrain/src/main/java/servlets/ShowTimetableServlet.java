@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,11 +16,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import services.ClientService;
 import services.StationService;
 import services.TimetableService;
 import valueobjects.RunVO;
 import valueobjects.StationVO;
+import valueobjects.TimetableVO;
 import entities.Run;
 import entities.Station;
 import entities.Train;
@@ -30,7 +34,8 @@ import entities.Train;
 @WebServlet
 public class ShowTimetableServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private static Logger log = Logger.getLogger(ShowTimetableServlet.class);
+ 
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -44,14 +49,14 @@ public class ShowTimetableServlet extends HttpServlet {
      * @param str String with datetime from request parameter
      * @return This is String converted into Date Object
      */
-    private Date getDateFromString(String str){
+    private Date getDateFromString( String str) throws ParseException, IllegalArgumentException  {
+    	if (str == null) {
+    		throw new IllegalArgumentException();
+    	}
     	Date date = new Date();
-    	try {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-			date = sdf.parse(str);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+		date = sdf.parse(str);
+		
     	return date;
     }
     
@@ -60,56 +65,51 @@ public class ShowTimetableServlet extends HttpServlet {
      * @param str String with datetime from request parameter
      * @return This is String converted into Date Object
      */
-    private StationVO getStationFromString(String str){
+    
+    /*private StationVO getStationFromString(String str){
     	StationVO station = new StationVO();
     	StationService ss = new StationService();
     	station = ss.getStationVOByName(str);
     	return station;
-    }
+    }*/
     
     private void processRequest(HttpServletRequest req, HttpServletResponse res){
-    	/*StationService ss = new StationService();
-		List<StationVO> stationList = ss.getAllStationVO();
-		req.setAttribute("stationList", stationList);*/
-		
+    	
 		String station = req.getParameter("station");
 		if (station == null) {
 			req.setAttribute("haveResult", 0);
 		} else {
 			processForm(req, res);
 		}
-		//req.setAttribute("stationList", stationList);
     	
     }
     
 	private void processForm(HttpServletRequest req, HttpServletResponse res) {
+		
+		log.info("Getting parameters from form");
 		String stationA = req.getParameter("station");
-		Date from = getDateFromString(req.getParameter("from"));
-		Date to = getDateFromString(req.getParameter("to"));
+		Date from = null;
+		Date to = null;
+		try {
+			from = getDateFromString(req.getParameter("from"));
+			to = getDateFromString(req.getParameter("to"));
+		} catch (Exception e) {
+			log.warn("Exception: " + e);
+		}
 		
-		StationVO station = getStationFromString(stationA);
-		
-		List<Date> departureDateTime = new ArrayList<Date>(); 
-		List<Date> arrivalDateTime = new ArrayList<Date>();
-		
-		ClientService cs = new ClientService();
+		log.info("Getting Timetables by Station " + stationA + " between "+ from + "and" + to);
 		TimetableService ts = new TimetableService();
-
-		List<RunVO> runList = ts.getRunFromTimetableByStation(station, from, to);
-		if (!runList.isEmpty()) {
-			for (RunVO run: runList) {
-				Date departureTime=cs.getStationDepTime(station, run);
-				Date arrivalTime=cs.getStationArrTime(station, run);
-				departureDateTime.add(departureTime);
-				arrivalDateTime.add(arrivalTime);
-				
-			}
+		List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
+		try {
+			timetableList = ts.getTimetableByStation(stationA, from, to);
+		} catch (Exception e) {
+			log.warn("Exception: " + e);
+			log.info("No result was found");
+			req.setAttribute("emptyList", 1);
 		}
 		req.setAttribute("haveResult", 1);
-		req.setAttribute("station", station);
-		req.setAttribute("runList", runList);
-    	req.setAttribute("departureDateTime", departureDateTime);
-    	req.setAttribute("arrivalDateTime", arrivalDateTime);
+		req.setAttribute("station", stationA);
+		req.setAttribute("timetableList", timetableList);
 	}
 
 	/**
@@ -118,7 +118,6 @@ public class ShowTimetableServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request,response);
 		ServletContext sc = getServletContext();
-		//RequestDispatcher rd = sc.getRequestDispatcher("/ShowFoundTrain.jsp");
 		RequestDispatcher rd = sc.getRequestDispatcher("/ShowTimetable.jsp");
 		rd.forward(request, response);
 	}

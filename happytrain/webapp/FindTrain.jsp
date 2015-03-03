@@ -45,25 +45,24 @@
 			    <label>От станции</label>
 			 	<select name="stationFrom" >
 				    		  <c:forEach var="item" items="${stationList}">
-							  	<option value="${item.name}" ${item.name == stationFrom.name ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
+							  	<option value="${item.name}" ${item.name == stationFrom? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
 							  </c:forEach>
 				</select>
 			 	<label>До станции</label>
 			 	<select name="stationTo" >
 				    		  <c:forEach var="item" items="${stationList}">
-							  	<option value="${item.name}" ${item.name == stationTo.name ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
+							  	<option value="${item.name}" ${item.name == stationTo ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
 							  </c:forEach>
 				</select>
 			 	<label>Время от</label>
 			 	<input type="text" name="from" size="25" value="01-01-2015 00:00:00">
 			 	<label>Время до</label>
-			 	<input type="text" name="from" size="25" value="01-01-2015 00:09:00">
+			 	<input type="text" name="to" size="25" value="01-01-2015 00:09:00">
 			 	<input type="submit" name="submit" value="Найти" class="button">
 			</form>
 			
 			<c:if test="${haveResult > 0}">
 				<table  id="beauty-table" >
-				
 				  <thead>
 					   <tr>
 						    <td align="center" valign="top">Номер поезда</td>
@@ -77,23 +76,27 @@
 						    
 					   </tr>
 				   </thead>
+				   
 				   <tbody>
-					   <c:forEach var="item" items="${runList}" varStatus="status">
-							<tr>
-								<td ><c:out value="${item.trainId.number}" /></td>
-								<td ><c:out value="${departureDateTime[status.index]}" /></td>
-								<td ><c:out value="${arrivalDateTime[status.index]}" /></td>
-								<td ><c:out value="${availableSeats[status.index]}" /></td>
-								<td ><a href="route?train=${item.trainId.id}&run=${item.id}">Список станций</a></td>
-								<c:if test="${user != null}">
-									<td >
-										<a href="protected/BuyTicket.jsp?train=${item.trainId.number}&run=${item.id}&stationFrom=${stationFrom.name}&stationTo=${stationTo.name}&depTime=${departureDateTime[status.index]}">
-											Купить билет
-										</a
-									></td>
-								</c:if>
-							</tr>
-					   </c:forEach>
+				   		<c:if test="${emptyList == 1}">
+				   			<tr><td colspan="5">Нет результатов</td></tr>
+				   		</c:if>
+						   <c:forEach var="item" items="${timetableList}" varStatus="status">
+								<tr>
+									<td ><c:out value="${item.trainNumber}" /></td>
+									<td ><c:out value="${item.departureDateTime}" /></td>
+									<td ><c:out value="${item.arrivalDateTime}" /></td>
+									<td ><c:out value="${item.availableSeats}" /></td>
+									<td ><a href="route?train=${item.trainId}&run=${item.runId}">Список станций</a></td>
+									<c:if test="${user != null}">
+										<td >
+											<a href="protected/BuyTicket.jsp?train=${item.trainNumber}&run=${item.runId}&stationFrom=${stationFrom}&stationTo=${stationTo}&depTime=${item.departureDateTime}">
+												Купить билет
+											</a
+										></td>
+									</c:if>
+								</tr>
+						   </c:forEach>
 				   </tbody>
 				   
 				   
