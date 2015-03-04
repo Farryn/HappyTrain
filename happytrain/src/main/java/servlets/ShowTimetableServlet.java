@@ -49,29 +49,7 @@ public class ShowTimetableServlet extends HttpServlet {
      * @param str String with datetime from request parameter
      * @return This is String converted into Date Object
      */
-    private Date getDateFromString( String str) throws ParseException, IllegalArgumentException  {
-    	if (str == null) {
-    		throw new IllegalArgumentException();
-    	}
-    	Date date = new Date();
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-		date = sdf.parse(str);
-		
-    	return date;
-    }
-    
-    /**
-     * Converts String to Date Object.
-     * @param str String with datetime from request parameter
-     * @return This is String converted into Date Object
-     */
-    
-    /*private StationVO getStationFromString(String str){
-    	StationVO station = new StationVO();
-    	StationService ss = new StationService();
-    	station = ss.getStationVOByName(str);
-    	return station;
-    }*/
+
     
     private void processRequest(HttpServletRequest req, HttpServletResponse res){
     	
@@ -88,14 +66,9 @@ public class ShowTimetableServlet extends HttpServlet {
 		
 		log.info("Getting parameters from form");
 		String stationA = req.getParameter("station");
-		Date from = null;
-		Date to = null;
-		try {
-			from = getDateFromString(req.getParameter("from"));
-			to = getDateFromString(req.getParameter("to"));
-		} catch (Exception e) {
-			log.warn("Exception: " + e);
-		}
+		String from = req.getParameter("from");
+		String to = req.getParameter("to");
+		
 		
 		log.info("Getting Timetables by Station " + stationA + " between "+ from + "and" + to);
 		TimetableService ts = new TimetableService();
@@ -110,6 +83,8 @@ public class ShowTimetableServlet extends HttpServlet {
 		req.setAttribute("haveResult", 1);
 		req.setAttribute("station", stationA);
 		req.setAttribute("timetableList", timetableList);
+		req.setAttribute("from", from);
+		req.setAttribute("to", to);
 	}
 
 	/**

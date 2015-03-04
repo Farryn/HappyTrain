@@ -8,37 +8,17 @@
 <title>Поиск поезда</title>
 <link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script src="js/jquery.js"></script>
+<script src="js/jquery.datetimepicker.js"></script>
+<script src="js/global.js"></script>
+
 
 </head>
 <body>
 <div id="wrapper">
-	<div id="header-wrapper">
-		<div id="header" class="container">
-			<div id="logo">
-				<h1><a href="/happytrain"><span>HappyTrain</span></a></h1>
-			</div>
-			<div id="login">
-				<span>Добро пожаловать, </span>
-				<span id="name"><c:out value="${user.login}" default="Гость" /></span>
-					<c:if test="${user == null}">
-						<br/><span><a href="Login.jsp">Войдите</a> или <a href="Register.jsp">зарегистрируйтесь</a></span>
-					</c:if>
-					<c:if test="${user != null}">
-						<br/><span><a href="logout">Выйти</a></span>
-					</c:if>
-			</div>
-		</div>
-		<div id="menu" class="container">
-			<ul>
-				<li class="current_page_item"><a href="/happytrain" accesskey="1" title="">Поиск поезда</a></li>
-				<li><a href="timetable" accesskey="1" title="">Расписание</a></li>
-				<li><a href="alltrains" accesskey="2" title="">Все поезда</a></li>
-				<li><a href="/happytrain/protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
-				<li><a href="/happytrain/protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
-			</ul>
-		</div>
-	</div>
-
+	
+		<%@include file="Header.jsp" %>
 	
 		<div id="portfolio" class="container">
 			<form  action="showtrain" method="GET" id="main-form">
@@ -54,12 +34,13 @@
 							  	<option value="${item.name}" ${item.name == stationTo ? 'selected="selected"' : ''}><c:out value="${item.name}" /></option>
 							  </c:forEach>
 				</select>
-			 	<label>Время от</label>
-			 	<input type="text" name="from" size="25" value="01-01-2015 00:00:00">
-			 	<label>Время до</label>
-			 	<input type="text" name="to" size="25" value="01-01-2015 00:09:00">
+			 	<label>От</label>
+			 	<input type="text" name="from" class="datetimepicker_mask" value="${from}">
+			 	<label>До</label>
+			 	<input type="text" name="to" class="datetimepicker_mask" value="${to}">
 			 	<input type="submit" name="submit" value="Найти" class="button">
 			</form>
+			
 			
 			<c:if test="${haveResult > 0}">
 				<table  id="beauty-table" >

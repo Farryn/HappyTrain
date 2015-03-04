@@ -1,5 +1,6 @@
 package services;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+
 import util.HibernateUtil;
 import util.MyException;
 import valueobjects.StationVO;
@@ -30,10 +32,13 @@ public class ClientService {
 	private static Logger log = Logger.getLogger(ClientService.class);
 
 	
-	public List<TimetableVO> searchTrain(String stationA, String stationB, Date from, Date to) throws Exception {
+	public List<TimetableVO> searchTrain(String stationA, String stationB, String fromTime, String toTime) throws Exception {
 		
+		Date from = getDateFromString(fromTime);
+		Date to = getDateFromString(toTime);
 		log.info("Checking input parameters");
 		if (stationA == null || stationB == null || from == null || to == null) {
+			log.warn("Input parameter is null");
 			throw new IllegalArgumentException();
 		}
 		
@@ -87,14 +92,14 @@ public class ClientService {
 	}
 	
 	
-	 private Date getDateFromString(String str) {
+	 private Date getDateFromString(String str) throws Exception {
+		 if (str == null) {
+	    		throw new IllegalArgumentException();
+	    	}
 	    	Date date = new Date();
-	    	try {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd hh:mm:ss");
-				date = sdf.parse(str);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy hh:mm");
+			date = sdf.parse(str);
+			
 	    	return date;
 	    }
 	 

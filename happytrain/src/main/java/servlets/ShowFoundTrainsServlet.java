@@ -50,24 +50,26 @@ public class ShowFoundTrainsServlet extends HttpServlet {
      * @return This is String converted into Date Object
      * @throws ParseException, IllegalArgumentException  
      */
-    private Date getDateFromString( String str) throws ParseException, IllegalArgumentException  {
+  /*  private Date getDateFromString( String str) throws ParseException, IllegalArgumentException  {
     	if (str == null) {
     		throw new IllegalArgumentException();
     	}
     	Date date = new Date();
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy hh:mm");
 		date = sdf.parse(str);
 		
     	return date;
     }
-    
+    */
     
     private void processRequest(HttpServletRequest req, HttpServletResponse res){
     	
     	log.info("Getting parameters from form");
     	String stationA = req.getParameter("stationFrom");
 		String stationB = req.getParameter("stationTo");
-		Date from = null;
+		String from = req.getParameter("from");
+		String to = req.getParameter("to");
+		/*Date from = null;
 		Date to = null;
 		try {
 			from = getDateFromString(req.getParameter("from"));
@@ -79,7 +81,7 @@ public class ShowFoundTrainsServlet extends HttpServlet {
 			log.warn("Exception: " + e);
     		//e.printStackTrace();
 		}
-		
+		*/
 		log.info("Getting timetable list from ClientService");
 		ClientService cs = new ClientService();
 		List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
@@ -95,6 +97,8 @@ public class ShowFoundTrainsServlet extends HttpServlet {
 		req.setAttribute("haveResult", 1);
 		req.setAttribute("stationFrom", stationA);
 		req.setAttribute("stationTo", stationB);
+		req.setAttribute("from", from);
+		req.setAttribute("to", to);
     	req.setAttribute("timetableList", timetableList);
     }
 	/**

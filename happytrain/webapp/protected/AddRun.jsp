@@ -8,35 +8,14 @@
 <title>Добавить рейс</title>
 <link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script src="js/jquery.js"></script>
+<script src="js/jquery.datetimepicker.js"></script>
+<script src="js/global.js"></script>
 </head>
 <body>
 <div id="wrapper">
-	<div id="header-wrapper">
-		<div id="header" class="container">
-			<div id="logo">
-				<h1><a href="/happytrain"><span>HappyTrain</span></a></h1>
-			</div>
-			<div id="login">
-				<span>Добро пожаловать, </span>
-				<span id="name"><c:out value="${user.login}" default="Гость" /></span>
-					<c:if test="${user == null}">
-						<br/><span><a href="Login.jsp">Войдите</a> или <a href="Register.jsp">зарегистрируйтесь</a></span>
-					</c:if>
-					<c:if test="${user != null}">
-						<br/><span><a href="logout">Выйти</a></span>
-					</c:if>
-			</div>
-		</div>
-		<div id="menu" class="container">
-			<ul>
-				<li class="current_page_item"><a href="/happytrain" accesskey="1" title="">Поиск поезда</a></li>
-				<li><a href="timetable" accesskey="1" title="">Расписание</a></li>
-				<li><a href="alltrains" accesskey="2" title="">Все поезда</a></li>
-				<li><a href="/happytrain/protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
-				<li><a href="/happytrain/protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
-			</ul>
-		</div>
-	</div>
+	<%@include file="/Header.jsp" %>
 	<div id="portfolio" class="container">
 		<c:if test="${fail == null}">
 			 <form action="/happytrain/addrun" method="post">   
@@ -56,8 +35,8 @@
 										<c:out value="${item.name}" />
 										<input type="hidden" name="stationList[]" value="${item.name}"/>
 									</td>
-									<td ><input type="text" name=arrivalTime[] /> </td>
-									<td ><input type="text" name=departureTime[] /></td>
+									<td ><input type="text" name=arrivalTime[] class="datetimepicker_mask"/> </td>
+									<td ><input type="text" name=departureTime[] class="datetimepicker_mask"/></td>
 								</tr>
 						   </c:forEach>
 						   <tr>

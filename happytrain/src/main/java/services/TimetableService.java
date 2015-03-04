@@ -28,8 +28,10 @@ public class TimetableService {
 	
 	
 	
-	public List<TimetableVO> getTimetableByStation(String station, Date from, Date to) throws Exception{
+	public List<TimetableVO> getTimetableByStation(String station, String fromTime, String toTime) throws Exception{
 		
+		Date from = getDateFromString(fromTime);
+		Date to = getDateFromString(toTime);
 		List<Run> runList = new ArrayList<Run>();
 		List<TimetableVO> timetableVOList = new ArrayList<TimetableVO>();
 		
@@ -75,7 +77,7 @@ public class TimetableService {
     		throw new IllegalArgumentException();
     	}
     	Date date = new Date();
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy hh:mm");
 		date = sdf.parse(str);
 		
     	return date;
