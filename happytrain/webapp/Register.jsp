@@ -14,7 +14,7 @@
 	<div id="header-wrapper">
 		<div id="header" class="container">
 			<div id="logo">
-				<h1><a href="/"><span>HappyTrain</span></a></h1>
+				<h1><a href="/happytrain"><span>HappyTrain</span></a></h1>
 			</div>
 			<div id="login">
 				<span>Добро пожаловать, </span>
@@ -29,27 +29,49 @@
 		</div>
 		<div id="menu" class="container">
 			<ul>
-				<li class="current_page_item"><a href="#" accesskey="1" title="">Поиск поезда</a></li>
+				<li class="current_page_item"><a href="/happytrain" accesskey="1" title="">Поиск поезда</a></li>
 				<li><a href="timetable" accesskey="1" title="">Расписание</a></li>
 				<li><a href="alltrains" accesskey="2" title="">Все поезда</a></li>
-				<li><a href="protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
-				<li><a href="protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
+				<li><a href="/happytrain/protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
+				<li><a href="/happytrain/protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
 			</ul>
 		</div>
 	</div>
-	<form action="register" method="POST">
-		<label>Имя</label><br/>
-		<input type="text" name="first_name" /><br/>
-		<label>Фамилия</label><br/>
-		<input type="text" name="last_name" /><br/>
-		<label>Дата рождения</label><br/>
-		<input type="text" name="birth_date" value="01-01-2015 00:00:00"/><br/>
-		<label>Логин</label><br/>
-		<input type="text" name="login" /><br/>
-		<label>Пароль</label><br/>
-		<input type="text" name="password" /><br/>
-		<input type="submit" value="Добавить" />
-	</form>
+	<div id="portfolio" class="container">
+	<c:if test="${fail == null}">
+		<form action="register" method="POST" id="input-form">
+			<ul id="wrapper-ul">
+				<li>
+					<label>Имя</label>
+					<input type="text" name="first_name" />
+				</li>
+				<li>
+					<label>Фамилия</label>
+					<input type="text" name="last_name" />
+				</li>
+				<li>
+					<label>Дата рождения</label>
+					<input type="text" name="birth_date" value="01-01-2015 00:00:00"/>
+				</li>
+				<li>
+					<label>Логин</label>
+					<input type="text" name="login" />
+				</li>
+				<li>
+					<label>Пароль</label>
+					<input type="text" name="password" />
+				</li>
+			</ul>
+			<input type="submit" value="Добавить" class="button"/>
+		</form>
+	</c:if>
+	<c:if test="${fail == 0}">
+			<div id="message"> Операция завершена успешно</div>
+	</c:if>
+	<c:if test="${fail == 1}">
+			<div id="message"> Ошибка при добавлении данных</div>
+	</c:if>
+	</div>
 	</div>
 </body>
 </html>

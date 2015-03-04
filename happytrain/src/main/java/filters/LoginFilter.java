@@ -20,7 +20,10 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import services.UserService;
+import servlets.ShowFoundTrainsServlet;
 import valueobjects.UserVO;
 
 /**
@@ -29,6 +32,7 @@ import valueobjects.UserVO;
 @WebFilter//(urlPatterns = {"/protected/*", "/alltrains"})
 public class LoginFilter implements Filter {
 
+	private static Logger log = Logger.getLogger(LoginFilter.class);
 	
     /**
      * Default constructor. 
@@ -48,22 +52,24 @@ public class LoginFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	HashMap<String, String> urlRoleMap;
+	
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		UserVO user = (UserVO) ((HttpServletRequest) request).getSession().getAttribute("user");
 		HttpServletRequest req = (HttpServletRequest) request;
 	    String url = req.getServletPath();
 	    if (user != null) {
-			
-			
+	    	log.info("Checking for availability of url to current User");
 			boolean isAuth  = new UserService().isUserAuth(user, req.getServletPath(), urlRoleMap);
 			if(isAuth){
 				chain.doFilter(request, response);
 			}else{
 				request.setAttribute("URL", url);
-				request.setAttribute("error", "You do not have enough rights"); 
+				request.setAttribute("failMessage", "У Вас недостаточно прав для доступа"); 
+				log.info("User do not have enough rights");
 			    request.getRequestDispatcher("/Login.jsp").forward(request, response);
 			}
 		} else {
+			log.info("There is no User in Session");
 		    request.setAttribute("URL", url);
 		    request.getRequestDispatcher("/Login.jsp").forward(request, response);
 		}

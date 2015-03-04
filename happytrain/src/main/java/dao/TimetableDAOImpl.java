@@ -54,13 +54,13 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	}
 
 	
-	public int findAvailableSeatsCount(String stationA, Run run) {
+	public int findAvailableSeatsCount(String stationA, String runId) {
 		String hql = "SELECT t.availableSeats FROM Timetable t "
-				    + "WHERE t.runId=:run "
+				    + "WHERE t.runId.id=:run "
 			      	+ "and t.routeId.stationId.name=:station "
 					+ "and t.routeId.trainId=t.runId.trainId";
 		int count = (Integer) HibernateUtil.getCurrentSession().createQuery(hql)
-				.setParameter("run", run)
+				.setParameter("run", Integer.parseInt(runId))
 				.setParameter("station", stationA)
 				.uniqueResult();
 		return count;
@@ -80,14 +80,14 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	}
 
 
-	public Timetable findTimetableByRunAndStation(List<Station> stationList, Run run) {
+	public Timetable findTimetableByRunAndStation(Station station, Run run) {
 		String hql = "SELECT t FROM Timetable t "
 				    + "WHERE t.runId=:run "
-			      	+ "and t.routeId.stationId IN (:stationList) "
+			      	+ "and t.routeId.stationId = :station "
 					+ "and t.routeId.trainId=t.runId.trainId";
 		Timetable timetable = (Timetable) HibernateUtil.getCurrentSession().createQuery(hql)
 				.setParameter("run", run)
-				.setParameter("stationList", stationList)
+				.setParameter("station", station)
 				.uniqueResult();
 		return timetable;
 	}

@@ -6,15 +6,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Добавить рейс</title>
-<link href="./css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="./css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 </head>
 <body>
 <div id="wrapper">
 	<div id="header-wrapper">
 		<div id="header" class="container">
 			<div id="logo">
-				<h1><a href="/"><span>HappyTrain</span></a></h1>
+				<h1><a href="/happytrain"><span>HappyTrain</span></a></h1>
 			</div>
 			<div id="login">
 				<span>Добро пожаловать, </span>
@@ -29,11 +29,11 @@
 		</div>
 		<div id="menu" class="container">
 			<ul>
-				<li class="current_page_item"><a href="#" accesskey="1" title="">Поиск поезда</a></li>
+				<li class="current_page_item"><a href="/happytrain" accesskey="1" title="">Поиск поезда</a></li>
 				<li><a href="timetable" accesskey="1" title="">Расписание</a></li>
 				<li><a href="alltrains" accesskey="2" title="">Все поезда</a></li>
-				<li><a href="protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
-				<li><a href="protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
+				<li><a href="/happytrain/protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
+				<li><a href="/happytrain/protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
 			</ul>
 		</div>
 	</div>
@@ -72,10 +72,10 @@
 			 </form>
 		</c:if>
 		<c:if test="${fail == 0}">
-			<span> Операция завершена успешно</span>
+			<span id="message"> Операция завершена успешно</span>
 		</c:if>
 		<c:if test="${fail == 1}">
-			<span> Ошибка при добавлении данных</span>
+			<span id="message"> Ошибка при добавлении данных</span>
 		</c:if>
 	</div>
 </div>

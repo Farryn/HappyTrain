@@ -5,8 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="../css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="../css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <title>Добавить станцию</title>
 
 </head>
@@ -15,7 +15,7 @@
 	<div id="header-wrapper">
 		<div id="header" class="container">
 			<div id="logo">
-				<h1><a href="/"><span>HappyTrain</span></a></h1>
+				<h1><a href="/happytrain"><span>HappyTrain</span></a></h1>
 			</div>
 			<div id="login">
 				<span>Добро пожаловать, </span>
@@ -30,34 +30,34 @@
 		</div>
 		<div id="menu" class="container">
 			<ul>
-				<li class="current_page_item"><a href="#" accesskey="1" title="">Поиск поезда</a></li>
+				<li class="current_page_item"><a href="/happytrain" accesskey="1" title="">Поиск поезда</a></li>
 				<li><a href="timetable" accesskey="1" title="">Расписание</a></li>
 				<li><a href="alltrains" accesskey="2" title="">Все поезда</a></li>
-				<li><a href="protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
-				<li><a href="protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
+				<li><a href="/happytrain/protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
+				<li><a href="/happytrain/protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
 			</ul>
 		</div>
 	</div>
-
-			<form  action="/happytrain/addstation" method="POST">
-			    
-			 <table   >
-				
-				<tr>
-				    <td align="right" valign="top">Название станции</td>
-				</tr>
-			    <tr>
-				    <td><input type="text" name="stationName" size="50" ></td>
-			    </tr>
-			    <tr>
-				    <td><input type="submit"  value="Отправить" ></td>
-			    </tr>
+		<div id="portfolio" class="container">
+			<c:if test="${fail == null}">
+				<form  action="/happytrain/addstation" method="POST" id="input-form">
+					<ul id="wrapper-ul">
+						<li>
+							<label>Название станции</label>
+							<input type="text" name="stationName" />
+						</li>
+					</ul>
+					<input type="submit"  value="Отправить" class="button">
+				</form>
+			</c:if>
+			<c:if test="${fail == 0}">
+				<div id="message"> Операция завершена успешно</div>
+			</c:if>
+			<c:if test="${fail == 1}">
+				<div id="message"> Ошибка при добавлении данных</div>
+			</c:if>
+		</div>	
 			
-			  
-			
-			 </table>
-			
-			</form>
 
 </div>
 </body>

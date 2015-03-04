@@ -3,32 +3,45 @@ package services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import util.HibernateUtil;
 import valueobjects.StationVO;
 import dao.StationDAOImpl;
 import entities.Station;
-import entities.Train;
 
 public class StationService {
 	
-	public List<Station> getAllStations() {
+	private static Logger log = Logger.getLogger(StationService.class);
+	
+	public List<Station> getAllStations() throws Exception {
 		List<Station> stationList = new ArrayList<Station>();
 		StationDAOImpl dao = new StationDAOImpl();
+		
+		log.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		try {
+			log.info("Searching for all stations");
 			stationList = dao.findAll();
+			if (stationList.isEmpty()) {
+				throw new IllegalStateException();
+			}
+			log.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
+			log.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
+			throw e;
 		} finally {
+			log.info("Closing Hibernate Session");
 			HibernateUtil.closeCurrentSession();
 		}
 		
 		return stationList;
 	}
 	
-	public List<StationVO> getAllStationVO() {
+	public List<StationVO> getAllStationVO() throws Exception {
 		StationService ss = new StationService();
 		List<Station> stationList = ss.getAllStations();
 		List<StationVO> stationVOList = new ArrayList<StationVO>();
@@ -40,7 +53,7 @@ public class StationService {
 	}
 	
 	
-	
+	/*
 	public Station getStationByName(String str){
 		StationDAOImpl dao = new StationDAOImpl();
 		Station station = null;
@@ -62,19 +75,27 @@ public class StationService {
 		Station station = ss.getStationByName(str);
 		StationVO stationVO = new StationVO(station); 
 		return stationVO;
-	}
+	}*/
 	
-	public void addStation(String stationName){
+	public void addStation(String stationName) throws Exception{
 		StationDAOImpl dao = new StationDAOImpl();
+		
+		log.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		try {
+			log.info("Creating Station and adding it into DB");
 			Station station = new Station(stationName);
 			dao.persist(station);
+			
+			log.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
+			log.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
+			throw e;
 		} finally {
+			log.info("Closing Hibernate Session");
 			HibernateUtil.closeCurrentSession();
 		}
 	}

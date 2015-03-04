@@ -18,7 +18,7 @@ public class TrainService {
 	private static Logger log = Logger.getLogger(TrainService.class);
 
 	
-	public TrainVO getTrainVOById(int id){
+	/*public TrainVO getTrainVOById(int id){
 		TrainService ts = new TrainService();
 		Train train = ts.getTrainById(id);
 		TrainVO trainVO = new TrainVO(train);
@@ -43,7 +43,7 @@ public class TrainService {
 		return train;
 		
 	}
-
+*/
 	public List<TrainVO> getAllTrains() throws Exception{
 		List<Train> trainList = new ArrayList<Train>();
 		List<TrainVO> trainVOList = new ArrayList<TrainVO>();

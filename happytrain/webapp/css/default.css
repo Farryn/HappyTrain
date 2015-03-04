@@ -10,6 +10,7 @@ body {
 	font-size: 12pt;
 	font-weight: 400;
 	color: rgba(0,0,0,.8);
+	height: 100%;
 }
 
 h1, h2, h3 {
@@ -104,6 +105,7 @@ hr {
 .container {
 	width: 1200px;
 	margin: 0px auto;
+	
 }
 
 .clearfix {
@@ -443,6 +445,7 @@ ul.style3 .first {
 	#portfolio
 	{
 		text-align: center;
+		height: 100%;
 	}
 	
 	
@@ -601,6 +604,7 @@ ul.style3 .first {
 	{
 		background: #72B0EA;
 		border: 2px solid #2B73B7;
+		border-radius: 6px;
 		margin-top: 1em;
 		padding: 0em 1em;
 		line-height: 2em;
@@ -755,4 +759,95 @@ ul.style3 .first {
 		color: #233d96;
 		font-weight: bold;
 	
+	}
+	
+	
+	#input-form
+	{
+		background: #72B0EA;
+		border: 2px solid #2B73B7;
+		border-radius: 6px;
+		padding: 1em 1em;
+		line-height: 2em;
+		text-decoration: none;
+		text-transform: uppercase;
+		font-weight: 200;
+		font-size: 1em;
+		color: #2B73B7;
+		width: 600px;
+		height: 100%; 
+		margin: 1em auto;
+	}
+	
+	#input-form ul
+	{
+		list-style: none;
+		padding: 0em 0em;
+	}
+	#input-form li
+	{
+		margin: 1em 0em;
+		
+	}
+	#input-form label
+	{
+		display: inline-block;
+		color: #FFF;
+		float:left;
+		text-align: right;
+		width: 250px;
+	}
+	
+	#input-form select, input[type=text], input[type=password]
+	{
+		position: relative;
+		border: 2px solid #2B73B7;
+		color: #2B73B7;
+		height: 30px;
+		width: 150px;
+		display: inline-block;
+		font-size: 1em;
+		margin:0em 2em;
+	}
+	
+	#input-form select
+	{
+		position: relative;
+		border: 2px solid #2B73B7;
+		color: #2B73B7;
+		height: 30px;
+		width: 150px;
+		display: inline-block;
+		font-size: 1em;
+		margin:0em 4em;
+		
+	}
+	
+	#input-form .button
+	{
+		display: inline-block;
+		background: #2B73B7;
+		letter-spacing: 0.10em;
+		line-height: 1em;
+		text-decoration: none;
+		text-transform: uppercase;
+		font-weight: 400;
+		font-size: 1em;
+		color: #FFF;
+		height: 30px;
+		border-width: 2px 0;
+		border-style: solid none;
+		border-color: #2B73B7;
+		border-radius: 6px;
+		margin-top: 0;
+	}
+	#message
+	{
+		
+		margin:3em auto 2em;
+		font-weight: 400;
+		font-size: 1.5em;
+		letter-spacing: 0.10em;
+		color: #2B73B7;
+		
 	}

@@ -6,15 +6,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Login</title>
-<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 </head>
 <body>
 <div id="wrapper">
 	<div id="header-wrapper">
 		<div id="header" class="container">
 			<div id="logo">
-				<h1><a href="/"><span>HappyTrain</span></a></h1>
+				<h1><a href="/happytrain"><span>HappyTrain</span></a></h1>
 			</div>
 			<div id="login">
 				<span>Добро пожаловать, </span>
@@ -29,23 +29,36 @@
 		</div>
 		<div id="menu" class="container">
 			<ul>
-				<li class="current_page_item"><a href="#" accesskey="1" title="">Поиск поезда</a></li>
+				<li class="current_page_item"><a href="/happytrain" accesskey="1" title="">Поиск поезда</a></li>
 				<li><a href="timetable" accesskey="1" title="">Расписание</a></li>
 				<li><a href="alltrains" accesskey="2" title="">Все поезда</a></li>
-				<li><a href="protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
-				<li><a href="protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
+				<li><a href="/happytrain/protected/AddStation.jsp" accesskey="3" title="">Добавить поезд</a></li>
+				<li><a href="/happytrain/protected/AddTrain.jsp" accesskey="4" title="">Добавить станцию</a></li>
 			</ul>
 		</div>
 	</div>
-	<form action="login" method="post">
-		<label>Login</label>
-	    <input type="text" name="login">
-	    <label>Password</label>
-	    <input type="password" name="password">
-	    <input type="hidden" name="url" value="${URL}">
-	    <input type="hidden" name="servletUrl" value="${servletUrl}">
-	    <input type="submit" value="Submit"> ${error}
-	</form>
+	<div id="portfolio" class="container">
+		<c:if test="${failMessage != null }">
+			<div id="message">
+				${failMessage}
+			</div>
+		</c:if>
+		<form action="login" method="post" id="input-form">
+			<ul id="wrapper-ul">
+				<li>
+					<label>Login</label>
+				    <input type="text" name="login">
+				</li>
+				<li>
+				    <label>Password</label>
+				    <input type="password" name="password">
+				</li>
+		    </ul>
+		    <input type="hidden" name="url" value="${URL}">
+			<input type="hidden" name="servletUrl" value="${servletUrl}">
+			<input type="submit" value="Submit" class="button">
+		</form>
+	</div>
 </div>
 </body>
 </html>

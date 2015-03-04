@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import services.EmployeeService;
 import services.RouteService;
 import services.StationService;
@@ -29,7 +31,7 @@ import entities.Train;
 @WebServlet
 public class AddTrainServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private static Logger log = Logger.getLogger(AddTrainServlet.class);   
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -39,31 +41,24 @@ public class AddTrainServlet extends HttpServlet {
     }
 
     
-    /**
-     * Converts String to Date Object.
-     * @param str String with datetime from request parameter
-     * @return This is String converted into Date Object
-     */
-    private StationVO getStationFromString(String str) {
-    	StationVO station = new StationVO();
-    	StationService ss = new StationService();
-    	station = ss.getStationVOByName(str);
-    	return station;
-    }
+   
+    
     
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
-		String trainNumber = req.getParameter("trainNumber");
+    	log.info("Getting parameters from form");
+    	String trainNumber = req.getParameter("trainNumber");
 		int seatsCount = Integer.parseInt(req.getParameter("seatsCount"));
 		String[] stationArray = req.getParameterValues("stationList[]");
 		
-		List<StationVO> stationList = new ArrayList<StationVO>();
-		if (stationArray.length > 0) {
-			for (String str: stationArray) {
-				stationList.add(getStationFromString(str));
-			}
+		log.info("Adding Train into DB");
+		try {
+			new EmployeeService().addTrain(trainNumber, seatsCount, stationArray);
+			req.setAttribute("fail", 0);
+		} catch (Exception e) {
+			log.error("Exception: " + e);
+			log.warn("Could not add train into DB");
+			req.setAttribute("fail", 1);
 		}
-		EmployeeService es = new EmployeeService();
-		es.addTrain(trainNumber, seatsCount, stationList);
 		
 	}
 	/**
@@ -79,7 +74,7 @@ public class AddTrainServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request,response);
 		ServletContext sc = getServletContext();
-		RequestDispatcher rd = sc.getRequestDispatcher("/FindTrain.jsp");
+		RequestDispatcher rd = sc.getRequestDispatcher("/protected/AddTrain.jsp");
 		rd.forward(request, response);
 	}
 

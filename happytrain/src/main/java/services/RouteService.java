@@ -53,8 +53,12 @@ public class RouteService {
 	
 
 
-	public void addRoute(Train train, Station station, int count) {
-		log.info("Creating new Route and adding it to DB");
+	public void addRoute(Train train, String stationName, int count) throws Exception {
+		StationDAOImpl stationDao = new StationDAOImpl();
+		Station station = stationDao.findByName(stationName);
+		if (station == null) {
+			throw new NullPointerException();
+		}
 		Route route = new Route(train, station, count);
 		RouteDAOImpl routeDao = new RouteDAOImpl();
 		routeDao.persist(route);

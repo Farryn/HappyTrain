@@ -12,6 +12,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
+import org.apache.log4j.Logger;
+
 import services.StationService;
 import valueobjects.StationVO;
 import entities.Station;
@@ -24,6 +26,7 @@ import entities.Station;
 											"/protected/AddTrain.jsp", "/protected/ShowAllTrains.jsp"})
 public class GetStationListFilter implements Filter {
 
+	private static Logger log = Logger.getLogger(GetStationListFilter.class);
     /**
      * Default constructor. 
      */
@@ -46,7 +49,13 @@ public class GetStationListFilter implements Filter {
 		// place your code here
 
 		StationService ss = new StationService();
-		List<StationVO> stationList = ss.getAllStationVO();
+		List<StationVO> stationList = null;
+		try {
+			stationList = ss.getAllStationVO();
+		} catch (Exception e) {
+			log.warn("Exception: " + e);
+			log.info("No station was found");
+		}
 		request.setAttribute("stationList", stationList);
 		// pass the request along the filter chain
 		chain.doFilter(request, response);

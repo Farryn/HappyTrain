@@ -45,20 +45,23 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 		return stationList;
 	}
 
-	public int getOrdinalNumber(Station stationA) {
-		String hql = "SELECT r.stationOrdinalNumber FROM Route r WHERE r.stationId=:stationA";
+	public int getOrdinalNumber(String stationA, Train train) {
+		String hql = "SELECT r.stationOrdinalNumber FROM Route r "
+					+ "WHERE r.stationId.name=:stationA "
+					+ "AND r.trainId =:train ";
 		int number = (Integer) HibernateUtil.getCurrentSession().createQuery(hql)
 				.setParameter("stationA", stationA)
+				.setParameter("train", train)
 				.uniqueResult();
 		return number;
 	}
 
 	public List<Station> findStationsBetweenFromAndTo(Run run, int stationFromOrdinalNumber, int stationToOrdinalNumber) {
-		List<Station> stationList = new ArrayList<Station>();
 		String hql = "SELECT r.stationId FROM Route r "
-					+ "WHERE r.trainId=:run.trainId "
+					+ "WHERE r.trainId=:train "
 					+ "AND (r.stationOrdinalNumber BETWEEN :stationFromOrdinalNumber AND :stationToOrdinalNumber) ";
-		stationList = HibernateUtil.getCurrentSession().createQuery(hql)
+		List<Station> stationList = HibernateUtil.getCurrentSession().createQuery(hql)
+			.setParameter("train", run.getTrainId())
 			.setParameter("stationFromOrdinalNumber", stationFromOrdinalNumber)
 			.setParameter("stationToOrdinalNumber", stationToOrdinalNumber)
 			.list();

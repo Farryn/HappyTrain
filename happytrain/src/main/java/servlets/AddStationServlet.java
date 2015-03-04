@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import entities.Station;
 import services.StationService;
 
@@ -19,6 +21,7 @@ import services.StationService;
 @WebServlet
 public class AddStationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(AddStationServlet.class);  
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -29,9 +32,18 @@ public class AddStationServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
+    	log.info("Getting parameters from form");
     	String stationName = req.getParameter("stationName");
-    	StationService ss = new StationService();
-    	ss.addStation(stationName);
+    	
+    	log.info("Adding Station into DB");
+    	try {
+			new StationService().addStation(stationName);
+			req.setAttribute("fail", 0);
+		} catch (Exception e) {
+			log.error("Exception: " + e);
+			log.warn("Could not add station into DB");
+			req.setAttribute("fail", 1);
+		}
 	}
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +60,7 @@ public class AddStationServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request,response);
 		ServletContext sc = getServletContext();
-		RequestDispatcher rd = sc.getRequestDispatcher("/FindTrain.jsp");
+		RequestDispatcher rd = sc.getRequestDispatcher("/protected/AddTrain.jsp");
 		rd.forward(request, response);
 	}
 

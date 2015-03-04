@@ -7,11 +7,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
-
-import servlets.ShowFoundTrainsServlet;
 import util.HibernateUtil;
-import valueobjects.RunVO;
+import util.MyException;
 import valueobjects.StationVO;
 import valueobjects.TimetableVO;
 import valueobjects.UserVO;
@@ -67,7 +64,7 @@ public class ClientService {
 			for (Run run:runList) {
 				Date departureTime = tdao.findDepTimeFromStation(stationA, run);
 				Date arrivalTime = tdao.findArrTimeToStation(stationB, run);
-				int count = tdao.findAvailableSeatsCount(stationA, run);
+				int count = tdao.findAvailableSeatsCount(stationA, String.valueOf(run.getId()));
 				if (departureTime == null || arrivalTime == null) {
 					throw new NullPointerException();
 				}
@@ -93,7 +90,7 @@ public class ClientService {
 	 private Date getDateFromString(String str) {
 	    	Date date = new Date();
 	    	try {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-dd hh:mm:ss");
 				date = sdf.parse(str);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -101,11 +98,29 @@ public class ClientService {
 	    	return date;
 	    }
 	 
-	public void buyTicket(UserVO userVO, String trainNumber, String stationFrom, String stationTo, String depTime, String runId) {
+	public void buyTicket(UserVO userVO,  String stationFrom, String stationTo, String depTime, String runId) throws Exception {
+		
 		Date date = getDateFromString(depTime);
+		log.info("Checking for free seats in Run " + runId);
 		boolean haveFreeSeats = checkForFreeSeats(stationFrom, runId);
+		if (!haveFreeSeats) {
+			log.info("Fail. There is no free seats");
+			throw new MyException("Нет свободных мест");
+		}
+		
+		log.info("Checking for User is already in passenger list on Run " + runId);
 		boolean isAlreadyInTicketList = checkForRegistrationOnRun(runId, userVO);
+		if (isAlreadyInTicketList) {
+			log.info("Fail. User is already registered on that Run");
+			throw new MyException("Вы уже зарегистрированы на этот поезд");
+		}
+		
+		log.info("Checking for time left until departure");
 		boolean haveEnoughTimeUntilDeparture = checkForEnoughTimeUntilDeparture(date);
+		if (!haveEnoughTimeUntilDeparture) {
+			log.info("Fail. There is no time left");
+			throw new MyException("До отправления поезда осталось менее 10 минут");
+		}
 		
 		if (haveFreeSeats && !isAlreadyInTicketList && haveEnoughTimeUntilDeparture) {
 			UserDAOImpl userDao = new UserDAOImpl();
@@ -115,6 +130,7 @@ public class ClientService {
 			RouteDAOImpl routeDao = new RouteDAOImpl();
 			TimetableDAOImpl timetableDao = new TimetableDAOImpl();
 			
+			log.info("Opening Hibernate Session with transaction");
 			HibernateUtil.openCurrentSession();
 			HibernateUtil.beginTransaction();
 			try {
@@ -123,22 +139,41 @@ public class ClientService {
 				Station stationB = stationDao.findByName(stationTo);
 				Run run = runDao.findById(Integer.parseInt(runId));
 				
-				int stationFromOrdinalNumber = routeDao.getOrdinalNumber(stationA);
-				int stationToOrdinalNumber = routeDao.getOrdinalNumber(stationA);
+				log.info("Searching ordinal numbers of first and last Station in order");
+				int stationFromOrdinalNumber = routeDao.getOrdinalNumber(stationFrom, run.getTrainId());
+				int stationToOrdinalNumber = routeDao.getOrdinalNumber(stationTo, run.getTrainId());
 				
+				log.info("Creating new Ticket and adding it to DB");
 				Ticket ticket = new Ticket(user, run, stationA, stationB, date);
 				ticketDao.persist(ticket);
+				
+				log.info("Searching for all Stations between first and last Station in order");
 				List<Station> stationList = routeDao.findStationsBetweenFromAndTo(run, stationFromOrdinalNumber, stationToOrdinalNumber);
+				if (stationList.isEmpty()) {
+					log.warn("Empty stationList returned");
+					throw new IllegalStateException();
+				}
 				for (Station station: stationList){
-					Timetable timetable = timetableDao.findTimetableByRunAndStation(stationList, run);
+					log.info("Searching for Timetable");
+					Timetable timetable = timetableDao.findTimetableByRunAndStation(station, run);
+					if (timetable == null) {
+						log.warn("Could not get Timetable with Station name " + station.getName() + " and Run.Id " + run.getId());
+						throw new NullPointerException();
+					}
+					
+					log.info("Updating timetable available seats count");
 					timetable.setAvailableSeats(timetable.getAvailableSeats()-1);
 					timetableDao.update(timetable);
 				}
 				
+				log.info("Commiting transaction");
 				HibernateUtil.commitTransaction();
 			} catch (Exception e) {
+				log.warn("Transaction was rollbacked");
 				HibernateUtil.rollbackTransaction();
+				throw e;
 			} finally {
+				log.info("Closing Hibernate Session");
 				HibernateUtil.closeCurrentSession();
 			}
 			
@@ -149,7 +184,7 @@ public class ClientService {
 	
 
 	private boolean checkForEnoughTimeUntilDeparture(Date date) {
-		// TODO Auto-generated method stub
+		log.info("Getting difference between current time and depTime of Train");
 		long duration = date.getTime() - new Date().getTime();
 		long difference = TimeUnit.MILLISECONDS.toMinutes(duration);
 		if (difference > 10) {
@@ -162,38 +197,44 @@ public class ClientService {
 		TicketDAOImpl tdao = new TicketDAOImpl();
 		int userId = userVO.getId();
 		int runId = Integer.parseInt(run);
+		log.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		boolean isRegistered = true;
 		try {
+			log.info("Searching Ticket in DB");
 			Ticket ticket = tdao.findTicketByRunAndUserIds(runId, userId);
 			if (ticket == null) {
 				isRegistered = false;
 			}
+			log.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
+			log.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
 		} finally {
+			log.info("Closing Hibernate Session");
 			HibernateUtil.closeCurrentSession();
 		}
 		return isRegistered;
 	}
 
 	private boolean checkForFreeSeats(String stationFrom, String runId) {
-		StationDAOImpl sdao = new StationDAOImpl();
-		RunDAOImpl rdao = new RunDAOImpl();
 		TimetableDAOImpl tdao = new TimetableDAOImpl();
+		
 		int availableSeats = 0;
+		log.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		try {
-			Station station = sdao.findByName(stationFrom);
-			Run run = rdao.findById(Integer.parseInt(runId));
-			availableSeats = tdao.findAvailableSeatsCount(stationFrom, run);
+			availableSeats = tdao.findAvailableSeatsCount(stationFrom, runId);
+			log.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
+			log.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
 		} finally {
+			log.info("Closing Hibernate Session");
 			HibernateUtil.closeCurrentSession();
 		}
 		if (availableSeats > 0) {
