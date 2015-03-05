@@ -28,6 +28,9 @@ import entities.Station;
 											"/protected/AddTrain.jsp", "/protected/ShowAllTrains.jsp", "/Register.jsp"})
 public class GetStationListFilter implements Filter {
 
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(GetStationListFilter.class);
     /**
      * Default constructor. 
@@ -47,9 +50,6 @@ public class GetStationListFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		// place your code here
-
 		StationService ss = new StationService();
 		List<StationVO> stationList = null;
 	    String strDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());

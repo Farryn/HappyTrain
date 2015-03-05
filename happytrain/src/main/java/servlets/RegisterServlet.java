@@ -16,12 +16,21 @@ import org.apache.log4j.Logger;
 import services.UserService;
 
 /**
- * Servlet implementation class RegisterServlet
+ * Servlet implementation class RegisterServlet.
  */
 @WebServlet
 public class RegisterServlet extends HttpServlet {
+	
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(RegisterServlet.class);
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -45,6 +54,11 @@ public class RegisterServlet extends HttpServlet {
 		
     	return date;
     }
+    
+    /** Processing request.
+     * @param req HttpServletRequest Object
+     * @param res HttpServletResponse Object
+     */
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
     	log.info("Getting parameters from form");
 		String firstName = req.getParameter("first_name");

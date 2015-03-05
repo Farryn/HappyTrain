@@ -1,9 +1,7 @@
 package servlets;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,21 +15,28 @@ import org.apache.log4j.Logger;
 import services.RouteService;
 import services.TimetableService;
 import valueobjects.StationVO;
-import valueobjects.TimetableVO;
 
 /**
- * Servlet implementation class AddRunServlet
+ * Servlet implementation class AddRunServlet.
  */
 @WebServlet
 public class AddRunServlet extends HttpServlet {
+	
+	/**
+	 * Serial id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(AddRunServlet.class);   
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public AddRunServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     

@@ -1,25 +1,19 @@
 package dao;
 
-import java.io.Serializable;
-import java.util.List;
-
-
-
-
-
-
-
 import util.HibernateUtil;
-import entities.Route;
-import entities.Run;
 import entities.Station;
-import entities.Train;
 
+/**
+ * Implementation of RunDAO.
+ *
+ */
 public class StationDAOImpl extends GenericDAOImpl<Integer, Station> implements StationDAO {
 
 	
-	public Station findByName(String str) {
-		
+	/**
+	 * @see dao.StationDAO#findByName(java.lang.String)
+	 */
+	public Station findByName(final String str) {
 		String hql = "SELECT s FROM Station s WHERE s.name=:name";
 		Station station = (Station) HibernateUtil.getCurrentSession().createQuery(hql)
 				.setParameter("name", str)

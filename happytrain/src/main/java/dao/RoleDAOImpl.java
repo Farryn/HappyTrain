@@ -4,16 +4,25 @@ import java.util.List;
 
 import util.HibernateUtil;
 import entities.Role;
-import entities.Station;
 
+/**
+ * Implementation of RoleDAO.
+ *
+ */
 public class RoleDAOImpl extends GenericDAOImpl<Integer, Role> implements RoleDAO {
 
+	/**
+	 * @see dao.RoleDAO#findAllRole()
+	 */
 	public List<Role> findAllRole() {
 		List<Role> roleList = HibernateUtil.getCurrentSession()
 				.createQuery("FROM Role r").list();
 		return roleList;
 	}
 	
+	/**
+	 * @see dao.RoleDAO#findByName(java.lang.String)
+	 */
 	public Role findByName(String str) {
 		
 		String hql = "SELECT r FROM Role r WHERE r.name=:name";

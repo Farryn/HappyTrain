@@ -1,9 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -15,23 +12,23 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import services.EmployeeService;
-import services.RouteService;
-import services.StationService;
-import services.TrainService;
-import valueobjects.RouteVO;
-import valueobjects.StationVO;
-import valueobjects.TrainVO;
-import entities.Route;
-import entities.Station;
-import entities.Train;
 
 /**
- * Servlet implementation class AddTrainServlet
+ * Servlet implementation class AddTrainServlet.
  */
 @WebServlet
 public class AddTrainServlet extends HttpServlet {
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(AddTrainServlet.class);   
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -42,8 +39,10 @@ public class AddTrainServlet extends HttpServlet {
 
     
    
-    
-    
+    /**
+     * @param req HttpServletRequest Object
+     * @param res HttpServletResponse Object
+     */
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
     	log.info("Getting parameters from form");
     	String trainNumber = req.getParameter("trainNumber");

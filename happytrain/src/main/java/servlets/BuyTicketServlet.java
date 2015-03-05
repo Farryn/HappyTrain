@@ -15,12 +15,21 @@ import util.MyException;
 import valueobjects.UserVO;
 
 /**
- * Servlet implementation class BuyTicketServlet
+ * Servlet implementation class BuyTicketServlet.
  */
 @WebServlet
 public class BuyTicketServlet extends HttpServlet {
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(BuyTicketServlet.class);   
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -29,6 +38,10 @@ public class BuyTicketServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
     
+    /**
+     * @param req HttpServletRequest Object
+     * @param res HttpServletResponse Object
+     */
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
     	log.info("Getting parameters from form");
 		/*String firstName = req.getParameter("firstName");

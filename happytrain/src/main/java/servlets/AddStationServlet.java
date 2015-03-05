@@ -12,15 +12,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import entities.Station;
 import services.StationService;
 
 /**
- * Servlet implementation class AddStationServlet
+ * Servlet implementation class AddStationServlet.
  */
 @WebServlet
 public class AddStationServlet extends HttpServlet {
+	
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(AddStationServlet.class);  
        
     /**
@@ -31,6 +38,10 @@ public class AddStationServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    /** Process data from request.
+     * @param req HttpServletRequest Object
+     * @param res HttpServletResponse Object
+     */
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
     	log.info("Getting parameters from form");
     	String stationName = req.getParameter("stationName");
@@ -49,6 +60,7 @@ public class AddStationServlet extends HttpServlet {
 			req.setAttribute("fail", 1);
 		}
 	}
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -56,7 +68,6 @@ public class AddStationServlet extends HttpServlet {
 		
 	}
 
-	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

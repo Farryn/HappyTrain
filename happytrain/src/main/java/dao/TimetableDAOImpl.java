@@ -1,20 +1,23 @@
 package dao;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import util.HibernateUtil;
-import entities.Role;
 import entities.Route;
 import entities.Run;
 import entities.Station;
 import entities.Timetable;
-import entities.Train;
 
+/**
+ * Implementation of TimetableDAO.
+ *
+ */
 public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> implements TimetableDAO {
 
 	
+	/**
+	 * @see dao.TimetableDAO#findTrainWithDepTimeBetweenPeriodOfTime(java.util.List, java.util.Date, java.util.Date)
+	 */
 	public List<Run> findTrainWithDepTimeBetweenPeriodOfTime(List<Route> routes, Date from, Date to) {
 		String hql="SELECT t.runId FROM Timetable t "
 				+ "WHERE (t.depTime BETWEEN :from and :to) "
@@ -28,6 +31,9 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	}
 	
 	
+	/**
+	 * @see dao.TimetableDAO#findDepTimeFromStation(java.lang.String, entities.Run)
+	 */
 	public Date findDepTimeFromStation(String stationA, Run run) {
 		String hql = "SELECT t.depTime FROM Timetable t "
 					+ "WHERE t.runId=:run "
@@ -41,6 +47,9 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	}
 	
 	
+	/**
+	 * @see dao.TimetableDAO#findArrTimeToStation(java.lang.String, entities.Run)
+	 */
 	public Date findArrTimeToStation(String stationB, Run run) {
 		String hql = "SELECT t.arrTime FROM Timetable t "
 				   + "WHERE t.runId=:run "
@@ -54,6 +63,9 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	}
 
 	
+	/**
+	 * @see dao.TimetableDAO#findAvailableSeatsCount(java.lang.String, java.lang.String)
+	 */
 	public int findAvailableSeatsCount(String stationA, String runId) {
 		String hql = "SELECT t.availableSeats FROM Timetable t "
 				    + "WHERE t.runId.id=:run "
@@ -67,6 +79,9 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	}
 
 
+	/**
+	 * @see dao.TimetableDAO#getRunFromTimetableByStation(java.lang.String, java.util.Date, java.util.Date)
+	 */
 	public List<Run> getRunFromTimetableByStation(String station, Date from, Date to) {
 		String hql = "SELECT t.runId FROM Timetable t "
 			    + "WHERE t.routeId.stationId.name=:station "
@@ -80,6 +95,9 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	}
 
 
+	/**
+	 * @see dao.TimetableDAO#findTimetableByRunAndStation(entities.Station, entities.Run)
+	 */
 	public Timetable findTimetableByRunAndStation(Station station, Run run) {
 		String hql = "SELECT t FROM Timetable t "
 				    + "WHERE t.runId=:run "

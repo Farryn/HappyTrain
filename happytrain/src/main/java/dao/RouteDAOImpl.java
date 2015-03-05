@@ -1,27 +1,21 @@
 package dao;
 
-import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
-
-
-
-
-
-
-
 import util.HibernateUtil;
 import entities.Route;
 import entities.Run;
 import entities.Station;
 import entities.Train;
 
+/**
+ * Implementation of RouteDAO.
+ *
+ */
 public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements RouteDAO {
 
+	/**
+	 * @see dao.RouteDAO#findRouteFromAtoB(java.lang.String, java.lang.String)
+	 */
 	public List<Route> findRouteFromAtoB(String stationA, String stationB) {
 		String hql = "SELECT r FROM Route r,Route r2 "
 					+ "WHERE r.trainId=r2.trainId "
@@ -35,6 +29,9 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 		return routeList;
 	}
 
+	/**
+	 * @see dao.RouteDAO#findStationsByTrain(int)
+	 */
 	public List<Station> findStationsByTrain(int id) {
 		String hql = "SELECT r.stationId FROM Route r "
 					+ "WHERE r.trainId.id=:train "
@@ -45,6 +42,9 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 		return stationList;
 	}
 
+	/**
+	 * @see dao.RouteDAO#getOrdinalNumber(java.lang.String, entities.Train)
+	 */
 	public int getOrdinalNumber(String stationA, Train train) {
 		String hql = "SELECT r.stationOrdinalNumber FROM Route r "
 					+ "WHERE r.stationId.name=:stationA "
@@ -56,6 +56,9 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 		return number;
 	}
 
+	/**
+	 * @see dao.RouteDAO#findStationsBetweenFromAndTo(entities.Run, int, int)
+	 */
 	public List<Station> findStationsBetweenFromAndTo(Run run, int stationFromOrdinalNumber, int stationToOrdinalNumber) {
 		String hql = "SELECT r.stationId FROM Route r "
 					+ "WHERE r.trainId=:train "
@@ -68,6 +71,9 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 		return stationList;
 	}
 
+	/**
+	 * @see dao.RouteDAO#findRouteByStationStringAndTrainId(java.lang.String, int)
+	 */
 	public Route findRouteByStationStringAndTrainId(String station, int trainId) {
 		String hql = "SELECT r FROM Route r "
 					+ "WHERE r.stationId.name=:station "

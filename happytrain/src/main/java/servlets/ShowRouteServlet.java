@@ -33,8 +33,16 @@ import entities.Train;
  */
 @WebServlet
 public class ShowRouteServlet extends HttpServlet {
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(ShowRouteServlet.class);   
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -42,7 +50,11 @@ public class ShowRouteServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
+    
+    /** Process data from request.
+     * @param req HttpServletRequest Object
+     * @param res HttpServletResponse Object
+     */
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
     	log.info("Getting parameters from GET");
     	String trainStr = req.getParameter("train");
@@ -67,7 +79,7 @@ public class ShowRouteServlet extends HttpServlet {
 			log.info("We have Run parameter");
 			int runId = Integer.parseInt(runStr);
 			
-			log.info("Getting Timetable with Run.Id "+ runId + " on every Station");
+			log.info("Getting Timetable with Run.Id " + runId + " on every Station");
 			ClientService clientService = new ClientService();
 			List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
 			try {

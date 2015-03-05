@@ -14,11 +14,17 @@ import util.MyException;
 import valueobjects.StationVO;
 import valueobjects.TimetableVO;
 import valueobjects.UserVO;
+import dao.RouteDAO;
 import dao.RouteDAOImpl;
+import dao.RunDAO;
 import dao.RunDAOImpl;
+import dao.StationDAO;
 import dao.StationDAOImpl;
+import dao.TicketDAO;
 import dao.TicketDAOImpl;
+import dao.TimetableDAO;
 import dao.TimetableDAOImpl;
+import dao.UserDAO;
 import dao.UserDAOImpl;
 import entities.Route;
 import entities.Run;
@@ -46,8 +52,8 @@ public class ClientService {
 		List<Run> runList = new ArrayList<Run>();
 		List<Route> routeList = new ArrayList<Route>();
 		
-		TimetableDAOImpl tdao = new TimetableDAOImpl();
-		RouteDAOImpl routeDao = new RouteDAOImpl();
+		TimetableDAO tdao = new TimetableDAOImpl();
+		RouteDAO routeDao = new RouteDAOImpl();
 		
 		log.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
@@ -102,7 +108,15 @@ public class ClientService {
 			
 	    	return date;
 	    }
-	 
+	/**
+	 *  
+	 * @param userVO
+	 * @param stationFrom
+	 * @param stationTo
+	 * @param depTime
+	 * @param runId
+	 * @throws Exception
+	 */
 	public void buyTicket(UserVO userVO,  String stationFrom, String stationTo, String depTime, String runId) throws Exception {
 		
 		Date date = getDateFromString(depTime);
@@ -128,12 +142,12 @@ public class ClientService {
 		}
 		
 		if (haveFreeSeats && !isAlreadyInTicketList && haveEnoughTimeUntilDeparture) {
-			UserDAOImpl userDao = new UserDAOImpl();
-			StationDAOImpl stationDao = new StationDAOImpl();
-			RunDAOImpl runDao = new RunDAOImpl();
-			TicketDAOImpl ticketDao = new TicketDAOImpl();
-			RouteDAOImpl routeDao = new RouteDAOImpl();
-			TimetableDAOImpl timetableDao = new TimetableDAOImpl();
+			UserDAO userDao = new UserDAOImpl();
+			StationDAO stationDao = new StationDAOImpl();
+			RunDAO runDao = new RunDAOImpl();
+			TicketDAO ticketDao = new TicketDAOImpl();
+			RouteDAO routeDao = new RouteDAOImpl();
+			TimetableDAO timetableDao = new TimetableDAOImpl();
 			
 			log.info("Opening Hibernate Session with transaction");
 			HibernateUtil.openCurrentSession();

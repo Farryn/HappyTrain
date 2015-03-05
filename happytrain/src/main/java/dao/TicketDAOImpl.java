@@ -1,15 +1,19 @@
 package dao;
 
 import java.util.List;
-
 import util.HibernateUtil;
-import entities.Station;
 import entities.Ticket;
-import entities.User;
 
+/**
+ * Implementation of TicketDAO.
+ *
+ */
 public class TicketDAOImpl extends GenericDAOImpl<Integer, Ticket> implements
 		TicketDAO {
 
+	/**
+	 * @see dao.TicketDAO#findTicketByRunAndUserIds(int, int)
+	 */
 	public Ticket findTicketByRunAndUserIds(int runId, int userId) {
 		String hql = "SELECT t FROM Ticket t "
 					+ "WHERE t.userId.id=:userId "
@@ -21,7 +25,10 @@ public class TicketDAOImpl extends GenericDAOImpl<Integer, Ticket> implements
 		return ticket;
 	}
 
-	public List<Ticket> findTicketsByRunId(int runId) {
+	/**
+	 * @see dao.TicketDAO#findTicketsByRunId(int)
+	 */
+	public List<Ticket> findTicketsByRunId(final int runId) {
 		String hql = "SELECT t FROM Ticket t "
 					+ "WHERE t.runId.id=:runId ";
 		List<Ticket> ticketList = (List<Ticket>) HibernateUtil.getCurrentSession().createQuery(hql)

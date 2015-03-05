@@ -1,12 +1,15 @@
 package dao;
 
-import java.util.List;
-
-import entities.Role;
-import entities.Route;
 import entities.Station;
-import entities.Train;
 
+/**
+ * DAO for Station Entity.
+ *
+ */
 public interface StationDAO extends GenericDAO<Integer, Station> {
-	Station findByName(String str);
+	/**Get Station by given name.
+	 * @param str Station name
+	 * @return Station Entity
+	 */
+	Station findByName(final String str);
 }

@@ -13,17 +13,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import services.TicketService;
-import services.UserService;
 import valueobjects.TicketVO;
-import valueobjects.TimetableVO;
-import valueobjects.UserVO;
 
 /**
- * Servlet implementation class ShowPassengerServlet
+ * Servlet implementation class ShowPassengerServlet.
  */
 @WebServlet
 public class ShowPassengerServlet extends HttpServlet {
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(ShowPassengerServlet.class);
 
     /**
@@ -34,7 +38,10 @@ public class ShowPassengerServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-    
+    /** Process data from request.
+     * @param req HttpServletRequest Object
+     * @param res HttpServletResponse Object
+     */
     private void processRequest(HttpServletRequest req, HttpServletResponse res) {
     	log.info("Getting parameters from GET");
 		int runId = Integer.parseInt(req.getParameter("run"));

@@ -1,13 +1,8 @@
 package servlets;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -18,22 +13,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import services.ClientService;
-import services.StationService;
 import services.TimetableService;
-import valueobjects.RunVO;
-import valueobjects.StationVO;
 import valueobjects.TimetableVO;
-import entities.Run;
-import entities.Station;
-import entities.Train;
 
 /**
- * Servlet implementation class ShowTimetable
+ * Servlet implementation class ShowTimetable.
  */
 @WebServlet
 public class ShowTimetableServlet extends HttpServlet {
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(ShowTimetableServlet.class);
  
     /**
@@ -44,13 +39,12 @@ public class ShowTimetableServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-    /**
-     * Converts String to Date Object.
-     * @param str String with datetime from request parameter
-     * @return This is String converted into Date Object
-     */
-
     
+
+    /** Process data from request.
+     * @param req HttpServletRequest Object
+     * @param res HttpServletResponse Object
+     */
     private void processRequest(HttpServletRequest req, HttpServletResponse res){
     	
 		String station = req.getParameter("station");
@@ -62,13 +56,15 @@ public class ShowTimetableServlet extends HttpServlet {
     	
     }
     
+    /** Process data from form.
+     * @param req HttpServletRequest Object
+     * @param res HttpServletResponse Object
+     */
 	private void processForm(HttpServletRequest req, HttpServletResponse res) {
-		
 		log.info("Getting parameters from form");
 		String stationA = req.getParameter("station");
 		String from = req.getParameter("from");
 		String to = req.getParameter("to");
-		
 		
 		log.info("Getting Timetables by Station " + stationA + " between "+ from + "and" + to);
 		TimetableService ts = new TimetableService();

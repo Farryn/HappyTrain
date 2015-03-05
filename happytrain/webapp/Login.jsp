@@ -8,6 +8,8 @@
 <title>Login</title>
 <link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<script src="/happytrain/js/jquery.js"></script>
+<script src="/happytrain/js/verify.notify.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -22,11 +24,11 @@
 			<ul id="wrapper-ul">
 				<li>
 					<label>Login</label>
-				    <input type="text" name="login">
+				    <input type="text" name="login" data-validate="required,alphanumeric">
 				</li>
 				<li>
 				    <label>Password</label>
-				    <input type="password" name="password">
+				    <input type="password" name="password" data-validate="required,alphanumeric">
 				</li>
 		    </ul>
 		    <input type="hidden" name="url" value="${URL}">

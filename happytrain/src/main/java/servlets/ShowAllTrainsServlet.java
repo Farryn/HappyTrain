@@ -14,16 +14,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import entities.Train;
 import services.TrainService;
 import valueobjects.TrainVO;
 
 /**
- * Servlet implementation class ShowAllTrainsServlet
+ * Servlet implementation class ShowAllTrainsServlet.
  */
 @WebServlet
 public class ShowAllTrainsServlet extends HttpServlet {
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(ShowAllTrainsServlet.class);
 
     /**
@@ -35,7 +41,7 @@ public class ShowAllTrainsServlet extends HttpServlet {
     }
     
     /**
-     * Get data from request and process it
+     * Get data from request and process it.
      * @param req Request Object
      * @param res Response Object 
      */

@@ -15,12 +15,23 @@ import util.MyException;
 import valueobjects.UserVO;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class LoginServlet.
  */
 @WebServlet
 public class LoginServlet extends HttpServlet {
+	
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(LoginServlet.class);
+	
+	
     /**
      * @see HttpServlet#HttpServlet()
      */

@@ -12,12 +12,21 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 /**
- * Servlet implementation class LogoutServlet
+ * Servlet implementation class LogoutServlet.
  */
 @WebServlet
 public class LogoutServlet extends HttpServlet {
+	
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(LogoutServlet.class);
+	
     /**
      * @see HttpServlet#HttpServlet()
      */

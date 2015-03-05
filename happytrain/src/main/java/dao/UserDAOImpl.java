@@ -1,13 +1,17 @@
 package dao;
 
-import java.util.List;
-
 import util.HibernateUtil;
-import entities.Run;
 import entities.User;
 
+/**
+ * Implementation of UserDAO.
+ *
+ */
 public class UserDAOImpl extends GenericDAOImpl<Integer, User> implements UserDAO {
 
+	/**
+	 * @see dao.UserDAO#findUser(java.lang.String, java.lang.String)
+	 */
 	public User findUser(String login, String password) {
 		String hql = "SELECT u FROM User u WHERE u.login=:login AND u.password=:password";
 		User user = (User) HibernateUtil.getCurrentSession().createQuery(hql)

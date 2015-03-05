@@ -14,14 +14,20 @@ import org.apache.log4j.Logger;
 
 import services.RunService;
 import valueobjects.RunVO;
-import valueobjects.TimetableVO;
 
 /**
- * Servlet implementation class ShowRunServlet
+ * Servlet implementation class ShowRunServlet.
  */
 @WebServlet
 public class ShowRunServlet extends HttpServlet {
+	/**
+	 * Serial Id.
+	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Logger instance.
+	 */
 	private static Logger log = Logger.getLogger(ShowRunServlet.class);
 
     /**
@@ -32,6 +38,10 @@ public class ShowRunServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    /** Process data from request.
+     * @param req HttpServletRequest Object
+     * @param res HttpServletResponse Object
+     */
     private void processRequest(HttpServletRequest req, HttpServletResponse res) {
     	log.info("Getting parameters from GET");
     	int trainId = Integer.parseInt(req.getParameter("train"));
