@@ -40,7 +40,7 @@ public class RegisterServlet extends HttpServlet {
     		throw new IllegalArgumentException();
     	}
     	Date date = new Date();
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy hh:mm");
 		date = sdf.parse(str);
 		
     	return date;
@@ -48,10 +48,34 @@ public class RegisterServlet extends HttpServlet {
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
     	log.info("Getting parameters from form");
 		String firstName = req.getParameter("first_name");
+		if (firstName == null || firstName.equals("")) {
+    		log.warn("Empty first name field");
+			req.setAttribute("fail", 1);
+			return;
+    	}
+		
 		String lastName = req.getParameter("last_name");
-		String birthDateString = req.getParameter("birth_date");
+		if (lastName == null || lastName.equals("")) {
+    		log.warn("Empty last name field");
+			req.setAttribute("fail", 1);
+			return;
+    	}
+		
 		String login = req.getParameter("login");
+		if (login == null || login.equals("")) {
+    		log.warn("Empty login field");
+			req.setAttribute("fail", 1);
+			return;
+    	}
+		
 		String password = req.getParameter("password");
+		if (password == null || password.equals("")) {
+    		log.warn("Empty password field");
+			req.setAttribute("fail", 1);
+			return;
+    	}
+		
+		String birthDateString = req.getParameter("birth_date");
 		Date birthDate = null;
 		try {
 			birthDate = getDateFromString(birthDateString);
@@ -83,7 +107,7 @@ public class RegisterServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request,response);
-		request.getRequestDispatcher("/protected/Register.jsp").forward(request, response);
+		request.getRequestDispatcher("/Register.jsp").forward(request, response);
 	}
 
 	

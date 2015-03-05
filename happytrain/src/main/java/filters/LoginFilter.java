@@ -60,9 +60,9 @@ public class LoginFilter implements Filter {
 	    if (user != null) {
 	    	log.info("Checking for availability of url to current User");
 			boolean isAuth  = new UserService().isUserAuth(user, req.getServletPath(), urlRoleMap);
-			if(isAuth){
+			if (isAuth) {
 				chain.doFilter(request, response);
-			}else{
+			} else {
 				request.setAttribute("URL", url);
 				request.setAttribute("failMessage", "У Вас недостаточно прав для доступа"); 
 				log.info("User do not have enough rights");

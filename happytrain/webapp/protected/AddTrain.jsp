@@ -7,6 +7,8 @@
 <link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
+<script src="/happytrain/js/verify.notify.js" type="text/javascript"></script>
+
 <script>
 $(document).ready(function() {
     var wrapper         = $("#wrapper-ul"); //Fields wrapper
@@ -22,13 +24,14 @@ $(document).ready(function() {
 						  					'<option value="${item.name}"> <c:out value="${item.name}" /> </option>'+
 						  				'</c:forEach></select>'+
 						  				
-					            		//'<input type="button" value="Удалить станцию" class="remove_field_button">'+
+					            		//'<button type="button" class="remove_field_button"><img src="/happytrain/css/images/cross2.png"></button>'+
 			            		'</li>'); 
         
     });
-    $(remove_button).on("click", function(e) {
-    	e.preventDefault();
-        $('tr').remove();
+    $(".remove_field_button").click(function() {
+    	alert("da");
+    	$('li').remove();
+        
   });
 
    
@@ -47,16 +50,23 @@ $(document).ready(function() {
 					<ul id="wrapper-ul">
 						<li>
 							<label>Номер поезда</label>
-							<input type="text" name="trainNumber" />
+							<input type="text" name="trainNumber" data-validate="required,alphanumeric"/>
 						</li>
 						<li>
 							<label>Число мест</label>
-							<input type="text" name="seatsCount"  />
+							<input type="text" name="seatsCount" data-validate="required,number" />
 						</li>
 						
 						<li>
 							<label>Маршрут</label>
 							<input type="button" value="Добавить станцию" class="button" id="add_button">
+						</li>
+						<li>
+							<select name="stationList[]" >
+							    	<c:forEach var="item" items="${stationList}">
+										  	<option value="${item.name}" ><c:out value="${item.name}" /></option>
+									</c:forEach>
+							</select>
 						</li>
 						<li>
 							<select name="stationList[]" >
@@ -78,6 +88,8 @@ $(document).ready(function() {
 				<div id="message"> Ошибка при добавлении данных</div>
 			</c:if>
 		</div>	
-</div>		
+</div>	
+
+
 </body>
 </html>

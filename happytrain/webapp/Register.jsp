@@ -8,6 +8,11 @@
 <title>Регистрация</title>
 <link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script src="js/jquery.js"></script>
+<script src="js/jquery.datetimepicker.js"></script>
+<script src="js/global.js"></script>
+<script src="/happytrain/js/verify.notify.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -18,23 +23,23 @@
 			<ul id="wrapper-ul">
 				<li>
 					<label>Имя</label>
-					<input type="text" name="first_name" />
+					<input type="text" name="first_name" data-validate="required"/>
 				</li>
 				<li>
 					<label>Фамилия</label>
-					<input type="text" name="last_name" />
+					<input type="text" name="last_name" data-validate="required"/>
 				</li>
 				<li>
 					<label>Дата рождения</label>
-					<input type="text" name="birth_date" value="01-01-2015 00:00:00"/>
+					<input type="text" name="birth_date" value="${from}" class="datetimepicker_mask" readonly="readonly"/>
 				</li>
 				<li>
 					<label>Логин</label>
-					<input type="text" name="login" />
+					<input type="text" name="login" data-validate="required,alphanumeric"/>
 				</li>
 				<li>
 					<label>Пароль</label>
-					<input type="text" name="password" />
+					<input type="text" name="password" data-validate="required,alphanumeric"/>
 				</li>
 			</ul>
 			<input type="submit" value="Добавить" class="button"/>

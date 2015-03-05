@@ -1,6 +1,8 @@
 package filters;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.DispatcherType;
@@ -23,7 +25,7 @@ import entities.Station;
  */
 @WebFilter(dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD} ,
 								urlPatterns = {   "/FindTrain.jsp", "/ShowTimetable.jsp", "/alltrains",
-											"/protected/AddTrain.jsp", "/protected/ShowAllTrains.jsp"})
+											"/protected/AddTrain.jsp", "/protected/ShowAllTrains.jsp", "/Register.jsp"})
 public class GetStationListFilter implements Filter {
 
 	private static Logger log = Logger.getLogger(GetStationListFilter.class);
@@ -50,14 +52,24 @@ public class GetStationListFilter implements Filter {
 
 		StationService ss = new StationService();
 		List<StationVO> stationList = null;
+	    String strDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
 		try {
 			stationList = ss.getAllStationVO();
 		} catch (Exception e) {
 			log.warn("Exception: " + e);
 			log.info("No station was found");
 		}
+		if (request.getParameter("from") != null) {
+			request.setAttribute("from", request.getParameter("from"));
+		} else {
+			request.setAttribute("from", strDate);
+		}
+		if (request.getParameter("to") != null) {
+			request.setAttribute("to", request.getParameter("to"));
+		} else {
+			request.setAttribute("to", strDate);
+		}
 		request.setAttribute("stationList", stationList);
-		// pass the request along the filter chain
 		chain.doFilter(request, response);
 	}
 

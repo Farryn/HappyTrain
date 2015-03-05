@@ -9,10 +9,12 @@
 <link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <link href="css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
-<script src="js/jquery.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
+
+
+<script src="js/verify.notify.js" type="text/javascript"></script>
 <script src="js/jquery.datetimepicker.js"></script>
 <script src="js/global.js"></script>
-
 
 </head>
 <body>
@@ -35,9 +37,9 @@
 							  </c:forEach>
 				</select>
 			 	<label>От</label>
-			 	<input type="text" name="from" class="datetimepicker_mask" value="${from}">
+			 	<input type="text" name="from" required class="datetimepicker_mask" value="${from}" readonly="readonly" />
 			 	<label>До</label>
-			 	<input type="text" name="to" class="datetimepicker_mask" value="${to}">
+			 	<input type="text" name="to" required class="datetimepicker_mask" value="${to}" readonly="readonly"/>
 			 	<input type="submit" name="submit" value="Найти" class="button">
 			</form>
 			
@@ -60,7 +62,7 @@
 				   
 				   <tbody>
 				   		<c:if test="${emptyList == 1}">
-				   			<tr><td colspan="5">Нет результатов</td></tr>
+				   			<tr><td colspan="<c:if test="${user != null}">6</c:if><c:if test="${user == null}">5</c:if>" >Нет результатов</td></tr>
 				   		</c:if>
 						   <c:forEach var="item" items="${timetableList}" varStatus="status">
 								<tr>

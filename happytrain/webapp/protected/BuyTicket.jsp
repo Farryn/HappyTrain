@@ -30,20 +30,20 @@
 					</li> --%>
 					<li>
 						<label>Номер поезда</label>
-						<input type="text" name="train" value="${param.train}" />
+						<input type="text" name="train" value="${param.train}" readonly="readonly"/>
 					</li>
 					<li>
 						<label>Станция отправления</label>
-						<input type="text" name="stationFrom" value="${param.stationFrom}" />
+						<input type="text" name="stationFrom" value="${param.stationFrom}" readonly="readonly"/>
 					</li>
 					<li>
 						<label>Станция прибытия</label>
-						<input type="text" name="stationTo" value="${param.stationTo}" />
+						<input type="text" name="stationTo" value="${param.stationTo}" readonly="readonly"/>
 					</li>
-					<%--<li>
+					<li>
 						<label>Время отправления</label>
-						<input type="text" name="depTime" value="${param.depTime}" />
-					</li> --%>
+						<input type="text" name="depTime" value="${param.depTime}" readonly="readonly"/>
+					</li> 
 				</ul>
 				<input type="hidden" name="depTime" value="${param.depTime}" />
 				<input type="hidden" name="run" value="${param.run}" />

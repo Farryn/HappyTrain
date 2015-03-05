@@ -12,6 +12,7 @@
 <script src="js/jquery.js"></script>
 <script src="js/jquery.datetimepicker.js"></script>
 <script src="js/global.js"></script>
+<script src="/happytrain/js/verify.notify.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -35,8 +36,8 @@
 										<c:out value="${item.name}" />
 										<input type="hidden" name="stationList[]" value="${item.name}"/>
 									</td>
-									<td ><input type="text" name=arrivalTime[] class="datetimepicker_mask"/> </td>
-									<td ><input type="text" name=departureTime[] class="datetimepicker_mask"/></td>
+									<td ><input type="text" name=arrivalTime[] class="datetimepicker_mask" readonly="readonly" data-validate="required"/> </td>
+									<td ><input type="text" name=departureTime[] class="datetimepicker_mask" readonly="readonly" data-validate="required"/></td>
 								</tr>
 						   </c:forEach>
 						   <tr>

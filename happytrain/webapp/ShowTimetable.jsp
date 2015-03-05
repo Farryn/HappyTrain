@@ -6,18 +6,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Расписание</title>
-<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <link href="css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
 <script src="js/jquery.js"></script>
 <script src="js/jquery.datetimepicker.js"></script>
 <script src="js/global.js"></script>
+<script src="https://raw.githubusercontent.com/jpillora/verifyjs/gh-pages/dist/verify.notify.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="wrapper">
 	<%@include file="Header.jsp" %>
 	<div id="portfolio" class="container">
-		<form  action="timetable" method="GET" id="main-form">
+		<form  action="/happytrain/timetable" method="GET" id="main-form">
 			    
 			 	<label>Станция</label>
 				<select name="station" >
@@ -27,9 +28,9 @@
 				</select>
 				
 			    <label>Время от</label>
-			 	<input type="text" name="from" class="datetimepicker_mask" value="${from}">
+			 	<input type="text" name="from" class="datetimepicker_mask" value="${from}" readonly="readonly" >
 			 	<label>Время до</label>
-			 	<input type="text" name="to" class="datetimepicker_mask" value="${to}">
+			 	<input type="text" name="to" class="datetimepicker_mask" value="${to}" readonly="readonly" >
 			 	<input type="submit" name="submit" value="Найти" class="button">
 			
 			

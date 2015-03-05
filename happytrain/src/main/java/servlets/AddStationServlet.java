@@ -34,7 +34,11 @@ public class AddStationServlet extends HttpServlet {
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
     	log.info("Getting parameters from form");
     	String stationName = req.getParameter("stationName");
-    	
+    	if (stationName == null || stationName.equals("")) {
+    		log.warn("Empty station name");
+			req.setAttribute("fail", 1);
+			return;
+    	}
     	log.info("Adding Station into DB");
     	try {
 			new StationService().addStation(stationName);

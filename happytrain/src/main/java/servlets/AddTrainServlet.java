@@ -47,8 +47,25 @@ public class AddTrainServlet extends HttpServlet {
     private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
     	log.info("Getting parameters from form");
     	String trainNumber = req.getParameter("trainNumber");
+    	if (trainNumber == null || trainNumber.equals("")) {
+    		log.warn("Empty train number");
+			req.setAttribute("fail", 1);
+			return;
+    	}
+    	
 		int seatsCount = Integer.parseInt(req.getParameter("seatsCount"));
+		if (seatsCount == 0) {
+    		log.warn("Empty seats count");
+			req.setAttribute("fail", 1);
+			return;
+    	}
+		
 		String[] stationArray = req.getParameterValues("stationList[]");
+		if (stationArray.length < 2) {
+    		log.warn("Not enough stations count");
+			req.setAttribute("fail", 1);
+			return;
+    	}
 		
 		log.info("Adding Train into DB");
 		try {

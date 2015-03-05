@@ -49,6 +49,15 @@ public class LoginServlet extends HttpServlet {
 		log.info("Getting User by login and password from UserService");
 		UserVO user = null;
 		try {
+			if (login == null || login.equals("")) {
+				log.warn("Empty login");
+				throw new MyException("Empty login");
+			}
+			
+			if (password == null || password.equals("")) {
+				log.warn("Empty password");
+				throw new MyException("Empty password");
+			}
 			user = new UserService().findUserByLoginAndPass(login, password);
 			request.getSession().setAttribute("user", user); 
 			log.info("User was authentificated");

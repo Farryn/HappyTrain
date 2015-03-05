@@ -7,6 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<script src="/happytrain/js/jquery.js" type="text/javascript"></script>
+<script src="/happytrain/js/verify.notify.js" type="text/javascript"></script>
 <title>Добавить станцию</title>
 
 </head>
@@ -19,7 +21,7 @@
 					<ul id="wrapper-ul">
 						<li>
 							<label>Название станции</label>
-							<input type="text" name="stationName" />
+							<input type="text" name="stationName" data-validate="required,alphanumeric"/>
 						</li>
 					</ul>
 					<input type="submit"  value="Отправить" class="button">

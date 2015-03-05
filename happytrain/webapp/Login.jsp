@@ -18,7 +18,7 @@
 				${failMessage}
 			</div>
 		</c:if>
-		<form action="login" method="post" id="input-form">
+		<form action="/happytrain/login" method="post" id="input-form">
 			<ul id="wrapper-ul">
 				<li>
 					<label>Login</label>
