@@ -23,11 +23,11 @@
 			<ul id="wrapper-ul">
 				<li>
 					<label>Имя</label>
-					<input type="text" name="first_name" data-validate="required"/>
+					<input type="text" name="first_name" data-validate="required,alpha"/>
 				</li>
 				<li>
 					<label>Фамилия</label>
-					<input type="text" name="last_name" data-validate="required"/>
+					<input type="text" name="last_name" data-validate="required,alpha"/>
 				</li>
 				<li>
 					<label>Дата рождения</label>

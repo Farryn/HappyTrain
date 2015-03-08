@@ -49,7 +49,7 @@ public class RegisterServlet extends HttpServlet {
     		throw new IllegalArgumentException();
     	}
     	Date date = new Date();
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy hh:mm");
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
 		date = sdf.parse(str);
 		
     	return date;

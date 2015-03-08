@@ -73,12 +73,15 @@ public class ClientService {
 			
 			log.info("Creating TimetableVO on every found Run ");
 			for (Run run:runList) {
-				Date departureTime = tdao.findDepTimeFromStation(stationA, run);
-				Date arrivalTime = tdao.findArrTimeToStation(stationB, run);
+				Date departureTimeBeforeFormat = tdao.findDepTimeFromStation(stationA, run);
+				Date arrivalTimeBeforeFormat = tdao.findArrTimeToStation(stationB, run);
 				int count = tdao.findAvailableSeatsCount(stationA, String.valueOf(run.getId()));
-				if (departureTime == null || arrivalTime == null) {
+				if (departureTimeBeforeFormat == null || arrivalTimeBeforeFormat == null) {
 					throw new NullPointerException();
 				}
+				SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+				String departureTime = dt.format(departureTimeBeforeFormat);
+				String arrivalTime = dt.format(arrivalTimeBeforeFormat);
 				TimetableVO timetable = new TimetableVO(run.getTrainId().getId() ,run.getTrainId().getNumber(), run.getId(), departureTime, arrivalTime, count);
 				timetableVOList.add(timetable);
 			}
@@ -103,7 +106,7 @@ public class ClientService {
 	    		throw new IllegalArgumentException();
 	    	}
 	    	Date date = new Date();
-	    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy hh:mm");
+	    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
 			date = sdf.parse(str);
 			
 	    	return date;
@@ -282,11 +285,14 @@ public class ClientService {
 		try {
 			log.info("Creating TimetableVO on every Station");
 			for (StationVO station: stationList) {
-				Date departureTime = tdao.findDepTimeFromStation(station.getName(), run);
-				Date arrivalTime = tdao.findArrTimeToStation(station.getName(), run);
-				if (departureTime == null || arrivalTime == null) {
+				Date departureTimeBeforeFormat = tdao.findDepTimeFromStation(station.getName(), run);
+				Date arrivalTimeBeforeFormat = tdao.findArrTimeToStation(station.getName(), run);
+				if (departureTimeBeforeFormat == null || arrivalTimeBeforeFormat == null) {
 					throw new NullPointerException();
 				}
+				SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+				String departureTime = dt.format(departureTimeBeforeFormat);
+				String arrivalTime = dt.format(arrivalTimeBeforeFormat);
 				TimetableVO timetable = new TimetableVO(departureTime, arrivalTime);
 				timetableVOList.add(timetable);
 			}

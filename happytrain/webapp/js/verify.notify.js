@@ -2304,8 +2304,12 @@ log("plugin added.");
     },
     alphanumeric: {
       regex: /^[0-9A-Za-z]+$/,
-      message: "Только буквы и цифры"
+      message: "Только английские буквы и цифры"
     },
+    alpha: {
+        regex: /^[A-Za-z]+$/,
+        message: "Только английские буквы"
+      },
     street_number: {
       regex: /^\d+[A-Za-z]?(-\d+)?[A-Za-z]?$/,
       message: "Street Number only"

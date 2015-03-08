@@ -48,11 +48,14 @@ public class TimetableService {
 			log.info("Creating TimetableVO for every Run");
 			for (Run run: runList){
 				log.info("Getting arrival and departure times by every Run in list and by Station");
-				Date departureTime = dao.findDepTimeFromStation(station, run);
-				Date arrivalTime = dao.findArrTimeToStation(station, run);
-				if (departureTime == null || arrivalTime == null) {
+				Date departureTimeBeforeFormat = dao.findDepTimeFromStation(station, run);
+				Date arrivalTimeBeforeFormat = dao.findArrTimeToStation(station, run);
+				if (departureTimeBeforeFormat == null || arrivalTimeBeforeFormat == null) {
 					throw new NullPointerException();
 				}
+				SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+				String departureTime = dt.format(departureTimeBeforeFormat);
+				String arrivalTime = dt.format(arrivalTimeBeforeFormat);
 				TimetableVO timetable = new TimetableVO(run.getTrainId().getNumber(), departureTime, arrivalTime);
 				timetableVOList.add(timetable);
 			}
@@ -77,7 +80,7 @@ public class TimetableService {
     		throw new IllegalArgumentException();
     	}
     	Date date = new Date();
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy hh:mm");
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
 		date = sdf.parse(str);
 		
     	return date;

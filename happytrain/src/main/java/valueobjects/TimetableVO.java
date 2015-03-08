@@ -9,8 +9,8 @@ public class TimetableVO {
 	private int trainId;
 	private String trainNumber;
 	private int runId;
-	private Date departureDateTime; 
-	private Date arrivalDateTime;
+	private String departureDateTime; 
+	private String arrivalDateTime;
 	private int availableSeats;
 	
 	/**
@@ -27,7 +27,7 @@ public class TimetableVO {
 	 * @param availableSeats
 	 */
 	public TimetableVO(int trainId, String trainNumber, int runId,
-			Date departureDateTime, Date arrivalDateTime,
+			String departureDateTime, String arrivalDateTime,
 			int availableSeats) {
 		this.trainId = trainId;
 		this.trainNumber = trainNumber;
@@ -42,7 +42,7 @@ public class TimetableVO {
 	 * @param departureDateTime
 	 * @param arrivalDateTime
 	 */
-	public TimetableVO(Date departureDateTime, Date arrivalDateTime) {
+	public TimetableVO(String departureDateTime, String arrivalDateTime) {
 		this.departureDateTime = departureDateTime;
 		this.arrivalDateTime = arrivalDateTime;
 	}
@@ -52,8 +52,8 @@ public class TimetableVO {
 	 * @param departureDateTime
 	 * @param arrivalDateTime
 	 */
-	public TimetableVO(String trainNumber, Date departureDateTime,
-			Date arrivalDateTime) {
+	public TimetableVO(String trainNumber, String departureDateTime,
+			String arrivalDateTime) {
 		this.trainNumber = trainNumber;
 		this.departureDateTime = departureDateTime;
 		this.arrivalDateTime = arrivalDateTime;
@@ -75,19 +75,19 @@ public class TimetableVO {
 		this.runId = runId;
 	}
 
-	public Date getDepartureDateTime() {
+	public String getDepartureDateTime() {
 		return departureDateTime;
 	}
 
-	public void setDepartureDateTime(Date departureDateTime) {
+	public void setDepartureDateTime(String departureDateTime) {
 		this.departureDateTime = departureDateTime;
 	}
 
-	public Date getArrivalDateTime() {
+	public String getArrivalDateTime() {
 		return arrivalDateTime;
 	}
 
-	public void setArrivalDateTime(Date arrivalDateTime) {
+	public void setArrivalDateTime(String arrivalDateTime) {
 		this.arrivalDateTime = arrivalDateTime;
 	}
 
