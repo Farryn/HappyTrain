@@ -2,10 +2,6 @@ package valueobjects;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import entities.Role;
 import entities.User;
 
@@ -37,61 +33,104 @@ public class UserVO {
 		this.role = user.getRole();
 	}
 
+	/**
+	 * @return the id
+	 */
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	/**
+	 * @return the firstName
+	 */
 	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
+	/**
+	 * @return the lastName
+	 */
 	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
+	/**
+	 * @return the login
+	 */
 	public String getLogin() {
 		return login;
 	}
 
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
+	/**
+	 * @return the password
+	 */
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
+	/**
+	 * @return the birthDate
+	 */
 	public Date getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
-	}
-
+	/**
+	 * @return the role
+	 */
 	public Role getRole() {
 		return role;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @param login the login to set
+	 */
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @param birthDate the birthDate to set
+	 */
+	public void setBirthDate(Date birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	/**
+	 * @param role the role to set
+	 */
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
 	
 	
 }

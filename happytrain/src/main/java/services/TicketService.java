@@ -4,41 +4,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 
-import servlets.ShowPassengerServlet;
 import util.HibernateUtil;
 import valueobjects.TicketVO;
-import valueobjects.UserVO;
+import dao.TicketDAO;
 import dao.TicketDAOImpl;
 import entities.Ticket;
-import entities.User;
 
 public class TicketService {
 	
-	private static Logger log = Logger.getLogger(TicketService.class);
+	private static final Logger LOG = Logger.getLogger(TicketService.class);
 
-	public List<TicketVO> getTicketsByRunId(int runId) throws Exception {
-		TicketDAOImpl tdao = new TicketDAOImpl();
+	private TicketDAO tdao = new TicketDAOImpl();
+	/**
+	 * @param tdao the tdao to set
+	 */
+	public void setTdao(TicketDAO tdao) {
+		this.tdao = tdao;
+	}
+	public List<TicketVO> getTicketsByRunId(int runId) throws  IllegalStateException {
+		
 		List<Ticket> ticketList = new ArrayList<Ticket>();
 		List<TicketVO> ticketVOList = new ArrayList<TicketVO>();
 		
-		log.info("Opening Hibernate Session with transaction");
+		LOG.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		try {
-			log.info("Searching for Tickets by Run.Id " + runId);
+			LOG.info("Searching for Tickets by Run.Id " + runId);
 			ticketList = tdao.findTicketsByRunId(runId);
 			if (ticketList.isEmpty()) {
+				LOG.warn("Empty ticket list");
 				throw new IllegalStateException();
 			}
-			log.info("Commiting transaction");
+			LOG.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			log.warn("Transaction was rollbacked");
+		} catch (HibernateException | IllegalStateException e) {
+			LOG.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
 			throw e;
 		} finally {
-			log.info("Closing Hibernate Session");
+			LOG.info("Closing Hibernate Session");
 			HibernateUtil.closeCurrentSession();
 		}
 		for (Ticket ticket: ticketList) {

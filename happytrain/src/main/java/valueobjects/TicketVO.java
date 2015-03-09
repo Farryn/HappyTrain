@@ -1,12 +1,6 @@
 package valueobjects;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import entities.Run;
-import entities.Station;
 import entities.Ticket;
-import entities.User;
 
 public class TicketVO {
 

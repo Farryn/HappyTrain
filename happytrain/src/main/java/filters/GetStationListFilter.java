@@ -31,24 +31,19 @@ public class GetStationListFilter implements Filter {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(GetStationListFilter.class);
+	private static final Logger LOG = Logger.getLogger(GetStationListFilter.class);
     /**
      * Default constructor. 
      */
     public GetStationListFilter() {
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see Filter#destroy()
-	 */
-	public void destroy() {
-		// TODO Auto-generated method stub
-	}
+	
 
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
+    @Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		StationService ss = new StationService();
 		List<StationVO> stationList = null;
@@ -56,8 +51,8 @@ public class GetStationListFilter implements Filter {
 		try {
 			stationList = ss.getAllStationVO();
 		} catch (Exception e) {
-			log.warn("Exception: " + e);
-			log.info("No station was found");
+			LOG.warn("Exception: " + e);
+			LOG.info("No station was found");
 		}
 		if (request.getParameter("from") != null) {
 			request.setAttribute("from", request.getParameter("from"));
@@ -73,11 +68,22 @@ public class GetStationListFilter implements Filter {
 		chain.doFilter(request, response);
 	}
 
-	/**
-	 * @see Filter#init(FilterConfig)
-	 */
-	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
+
+
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+		// empty
+		
 	}
+
+
+
+	@Override
+	public void destroy() {
+		// empty
+		
+	}
+
+	
 
 }

@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.List;
+
 import util.HibernateUtil;
 import entities.Ticket;
 
@@ -14,6 +15,7 @@ public class TicketDAOImpl extends GenericDAOImpl<Integer, Ticket> implements
 	/**
 	 * @see dao.TicketDAO#findTicketByRunAndUserIds(int, int)
 	 */
+	@Override
 	public Ticket findTicketByRunAndUserIds(int runId, int userId) {
 		String hql = "SELECT t FROM Ticket t "
 					+ "WHERE t.userId.id=:userId "
@@ -28,6 +30,7 @@ public class TicketDAOImpl extends GenericDAOImpl<Integer, Ticket> implements
 	/**
 	 * @see dao.TicketDAO#findTicketsByRunId(int)
 	 */
+	@Override
 	public List<Ticket> findTicketsByRunId(final int runId) {
 		String hql = "SELECT t FROM Ticket t "
 					+ "WHERE t.runId.id=:runId ";

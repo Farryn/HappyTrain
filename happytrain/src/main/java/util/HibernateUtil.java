@@ -7,7 +7,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil {
-	private static final SessionFactory sessionFactory;
+	private static final SessionFactory SESSIONFACTORY;
 	private static Session currentSession;
 	private static Transaction currentTransaction;
 	
@@ -39,16 +39,15 @@ public class HibernateUtil {
       try {
         Configuration configuration = new Configuration().configure();
 		StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-		sessionFactory = configuration.buildSessionFactory(builder.build());
+		SESSIONFACTORY = configuration.buildSessionFactory(builder.build());
      
-      } catch (Throwable ex) {
-        System.err.println("Initial SessionFactory creation failed." + ex);
-        throw new ExceptionInInitializerError(ex);
+      } catch (Exception e) {
+        throw new ExceptionInInitializerError(e);
       }
     }
 
     public static SessionFactory getSessionFactory() {
-      return sessionFactory;
+      return SESSIONFACTORY;
     }
     
     
@@ -74,15 +73,5 @@ public class HibernateUtil {
 		currentTransaction.rollback();
 	}
 	
-	/*
-	public static Session openCurrentSessionwithTransaction() {
-		currentSession = HibernateUtil.getSessionFactory().openSession();
-		currentTransaction = currentSession.beginTransaction();
-		return currentSession;
-	}*/
 	
-	/*public static void closeCurrentSessionwithTransaction() {
-		currentTransaction.commit();
-		currentSession.close();
-	}*/
 }

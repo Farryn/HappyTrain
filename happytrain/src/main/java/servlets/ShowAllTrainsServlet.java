@@ -30,14 +30,12 @@ public class ShowAllTrainsServlet extends HttpServlet {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(ShowAllTrainsServlet.class);
+	private static final Logger LOG = Logger.getLogger(ShowAllTrainsServlet.class);
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public ShowAllTrainsServlet() {
-        super();
-        // TODO Auto-generated constructor stub
     }
     
     /**
@@ -45,15 +43,15 @@ public class ShowAllTrainsServlet extends HttpServlet {
      * @param req Request Object
      * @param res Response Object 
      */
-    private void processRequest(HttpServletRequest req, HttpServletResponse res){
-    	log.info("Getting all trains from db");
+    private void processRequest(HttpServletRequest req){
+    	LOG.info("Getting all trains from db");
     	TrainService ts = new TrainService();
     	List<TrainVO> trainList = new ArrayList<TrainVO>();
 		try {
 			trainList = ts.getAllTrains();
 		} catch (Exception e) {
-			log.warn("Exception: " + e);
-			log.info("No result was found");
+			LOG.warn("Exception: " + e);
+			LOG.info("No result was found");
 			req.setAttribute("emptyList", 1);
 		}
     	req.setAttribute("trainList", trainList);
@@ -65,18 +63,14 @@ public class ShowAllTrainsServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+		processRequest(request);
 		ServletContext sc = getServletContext();
 		RequestDispatcher rd = sc.getRequestDispatcher("/protected/ShowAllTrains.jsp");
 		rd.forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-	}
+	
 
 }

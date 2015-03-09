@@ -25,27 +25,47 @@ public class TrainVO {
 		this.seatsCount = seatsCount;
 	}
 
+	/**
+	 * @return the id
+	 */
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	/**
+	 * @return the number
+	 */
 	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(String number) {
-		this.number = number;
-	}
-
+	/**
+	 * @return the seatsCount
+	 */
 	public int getSeatsCount() {
 		return seatsCount;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @param number the number to set
+	 */
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	/**
+	 * @param seatsCount the seatsCount to set
+	 */
 	public void setSeatsCount(int seatsCount) {
 		this.seatsCount = seatsCount;
 	}
+
+	
 }

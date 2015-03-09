@@ -28,60 +28,50 @@ public class BuyTicketServlet extends HttpServlet {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(BuyTicketServlet.class);   
+	private static final Logger LOG = Logger.getLogger(BuyTicketServlet.class);   
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public BuyTicketServlet() {
-        super();
-        // TODO Auto-generated constructor stub
     }
     
     /**
      * @param req HttpServletRequest Object
      * @param res HttpServletResponse Object
      */
-    private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
-    	log.info("Getting parameters from form");
-		/*String firstName = req.getParameter("firstName");
-		String lastName = req.getParameter("lastName");
-		String birthDate = req.getParameter("birthDate");
-		String trainNumber = req.getParameter("train");*/
+    private void processRequest(HttpServletRequest req) {
+    	LOG.info("Getting parameters from form");
 		String stationFrom = req.getParameter("stationFrom");
 		String stationTo = req.getParameter("stationTo");
 		String depTime = req.getParameter("depTime");
 		String runId = req.getParameter("run");
 		UserVO user = (UserVO) req.getSession().getAttribute("user");
-		log.info("Buying Ticket using ClientService");
+		LOG.info("Buying Ticket using ClientService");
 		try {
 			new ClientService().buyTicket(user, stationFrom, stationTo, depTime, runId);
 			req.setAttribute("fail", 0);
 		} catch (MyException e) {
-			log.warn("Exception: " + e);
+			LOG.warn("Exception: " + e);
 			req.setAttribute("failMessage", e.getMessage());
 			req.setAttribute("fail", 1);
 		} catch (Exception e) {
-			log.error("Exception: " + e);
-			log.warn("Could not add Ticket");
+			LOG.error("Exception: " + e);
+			LOG.warn("Could not add Ticket");
 			req.setAttribute("failMessage", "Ошибка при покупке билета");
 			req.setAttribute("fail", 1);
 		}
 
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+		processRequest(request);
 		request.getRequestDispatcher("/protected/BuyTicket.jsp").forward(request, response);
 	}
 

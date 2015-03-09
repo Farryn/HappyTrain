@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -27,14 +28,13 @@ public class AddTrainServlet extends HttpServlet {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(AddTrainServlet.class);   
+	private static final Logger LOG = Logger.getLogger(AddTrainServlet.class);   
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public AddTrainServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+        
     }
 
     
@@ -43,53 +43,51 @@ public class AddTrainServlet extends HttpServlet {
      * @param req HttpServletRequest Object
      * @param res HttpServletResponse Object
      */
-    private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
-    	log.info("Getting parameters from form");
+    
+    private void processRequest(HttpServletRequest req) {
+    	LOG.info("Getting parameters from form");
     	String trainNumber = req.getParameter("trainNumber");
-    	if (trainNumber == null || trainNumber.equals("")) {
-    		log.warn("Empty train number");
+    	if (trainNumber == null || "".equals(trainNumber)) {
+    		LOG.warn("Empty train number");
 			req.setAttribute("fail", 1);
 			return;
     	}
     	
 		int seatsCount = Integer.parseInt(req.getParameter("seatsCount"));
 		if (seatsCount == 0) {
-    		log.warn("Empty seats count");
+    		LOG.warn("Empty seats count");
 			req.setAttribute("fail", 1);
 			return;
     	}
 		
 		String[] stationArray = req.getParameterValues("stationList[]");
 		if (stationArray.length < 2) {
-    		log.warn("Not enough stations count");
+    		LOG.warn("Not enough stations count");
 			req.setAttribute("fail", 1);
 			return;
     	}
 		
-		log.info("Adding Train into DB");
+		LOG.info("Adding Train into DB");
 		try {
 			new EmployeeService().addTrain(trainNumber, seatsCount, stationArray);
 			req.setAttribute("fail", 0);
 		} catch (Exception e) {
-			log.error("Exception: " + e);
-			log.warn("Could not add train into DB");
 			req.setAttribute("fail", 1);
+			LOG.error("Exception: " + e);
+			LOG.warn("Could not add train into DB");
+			
 		}
 		
 	}
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request,response);
-		ServletContext sc = getServletContext();
+    	ServletContext sc = getServletContext();
+    	processRequest(request);
 		RequestDispatcher rd = sc.getRequestDispatcher("/protected/AddTrain.jsp");
 		rd.forward(request, response);
 	}

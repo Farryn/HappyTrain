@@ -12,6 +12,7 @@ public class UserDAOImpl extends GenericDAOImpl<Integer, User> implements UserDA
 	/**
 	 * @see dao.UserDAO#findUser(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public User findUser(String login, String password) {
 		String hql = "SELECT u FROM User u WHERE u.login=:login AND u.password=:password";
 		User user = (User) HibernateUtil.getCurrentSession().createQuery(hql)

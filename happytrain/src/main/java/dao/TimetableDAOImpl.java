@@ -2,6 +2,7 @@ package dao;
 
 import java.util.Date;
 import java.util.List;
+
 import util.HibernateUtil;
 import entities.Route;
 import entities.Run;
@@ -18,6 +19,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	/**
 	 * @see dao.TimetableDAO#findTrainWithDepTimeBetweenPeriodOfTime(java.util.List, java.util.Date, java.util.Date)
 	 */
+	@Override
 	public List<Run> findTrainWithDepTimeBetweenPeriodOfTime(List<Route> routes, Date from, Date to) {
 		String hql="SELECT t.runId FROM Timetable t "
 				+ "WHERE (t.depTime BETWEEN :from and :to) "
@@ -34,6 +36,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	/**
 	 * @see dao.TimetableDAO#findDepTimeFromStation(java.lang.String, entities.Run)
 	 */
+	@Override
 	public Date findDepTimeFromStation(String stationA, Run run) {
 		String hql = "SELECT t.depTime FROM Timetable t "
 					+ "WHERE t.runId=:run "
@@ -50,6 +53,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	/**
 	 * @see dao.TimetableDAO#findArrTimeToStation(java.lang.String, entities.Run)
 	 */
+	@Override
 	public Date findArrTimeToStation(String stationB, Run run) {
 		String hql = "SELECT t.arrTime FROM Timetable t "
 				   + "WHERE t.runId=:run "
@@ -66,6 +70,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	/**
 	 * @see dao.TimetableDAO#findAvailableSeatsCount(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public int findAvailableSeatsCount(String stationA, String runId) {
 		String hql = "SELECT t.availableSeats FROM Timetable t "
 				    + "WHERE t.runId.id=:run "
@@ -82,6 +87,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	/**
 	 * @see dao.TimetableDAO#getRunFromTimetableByStation(java.lang.String, java.util.Date, java.util.Date)
 	 */
+	@Override
 	public List<Run> getRunFromTimetableByStation(String station, Date from, Date to) {
 		String hql = "SELECT t.runId FROM Timetable t "
 			    + "WHERE t.routeId.stationId.name=:station "
@@ -98,6 +104,7 @@ public class TimetableDAOImpl extends GenericDAOImpl<Integer, Timetable> impleme
 	/**
 	 * @see dao.TimetableDAO#findTimetableByRunAndStation(entities.Station, entities.Run)
 	 */
+	@Override
 	public Timetable findTimetableByRunAndStation(Station station, Run run) {
 		String hql = "SELECT t FROM Timetable t "
 				    + "WHERE t.runId=:run "

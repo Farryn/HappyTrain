@@ -29,14 +29,12 @@ public class RegisterServlet extends HttpServlet {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(RegisterServlet.class);
+	private static final Logger LOG = Logger.getLogger(RegisterServlet.class);
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public RegisterServlet() {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -59,32 +57,33 @@ public class RegisterServlet extends HttpServlet {
      * @param req HttpServletRequest Object
      * @param res HttpServletResponse Object
      */
-    private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
-    	log.info("Getting parameters from form");
+    
+    private void processRequest(HttpServletRequest req) {
+    	LOG.info("Getting parameters from form");
 		String firstName = req.getParameter("first_name");
-		if (firstName == null || firstName.equals("")) {
-    		log.warn("Empty first name field");
+		if (firstName == null || "".equals(firstName)) {
+    		LOG.warn("Empty first name field");
 			req.setAttribute("fail", 1);
 			return;
     	}
 		
 		String lastName = req.getParameter("last_name");
-		if (lastName == null || lastName.equals("")) {
-    		log.warn("Empty last name field");
+		if (lastName == null || "".equals(lastName)) {
+    		LOG.warn("Empty last name field");
 			req.setAttribute("fail", 1);
 			return;
     	}
 		
 		String login = req.getParameter("login");
-		if (login == null || login.equals("")) {
-    		log.warn("Empty login field");
+		if (login == null || "".equals(login)) {
+    		LOG.warn("Empty login field");
 			req.setAttribute("fail", 1);
 			return;
     	}
 		
 		String password = req.getParameter("password");
-		if (password == null || password.equals("")) {
-    		log.warn("Empty password field");
+		if (password == null || "".equals(password)) {
+    		LOG.warn("Empty password field");
 			req.setAttribute("fail", 1);
 			return;
     	}
@@ -94,33 +93,29 @@ public class RegisterServlet extends HttpServlet {
 		try {
 			birthDate = getDateFromString(birthDateString);
 		} catch (Exception e) {
-			log.warn("Exception: " + e);
+			LOG.warn("Exception: " + e);
 		} 
 		
-		log.info("Adding User using UserService");
+		LOG.info("Adding User using UserService");
 		try {
 			new UserService().addUser(firstName, lastName, birthDate, login, password);
 			req.setAttribute("fail", 0);
 		} catch (Exception e) {
-			log.error("Exception: " + e);
-			log.warn("Could not add User into DB");
+			LOG.error("Exception: " + e);
+			LOG.warn("Could not add User into DB");
 			req.setAttribute("fail", 1);
 		}
 		
 		
 	}
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request,response);
+		processRequest(request);
 		request.getRequestDispatcher("/Register.jsp").forward(request, response);
 	}
 

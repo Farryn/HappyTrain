@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.List;
+
 import util.HibernateUtil;
 import entities.Run;
 
@@ -13,6 +14,7 @@ public class RunDAOImpl extends GenericDAOImpl<Integer, Run> implements RunDAO {
 	/**
 	 * @see dao.RunDAO#findByTrainId(int)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Run> findByTrainId(final int trainId) {
 		String hql = "SELECT r FROM Run r "

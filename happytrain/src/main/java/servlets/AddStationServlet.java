@@ -28,52 +28,48 @@ public class AddStationServlet extends HttpServlet {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(AddStationServlet.class);  
+	private static final Logger LOG = Logger.getLogger(AddStationServlet.class);  
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public AddStationServlet() {
         super();
-        // TODO Auto-generated constructor stub
+
     }
 
     /** Process data from request.
      * @param req HttpServletRequest Object
      * @param res HttpServletResponse Object
      */
-    private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
-    	log.info("Getting parameters from form");
+    private void processRequest(HttpServletRequest req) {
+    	LOG.info("Getting parameters from form");
     	String stationName = req.getParameter("stationName");
-    	if (stationName == null || stationName.equals("")) {
-    		log.warn("Empty station name");
+    	if (stationName == null || "".equals(stationName)) {
+    		LOG.warn("Empty station name");
 			req.setAttribute("fail", 1);
 			return;
     	}
-    	log.info("Adding Station into DB");
+    	LOG.info("Adding Station into DB");
     	try {
 			new StationService().addStation(stationName);
 			req.setAttribute("fail", 0);
 		} catch (Exception e) {
-			log.error("Exception: " + e);
-			log.warn("Could not add station into DB");
+			LOG.error("Exception: " + e);
+			LOG.warn("Could not add station into DB");
 			req.setAttribute("fail", 1);
 		}
 	}
     
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-	}
+	
 
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request,response);
+		processRequest(request);
 		ServletContext sc = getServletContext();
 		RequestDispatcher rd = sc.getRequestDispatcher("/protected/AddTrain.jsp");
 		rd.forward(request, response);

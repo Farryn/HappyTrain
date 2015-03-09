@@ -41,33 +41,31 @@ public class ShowRouteServlet extends HttpServlet {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(ShowRouteServlet.class);   
+	private static final Logger LOG = Logger.getLogger(ShowRouteServlet.class);   
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public ShowRouteServlet() {
-        super();
-        // TODO Auto-generated constructor stub
     }
     
     /** Process data from request.
      * @param req HttpServletRequest Object
      * @param res HttpServletResponse Object
      */
-    private void processRequest(HttpServletRequest req,	HttpServletResponse res) {
-    	log.info("Getting parameters from GET");
+    private void processRequest(HttpServletRequest req) {
+    	LOG.info("Getting parameters from GET");
     	String trainStr = req.getParameter("train");
 		int trainId = Integer.parseInt(trainStr);
 		
-		log.info("Getting Stations from RouteService");
+		LOG.info("Getting Stations from RouteService");
 		RouteService routeService = new RouteService();
 		List<StationVO> stationList = new ArrayList<StationVO>();
 		try {
 			stationList = routeService.getStationsByTrain(trainId);
 		} catch (Exception e) {
-			log.warn("Exception: " + e);
-			log.info("No result was found");
+			LOG.warn("Exception: " + e);
+			LOG.info("No result was found");
 			req.setAttribute("emptyList", 1);
 		}
 		req.setAttribute("haveRun", 0);
@@ -76,17 +74,17 @@ public class ShowRouteServlet extends HttpServlet {
 		
 		String runStr = req.getParameter("run");
 		if (runStr != null) {
-			log.info("We have Run parameter");
+			LOG.info("We have Run parameter");
 			int runId = Integer.parseInt(runStr);
 			
-			log.info("Getting Timetable with Run.Id " + runId + " on every Station");
+			LOG.info("Getting Timetable with Run.Id " + runId + " on every Station");
 			ClientService clientService = new ClientService();
 			List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
 			try {
 				timetableList = clientService.getTimesFromStationList(runId, stationList);
 			} catch (Exception e) {
-				log.warn("Exception: " + e);
-				log.info("No time was found");
+				LOG.warn("Exception: " + e);
+				LOG.info("No time was found");
 				req.setAttribute("emptyList", 1);
 			}
 			
@@ -100,8 +98,9 @@ public class ShowRouteServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+		processRequest(request);
 		ServletContext sc = getServletContext();
 		RequestDispatcher rd = sc.getRequestDispatcher("/ShowRoute.jsp");
 		rd.forward(request, response);
@@ -109,11 +108,6 @@ public class ShowRouteServlet extends HttpServlet {
 
 	
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+	
 
 }

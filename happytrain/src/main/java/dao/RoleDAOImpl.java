@@ -14,6 +14,7 @@ public class RoleDAOImpl extends GenericDAOImpl<Integer, Role> implements RoleDA
 	/**
 	 * @see dao.RoleDAO#findAllRole()
 	 */
+	@Override
 	public List<Role> findAllRole() {
 		List<Role> roleList = HibernateUtil.getCurrentSession()
 				.createQuery("FROM Role r").list();
@@ -23,6 +24,7 @@ public class RoleDAOImpl extends GenericDAOImpl<Integer, Role> implements RoleDA
 	/**
 	 * @see dao.RoleDAO#findByName(java.lang.String)
 	 */
+	@Override
 	public Role findByName(String str) {
 		
 		String hql = "SELECT r FROM Role r WHERE r.name=:name";

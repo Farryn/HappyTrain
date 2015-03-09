@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 
-import servlets.ShowRouteServlet;
 import util.HibernateUtil;
-import valueobjects.RouteVO;
 import valueobjects.StationVO;
-import valueobjects.TrainVO;
+import dao.RouteDAO;
 import dao.RouteDAOImpl;
+import dao.StationDAO;
 import dao.StationDAOImpl;
 import entities.Route;
 import entities.Station;
@@ -18,30 +18,49 @@ import entities.Train;
 
 public class RouteService {
 	
-	private static Logger log = Logger.getLogger(RouteService.class);   
+	private static final Logger LOG = Logger.getLogger(RouteService.class);   
 	
-	public List<StationVO> getStationsByTrain(int id) throws Exception{
+	private RouteDAO routeDao = new RouteDAOImpl();
+	private StationDAO stationDao = new StationDAOImpl();
+	
+	/**
+	 * @param routeDao the routeDao to set
+	 */
+	public void setRouteDao(RouteDAO routeDao) {
+		this.routeDao = routeDao;
+	}
+
+	/**
+	 * @param stationDao the stationDao to set
+	 */
+	public void setStationDao(StationDAO stationDao) {
+		this.stationDao = stationDao;
+	}
+
+
+
+	public List<StationVO> getStationsByTrain(int id) throws IllegalStateException, NullPointerException{
 		List<Station> stationList = new ArrayList<Station>();
 		List<StationVO> stationVOList = new ArrayList<StationVO>();
 		
-		RouteDAOImpl routeDao = new RouteDAOImpl();
-		log.info("Opening Hibernate Session with transaction");
+		
+		LOG.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		try {
-			log.info("Getting Stations with Train.id " + id);
+			LOG.info("Getting Stations with Train.id " + id);
 			stationList = routeDao.findStationsByTrain(id);
 			if (stationList.isEmpty()) {
 				throw new IllegalStateException();
 			}
-			log.info("Commiting transaction");
+			LOG.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			log.warn("Transaction was rollbacked");
+		} catch (IllegalStateException | HibernateException | NullPointerException e) {
+			LOG.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
 			throw e;
 		} finally {
-			log.info("Closing Hibernate Session");
+			LOG.info("Closing Hibernate Session");
 			HibernateUtil.closeCurrentSession();
 		}
 		
@@ -53,14 +72,13 @@ public class RouteService {
 	
 
 
-	public void addRoute(Train train, String stationName, int count) throws Exception {
-		StationDAOImpl stationDao = new StationDAOImpl();
+	public void addRoute(Train train, String stationName, int count) throws NullPointerException {
+		
 		Station station = stationDao.findByName(stationName);
 		if (station == null) {
 			throw new NullPointerException();
 		}
 		Route route = new Route(train, station, count);
-		RouteDAOImpl routeDao = new RouteDAOImpl();
 		routeDao.persist(route);
 		
 	}

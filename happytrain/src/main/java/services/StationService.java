@@ -4,46 +4,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 
 import util.HibernateUtil;
 import valueobjects.StationVO;
+import dao.StationDAO;
 import dao.StationDAOImpl;
 import entities.Station;
 
 public class StationService {
 	
-	private static Logger log = Logger.getLogger(StationService.class);
+	private static final Logger LOG = Logger.getLogger(StationService.class);
 	
-	public List<Station> getAllStations() throws Exception {
+	private StationDAO dao = new StationDAOImpl();
+	
+	/**
+	 * @param dao the dao to set
+	 */
+	public void setDao(StationDAO dao) {
+		this.dao = dao;
+	}
+
+	public List<Station> getAllStations() throws NullPointerException, IllegalStateException {
 		List<Station> stationList = new ArrayList<Station>();
-		StationDAOImpl dao = new StationDAOImpl();
 		
-		log.info("Opening Hibernate Session with transaction");
+		LOG.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		try {
-			log.info("Searching for all stations");
+			LOG.info("Searching for all stations");
 			stationList = dao.findAll();
 			if (stationList.isEmpty()) {
 				throw new IllegalStateException();
 			}
-			log.info("Commiting transaction");
+			LOG.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			log.warn("Transaction was rollbacked");
+		} catch (NullPointerException | HibernateException | IllegalStateException e) {
+			LOG.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
 			throw e;
 		} finally {
-			log.info("Closing Hibernate Session");
+			LOG.info("Closing Hibernate Session");
 			HibernateUtil.closeCurrentSession();
 		}
 		
 		return stationList;
 	}
 	
-	public List<StationVO> getAllStationVO() throws Exception {
-		StationService ss = new StationService();
-		List<Station> stationList = ss.getAllStations();
+	public List<StationVO> getAllStationVO() throws NullPointerException, IllegalStateException {
+		List<Station> stationList = getAllStations();
 		List<StationVO> stationVOList = new ArrayList<StationVO>();
 		
 		for (Station station: stationList) {
@@ -53,49 +62,25 @@ public class StationService {
 	}
 	
 	
-	/*
-	public Station getStationByName(String str){
-		StationDAOImpl dao = new StationDAOImpl();
-		Station station = null;
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		try {
-			station = dao.findByName(str);
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction();
-		} finally {
-			HibernateUtil.closeCurrentSession();
-		}
-		return station;
-	}
 	
-	public StationVO getStationVOByName(String str) {
-		StationService ss = new StationService();
-		Station station = ss.getStationByName(str);
-		StationVO stationVO = new StationVO(station); 
-		return stationVO;
-	}*/
-	
-	public void addStation(String stationName) throws Exception{
-		StationDAOImpl dao = new StationDAOImpl();
+	public void addStation(String stationName) {
 		
-		log.info("Opening Hibernate Session with transaction");
+		LOG.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		try {
-			log.info("Creating Station and adding it into DB");
+			LOG.info("Creating Station and adding it into DB");
 			Station station = new Station(stationName);
 			dao.persist(station);
 			
-			log.info("Commiting transaction");
+			LOG.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			log.warn("Transaction was rollbacked");
+		} catch (HibernateException e) {
+			LOG.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
 			throw e;
 		} finally {
-			log.info("Closing Hibernate Session");
+			LOG.info("Closing Hibernate Session");
 			HibernateUtil.closeCurrentSession();
 		}
 	}

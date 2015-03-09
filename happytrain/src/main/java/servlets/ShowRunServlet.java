@@ -28,31 +28,29 @@ public class ShowRunServlet extends HttpServlet {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(ShowRunServlet.class);
+	private static final Logger LOG = Logger.getLogger(ShowRunServlet.class);
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public ShowRunServlet() {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
     /** Process data from request.
      * @param req HttpServletRequest Object
      * @param res HttpServletResponse Object
      */
-    private void processRequest(HttpServletRequest req, HttpServletResponse res) {
-    	log.info("Getting parameters from GET");
+    private void processRequest(HttpServletRequest req) {
+    	LOG.info("Getting parameters from GET");
     	int trainId = Integer.parseInt(req.getParameter("train"));
     	
-    	log.info("Getting Runs list from RunService");
+    	LOG.info("Getting Runs list from RunService");
 		List<RunVO> runList = new ArrayList<RunVO>();
 		try {
 			runList = new RunService().getRunByTrainId(trainId);
 		} catch (Exception e) {
-			log.warn("Exception: " + e);
-			log.info("No result was found");
+			LOG.warn("Exception: " + e);
+			LOG.info("No result was found");
 			req.setAttribute("emptyList", 1);
 		}
 		req.setAttribute("runList", runList);
@@ -61,18 +59,14 @@ public class ShowRunServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    @Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+		processRequest(request);
 		request.getRequestDispatcher("/protected/ShowRun.jsp").forward(request, response);
 	}
 
 	
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+	
 
 }

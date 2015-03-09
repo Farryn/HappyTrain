@@ -2,20 +2,14 @@ package valueobjects;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import entities.Run;
 import entities.Train;
 
 public class RunVO {
+	
 	private int id;
-	
 	private Date startTime;
-	
 	private Date finishTime;
-	
 	private Train trainId;
 	
 	public RunVO() {
@@ -28,35 +22,61 @@ public class RunVO {
 		this.finishTime = run.getFinishTime();
 	}
 
+	/**
+	 * @return the id
+	 */
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	/**
+	 * @return the startTime
+	 */
 	public Date getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-
+	/**
+	 * @return the finishTime
+	 */
 	public Date getFinishTime() {
 		return finishTime;
 	}
 
-	public void setFinishTime(Date finishTime) {
-		this.finishTime = finishTime;
-	}
-
+	/**
+	 * @return the trainId
+	 */
 	public Train getTrainId() {
 		return trainId;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * @param finishTime the finishTime to set
+	 */
+	public void setFinishTime(Date finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	/**
+	 * @param trainId the trainId to set
+	 */
 	public void setTrainId(Train trainId) {
 		this.trainId = trainId;
 	}
+
+	
 }

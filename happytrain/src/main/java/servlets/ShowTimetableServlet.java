@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -29,29 +30,26 @@ public class ShowTimetableServlet extends HttpServlet {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(ShowTimetableServlet.class);
+	private static final Logger LOG = Logger.getLogger(ShowTimetableServlet.class);
  
     /**
      * @see HttpServlet#HttpServlet()
      */
     public ShowTimetableServlet() {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
     
 
     /** Process data from request.
      * @param req HttpServletRequest Object
-     * @param res HttpServletResponse Object
      */
-    private void processRequest(HttpServletRequest req, HttpServletResponse res){
+    private void processRequest(HttpServletRequest req){
     	
 		String station = req.getParameter("station");
 		if (station == null) {
 			req.setAttribute("haveResult", 0);
 		} else {
-			processForm(req, res);
+			processForm(req);
 		}
     	
     }
@@ -60,20 +58,20 @@ public class ShowTimetableServlet extends HttpServlet {
      * @param req HttpServletRequest Object
      * @param res HttpServletResponse Object
      */
-	private void processForm(HttpServletRequest req, HttpServletResponse res) {
-		log.info("Getting parameters from form");
+	private void processForm(HttpServletRequest req) {
+		LOG.info("Getting parameters from form");
 		String stationA = req.getParameter("station");
 		String from = req.getParameter("from");
 		String to = req.getParameter("to");
 		
-		log.info("Getting Timetables by Station " + stationA + " between "+ from + "and" + to);
+		LOG.info("Getting Timetables by Station " + stationA + " between "+ from + "and" + to);
 		TimetableService ts = new TimetableService();
 		List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
 		try {
 			timetableList = ts.getTimetableByStation(stationA, from, to);
 		} catch (Exception e) {
-			log.warn("Exception: " + e);
-			log.info("No result was found");
+			LOG.warn("Exception: " + e);
+			LOG.info("No result was found");
 			req.setAttribute("emptyList", 1);
 		}
 		req.setAttribute("haveResult", 1);
@@ -86,8 +84,9 @@ public class ShowTimetableServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request,response);
+		processRequest(request);
 		ServletContext sc = getServletContext();
 		RequestDispatcher rd = sc.getRequestDispatcher("/ShowTimetable.jsp");
 		rd.forward(request, response);
@@ -96,8 +95,9 @@ public class ShowTimetableServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processForm(request,response);
+		processForm(request);
 		ServletContext sc = getServletContext();
 		RequestDispatcher rd = sc.getRequestDispatcher("/ShowTimetable.jsp");
 		rd.forward(request, response);

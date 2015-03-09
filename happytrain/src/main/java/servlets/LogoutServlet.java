@@ -25,21 +25,20 @@ public class LogoutServlet extends HttpServlet {
 	/**
 	 * Logger instance.
 	 */
-	private static Logger log = Logger.getLogger(LogoutServlet.class);
+	private static final Logger LOG = Logger.getLogger(LogoutServlet.class);
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public LogoutServlet() {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.info("Logging out");
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		LOG.info("Logging out");
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 		    session.invalidate();
@@ -47,11 +46,6 @@ public class LogoutServlet extends HttpServlet {
 		request.getRequestDispatcher("/").forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+	
 
 }

@@ -4,7 +4,7 @@
 package util;
 
 /**
- * @author Mup4uk
+ * @author 
  *
  */
 public class MyException extends Exception {
@@ -12,8 +12,12 @@ public class MyException extends Exception {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 2020167760484920984L;
+
+	/**
+	 * 
+	 */
 	public MyException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -21,7 +25,6 @@ public class MyException extends Exception {
 	 */
 	public MyException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -29,7 +32,6 @@ public class MyException extends Exception {
 	 */
 	public MyException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -38,9 +40,8 @@ public class MyException extends Exception {
 	 */
 	public MyException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
-
+	
 	/**
 	 * @param message
 	 * @param cause
@@ -50,7 +51,6 @@ public class MyException extends Exception {
 	public MyException(String message, Throwable cause,
 			boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
 	}
 
 }
