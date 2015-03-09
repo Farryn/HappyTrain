@@ -12,17 +12,34 @@ import dao.TicketDAO;
 import dao.TicketDAOImpl;
 import entities.Ticket;
 
+/**
+ * @author Damir Tuktamyshev
+ * Service for Ticket.
+ */
 public class TicketService {
 	
+	/**
+	 * Logger.
+	 */
 	private static final Logger LOG = Logger.getLogger(TicketService.class);
 
-	private TicketDAO tdao = new TicketDAOImpl();
 	/**
-	 * @param tdao the tdao to set
+	 * DAO for Ticket.
 	 */
-	public void setTdao(TicketDAO tdao) {
-		this.tdao = tdao;
+	private TicketDAO ticketDao = new TicketDAOImpl();
+	
+	/**
+	 * @param ticketDao the ticketDao to set
+	 */
+	public void setTdao(TicketDAO ticketDao) {
+		this.ticketDao = ticketDao;
 	}
+	
+	/**Get list of Tickets by given Run id
+	 * @param runId Run id
+	 * @return TicketVO list
+	 * @throws IllegalStateException
+	 */
 	public List<TicketVO> getTicketsByRunId(int runId) throws  IllegalStateException {
 		
 		List<Ticket> ticketList = new ArrayList<Ticket>();
@@ -33,7 +50,7 @@ public class TicketService {
 		HibernateUtil.beginTransaction();
 		try {
 			LOG.info("Searching for Tickets by Run.Id " + runId);
-			ticketList = tdao.findTicketsByRunId(runId);
+			ticketList = ticketDao.findTicketsByRunId(runId);
 			if (ticketList.isEmpty()) {
 				LOG.warn("Empty ticket list");
 				throw new IllegalStateException();

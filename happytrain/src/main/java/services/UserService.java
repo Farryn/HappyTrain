@@ -22,21 +22,49 @@ import valueobjects.UserVO;
 
 
 
+/**
+ * @author Damir Tuktamyshev
+ *	Service for User.
+ */
 public class UserService {
 
+	/**
+	 * Logger.
+	 */
 	private static final Logger LOG = Logger.getLogger(UserService.class);
 	
-	private UserDAO udao = new UserDAOImpl();
-	private RoleDAO rdao = new RoleDAOImpl();
+	/**
+	 * DAO for User.
+	 */
+	private UserDAO userDao = new UserDAOImpl();
+	/**
+	 * DAO for Role.
+	 */
+	private RoleDAO roleDao = new RoleDAOImpl();
 	
-	public void setRoleDao(RoleDAO rdao) {
-		this.rdao = rdao;
+	
+
+	/**
+	 * @param userDao the userDao to set
+	 */
+	public void setUserDao(UserDAO userDao) {
+		this.userDao = userDao;
 	}
 
-	public void setUserDao(UserDAO udao) {
-		this.udao = udao;
+	/**
+	 * @param roleDao the roleDao to set
+	 */
+	public void setRoleDao(RoleDAO roleDao) {
+		this.roleDao = roleDao;
 	}
 
+	/**Get User by given login and password.
+	 * @param login Login
+	 * @param password Password
+	 * @return UserVO
+	 * @throws MyException if input was incorrect
+	 * @throws NullPointerException
+	 */
 	public UserVO findUserByLoginAndPass(String login, String password) throws MyException, NullPointerException {
 		
 		LOG.info("Opening Hibernate Session with transaction");
@@ -44,7 +72,7 @@ public class UserService {
 		HibernateUtil.beginTransaction();
 		UserVO userVO = null;
 		try {
-			User user = udao.findUser(login, password);
+			User user = userDao.findUser(login, password);
 			if (user == null) {
 				throw new MyException("¬ведены неверные данные");
 			}
@@ -63,6 +91,12 @@ public class UserService {
 		return userVO;
 	}
 
+	/**Check whether User is authenticated to browse given page.
+	 * @param userVO User
+	 * @param servletPath Page 
+	 * @param urlRoleMap Available Pages
+	 * @return true if User is authenticated
+	 */
 	public boolean isUserAuth(UserVO userVO, String servletPath, Map<String, String> urlRoleMap) {
 		String currentUserRole = userVO.getRole().getName();
 		String availableURLs = urlRoleMap.get(currentUserRole);
@@ -77,6 +111,13 @@ public class UserService {
 		return false;
 	}
 
+	/**Adds User into DB.
+	 * @param firstName First name
+	 * @param lastName Last name
+	 * @param birthDate Date of birth
+	 * @param login Login
+	 * @param password Password
+	 */
 	public void addUser(String firstName, String lastName, Date birthDate,
 			String login, String password)  {
 		
@@ -85,9 +126,9 @@ public class UserService {
 		HibernateUtil.beginTransaction();
 		try {
 			LOG.info("Creating new User and adding it to DB");
-			Role role = rdao.findByName("client");
+			Role role = roleDao.findByName("client");
 			User user = new User(firstName, lastName, login, password, birthDate, role);
-			udao.persist(user);
+			userDao.persist(user);
 			
 			LOG.info("Commiting transaction");
 			HibernateUtil.commitTransaction();

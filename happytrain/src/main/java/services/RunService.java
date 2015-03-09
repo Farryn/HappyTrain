@@ -12,16 +12,37 @@ import dao.RunDAO;
 import dao.RunDAOImpl;
 import entities.Run;
 
+/**
+ * @author Damir Tuktamyshev
+ * Service for Run.
+ */
 public class RunService {
 
+	/**
+	 * Logger.
+	 */
 	private static final Logger LOG = Logger.getLogger(RunService.class);
+	/**
+	 * DAO for Run.
+	 */
 	private RunDAO dao = new RunDAOImpl();
 	
 
+	
+
+	/**
+	 * @param dao the dao to set.
+	 */
 	public void setDao(RunDAO dao) {
 		this.dao = dao;
 	}
 
+	/**Get Run by given id.
+	 * @param id Run id
+	 * @return Run
+	 * @throws NullPointerException
+	 * @throws IllegalStateException
+	 */
 	public Run getRunById(int id) throws NullPointerException, IllegalStateException{
 		Run run = null;
 		LOG.info("Opening Hibernate Session with transaction");
@@ -47,6 +68,12 @@ public class RunService {
 		
 	}
 
+	/**Get all Runs by given Train id.
+	 * @param trainId Train id
+	 * @return List of Runs
+	 * @throws NullPointerException
+	 * @throws IllegalStateException
+	 */
 	public List<RunVO> getRunByTrainId(int trainId) throws NullPointerException, IllegalStateException {
 		List<Run> runList =  new ArrayList<Run>();
 		List<RunVO> runVOList = new ArrayList<RunVO>();

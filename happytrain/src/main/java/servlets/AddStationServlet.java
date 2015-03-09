@@ -40,7 +40,6 @@ public class AddStationServlet extends HttpServlet {
 
     /** Process data from request.
      * @param req HttpServletRequest Object
-     * @param res HttpServletResponse Object
      */
     private void processRequest(HttpServletRequest req) {
     	LOG.info("Getting parameters from form");

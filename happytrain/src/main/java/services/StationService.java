@@ -12,10 +12,20 @@ import dao.StationDAO;
 import dao.StationDAOImpl;
 import entities.Station;
 
+/**
+ * @author Damir Tuktamyshev
+ * Service for Station.
+ */
 public class StationService {
 	
+	/**
+	 * Logger.
+	 */
 	private static final Logger LOG = Logger.getLogger(StationService.class);
 	
+	/**
+	 * DAO for Station.
+	 */
 	private StationDAO dao = new StationDAOImpl();
 	
 	/**
@@ -25,6 +35,11 @@ public class StationService {
 		this.dao = dao;
 	}
 
+	/**Get all Stations.
+	 * @return List of Stations
+	 * @throws NullPointerException
+	 * @throws IllegalStateException
+	 */
 	public List<Station> getAllStations() throws NullPointerException, IllegalStateException {
 		List<Station> stationList = new ArrayList<Station>();
 		
@@ -51,6 +66,11 @@ public class StationService {
 		return stationList;
 	}
 	
+	/**Transform Station list into StationVO list.  
+	 * @return StationVO list
+	 * @throws NullPointerException
+	 * @throws IllegalStateException
+	 */
 	public List<StationVO> getAllStationVO() throws NullPointerException, IllegalStateException {
 		List<Station> stationList = getAllStations();
 		List<StationVO> stationVOList = new ArrayList<StationVO>();
@@ -63,6 +83,9 @@ public class StationService {
 	
 	
 	
+	/**Add station into DB.
+	 * @param stationName
+	 */
 	public void addStation(String stationName) {
 		
 		LOG.info("Opening Hibernate Session with transaction");

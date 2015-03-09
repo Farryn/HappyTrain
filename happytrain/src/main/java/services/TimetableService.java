@@ -24,13 +24,32 @@ import entities.Run;
 import entities.Timetable;
 import entities.Train;
 
+/**
+ * @author Damir Tuktamyshev
+ * Service for Timetable.
+ */
 public class TimetableService {
 	
+	/**
+	 * Logger.
+	 */
 	private static final Logger LOG = Logger.getLogger(TimetableService.class);
 	
+	/**
+	 * DAO for Timetable.
+	 */
 	private TimetableDAO timetableDao = new TimetableDAOImpl();
+	/**
+	 * DAO for Train.
+	 */
 	private TrainDAO trainDao = new TrainDAOImpl();
+	/**
+	 * DAO for Run.
+	 */
 	private RunDAO runDao = new RunDAOImpl();
+	/**
+	 * DAO for Route.
+	 */
 	private RouteDAO routeDao = new RouteDAOImpl();
 	
 	/**
@@ -65,6 +84,16 @@ public class TimetableService {
 	}
 
 
+	/**Get list of Timetable by given Station and period of time
+	 * @param station Station name
+	 * @param fromTime Beginning of period
+	 * @param toTime End of period
+	 * @return TimetableVO list
+	 * @throws NullPointerException
+	 * @throws IllegalStateException
+	 * @throws IllegalArgumentException
+	 * @throws ParseException
+	 */
 	public List<TimetableVO> getTimetableByStation(String station, String fromTime, String toTime) 
 			throws NullPointerException, IllegalStateException, IllegalArgumentException, ParseException {
 		
@@ -113,6 +142,12 @@ public class TimetableService {
 	}
 
 	
+	/**Generates Date object from String.
+	 * @param str String representing date
+	 * @return Date
+	 * @throws IllegalArgumentException
+	 * @throws ParseException
+	 */
 	private Date getDateFromString(String str) throws ParseException, IllegalArgumentException  {
 		if (str == null) {
     		throw new IllegalArgumentException();
@@ -124,6 +159,16 @@ public class TimetableService {
     	return date;
     }
 	
+	/**Add Run into DB. 
+	 * @param trainId Train id
+	 * @param stationArray Array of Stations
+	 * @param arrivalTime Arrival time
+	 * @param departureTime Departure time
+	 * @throws NullPointerException
+	 * @throws IllegalStateException
+	 * @throws IllegalArgumentException
+	 * @throws ParseException
+	 */
 	public void addRun(int trainId, String[] stationArray, String[] arrivalTime, String[] departureTime) 
 			throws NullPointerException, IllegalStateException, IllegalArgumentException, ParseException {
 			LOG.info("Opening Hibernate Session with transaction");
@@ -172,6 +217,18 @@ public class TimetableService {
 	}
 
 
+	/**Creates Timetable by given parameters.
+	 * @param station Station name
+	 * @param trainId Train id
+	 * @param run Run
+	 * @param arrivalTime Arrival time
+	 * @param departureTime Departure time
+	 * @param seatsCount Count of seats
+	 * @return Timetable
+	 * @throws IllegalArgumentException
+	 * @throws ParseException
+	 * @throws NullPointerException
+	 */
 	private Timetable createTimetable(String station, int trainId, Run run,
 			String arrivalTime, String departureTime, int seatsCount) 
 					throws IllegalArgumentException, ParseException, NullPointerException {

@@ -12,17 +12,36 @@ import dao.TrainDAO;
 import dao.TrainDAOImpl;
 import entities.Train;
 
+/**
+ * @author Damir Tuktamyshev
+ * Service for Train.
+ */
 public class TrainService {
 
+	/**
+	 * Logger.
+	 */
 	private static final Logger LOG = Logger.getLogger(TrainService.class);
 
+	/**
+	 * DAO for Train.
+	 */
 	private TrainDAO dao = new TrainDAOImpl();
 	
+
+	/**
+	 * @param dao the dao to set
+	 */
 	public void setDao(TrainDAO dao) {
 		this.dao = dao;
 	}
 
 
+	/**Get all Trains.
+	 * @return Train list
+	 * @throws IllegalStateException
+	 * @throws NullPointerException
+	 */
 	public List<TrainVO> getAllTrains() throws IllegalStateException, NullPointerException{
 		List<Train> trainList = new ArrayList<Train>();
 		List<TrainVO> trainVOList = new ArrayList<TrainVO>();
@@ -56,6 +75,9 @@ public class TrainService {
 	}
 	
 	
+	/**Add Train onto DB.
+	 * @param train Train
+	 */
 	public void addTrain(Train train){
 		dao.persist(train);
 	}

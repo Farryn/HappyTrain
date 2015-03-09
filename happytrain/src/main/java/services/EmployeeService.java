@@ -6,10 +6,23 @@ import org.hibernate.HibernateException;
 import entities.Train;
 import util.HibernateUtil;
 
+/**
+ * @author 
+ * Service for Employee.
+ */
 public class EmployeeService {
 	
+	/**
+	 * Logger.
+	 */
 	private static final Logger LOG = Logger.getLogger(EmployeeService.class);
+	/**
+	 * Service for Train.
+	 */
 	private TrainService trainService = new TrainService();
+	/**
+	 * Service for Route.
+	 */
 	private RouteService routeService = new RouteService();
 	
 	/**
@@ -26,6 +39,13 @@ public class EmployeeService {
 		this.routeService = routeService;
 	}
 
+	/**Method adds Train into DB.
+	 * @param name Train number
+	 * @param seatsCount Count of seats
+	 * @param stationArray Station array
+	 * @throws NullPointerException
+	 * @throws IllegalStateException
+	 */
 	public void addTrain(String name, int seatsCount, String[] stationArray) throws NullPointerException, IllegalStateException {
 		
 		LOG.info("Creating new Train with name " + name);

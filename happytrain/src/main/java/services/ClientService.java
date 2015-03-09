@@ -34,16 +34,45 @@ import entities.Ticket;
 import entities.Timetable;
 import entities.User;
 
+/**
+ * @author 
+ * Service for searching Trains and buying Tickets. 
+ */
 public class ClientService {
 	
+	/**
+	 * Logger.
+	 */
 	private static final Logger LOG = Logger.getLogger(ClientService.class);
 
+	
+	/**
+	 * DAO for User.
+	 */
 	private UserDAO userDao = new UserDAOImpl();
+	/**
+	 * DAO for Station.
+	 */
 	private StationDAO  stationDao = new StationDAOImpl();
+	/**
+	 * DAO for Run.
+	 */
 	private RunDAO runDao = new RunDAOImpl();
+	/**
+	 * DAO for Tickets.
+	 */
 	private TicketDAO ticketDao = new TicketDAOImpl();
+	/**
+	 * DAO for Route.
+	 */
 	private RouteDAO routeDao = new RouteDAOImpl();
+	/**
+	 * DAO for Timetable.
+	 */
 	private TimetableDAO timetableDao = new TimetableDAOImpl();
+	/**
+	 * Service for Run.
+	 */
 	private RunService runService = new RunService();
 	
 	/**
@@ -102,6 +131,17 @@ public class ClientService {
 	}
 
 
+	/**Search Train passing two given Stations.The departure time from first Station must be between given period of time.
+	 * @param stationA First Station
+	 * @param stationB Second Station
+	 * @param fromTime Beginning of period
+	 * @param toTime End of period
+	 * @return TimetableVO list
+	 * @throws NullPointerException 
+	 * @throws IllegalStateException
+	 * @throws IllegalArgumentException
+	 * @throws ParseException
+	 */
 	public List<TimetableVO> searchTrain(String stationA, String stationB, String fromTime, String toTime) 
 			throws NullPointerException ,IllegalStateException, IllegalArgumentException, ParseException {
 		
@@ -133,8 +173,16 @@ public class ClientService {
 	}
 	
 	
-	 private List<TimetableVO> getSearchedTrains(String stationA,
-			String stationB, Date from, Date to) {
+	 /**Inner method of searchTrain method providing main logic.
+	 * @param stationA First Station
+	 * @param stationB Second Station
+	 * @param from Beginning of period
+	 * @param to End of period
+	 * @return TimetableVO list
+	 * @throws IllegalStateException
+	 */
+	private List<TimetableVO> getSearchedTrains(String stationA,
+			String stationB, Date from, Date to) throws IllegalStateException{
 		 
 		 	List<Run> runList = new ArrayList<Run>();
 		 	List<Route> routeList = new ArrayList<Route>();
@@ -161,6 +209,13 @@ public class ClientService {
 	}
 
 
+	/**Generates TimetableVO list using list of Runs.
+	 * @param runList Run list
+	 * @param stationA First Station
+	 * @param stationB Second Station
+	 * @return TimetableVO list
+	 * @throws NullPointerException
+	 */
 	private List<TimetableVO> getTimetableByRunList(List<Run> runList, String stationA, String stationB)
 			 throws NullPointerException{
 		
@@ -178,7 +233,7 @@ public class ClientService {
 			SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 			String departureTime = dt.format(departureTimeBeforeFormat);
 			String arrivalTime = dt.format(arrivalTimeBeforeFormat);
-			TimetableVO timetable = new TimetableVO(run.getTrainId().getId() ,run.getTrainId().getNumber(), run.getId(), departureTime, arrivalTime, count);
+			TimetableVO timetable = new TimetableVO(run.getTrainId().getId(), run.getTrainId().getNumber(), run.getId(), departureTime, arrivalTime, count);
 			timetableVOList.add(timetable);
 		}
 			
@@ -186,6 +241,12 @@ public class ClientService {
 	}
 
 
+	/**Generates Date object from String.
+	 * @param str String representing date
+	 * @return Date
+	 * @throws IllegalArgumentException
+	 * @throws ParseException
+	 */
 	private Date getDateFromString(String str) throws IllegalArgumentException, ParseException {
 		 if (str == null) {
 	    		throw new IllegalArgumentException();
@@ -196,17 +257,17 @@ public class ClientService {
 			
 	    	return date;
 	    }
+	
 	/**
-	 *  
-	 * @param userVO
-	 * @param stationFrom
-	 * @param stationTo
-	 * @param depTime
-	 * @param runId
-	 * @throws MyException 
+	 * Method for buying Ticket.
+	 * @param userVO User value object
+	 * @param stationFrom Departure Station
+	 * @param stationTo Arrival Station
+	 * @param depTime Departure time
+	 * @param runId Run id
+	 * @throws MyException if checks failed
 	 * @throws ParseException 
 	 * @throws IllegalArgumentException 
-	 * @throws Exception
 	 */
 	public void buyTicket(UserVO userVO,  String stationFrom, String stationTo, String depTime, String runId) 
 			throws NullPointerException, IllegalStateException, IllegalArgumentException, ParseException, MyException  {
@@ -224,7 +285,6 @@ public class ClientService {
 				addTicket(userVO, stationFrom, stationTo, run, depTime);
 				updateTimetable(stationFrom, stationTo, run);
 				
-				
 				LOG.info("Commiting transaction");
 				HibernateUtil.commitTransaction();
 			} catch (NullPointerException | IllegalStateException | HibernateException | IllegalArgumentException | ParseException e) {
@@ -240,7 +300,14 @@ public class ClientService {
 		
 	}
 
-	private void updateTimetable(String stationFrom, String stationTo, Run run) {
+	/**Method updates available seats in Timetable.
+	 * @param stationFrom Departure Station
+	 * @param stationTo Arrival Station
+	 * @param run Run
+	 * @throws IllegalStateException
+	 * @throws NullPointerException
+	 */
+	private void updateTimetable(String stationFrom, String stationTo, Run run) throws IllegalStateException, NullPointerException{
 		LOG.info("Searching ordinal numbers of first and last Station in order");
 		int stationFromOrdinalNumber = routeDao.getOrdinalNumber(stationFrom, run.getTrainId());
 		int stationToOrdinalNumber = routeDao.getOrdinalNumber(stationTo, run.getTrainId());
@@ -267,8 +334,17 @@ public class ClientService {
 	}
 
 
+	/**Method adds Ticket into DB.
+	 * @param userVO User value object
+	 * @param stationFrom Departure Station
+	 * @param stationTo Arrival Station
+	 * @param run Run
+	 * @param depTime Departure time
+	 * @throws ParseException
+	 * @throws NullPointerException
+	 */
 	private void addTicket(UserVO userVO, String stationFrom, String stationTo,
-			Run run, String depTime) throws IllegalArgumentException, ParseException, NullPointerException {
+			Run run, String depTime) throws ParseException, NullPointerException {
 		
 		Date date = getDateFromString(depTime);
 		User user = userDao.findById(userVO.getId());
@@ -286,7 +362,16 @@ public class ClientService {
 	}
 
 
-	private boolean checkForBuying(UserVO userVO,  String stationFrom, String depTime, String runId) throws IllegalArgumentException, ParseException, MyException{
+	/**Method does all checks for buying Ticket.
+	 * @param userVO User value object
+	 * @param stationFrom Departure Station
+	 * @param depTime Departure time
+	 * @param runId Run id
+	 * @return true if all checks were passed
+	 * @throws ParseException
+	 * @throws MyException
+	 */
+	private boolean checkForBuying(UserVO userVO,  String stationFrom, String depTime, String runId) throws ParseException, MyException{
 		
 		Date date = getDateFromString(depTime);
 		LOG.info("Checking for free seats in Run " + runId);
@@ -310,13 +395,16 @@ public class ClientService {
 			throw new MyException("До отправления поезда осталось менее 10 минут");
 		}
 		
-		if (haveFreeSeats && !isAlreadyInTicketList && haveEnoughTimeUntilDeparture){
+		if (haveFreeSeats && !isAlreadyInTicketList && haveEnoughTimeUntilDeparture) {
 			return true;
 		}
-		
 		return false;
 	}
 
+	/**Method checks for amount of time left until departure.
+	 * @param date Departure date
+	 * @return true if there is enough time
+	 */
 	private boolean checkForEnoughTimeUntilDeparture(Date date) {
 		LOG.info("Getting difference between current time and depTime of Train");
 		long duration = date.getTime() - new Date().getTime();
@@ -327,6 +415,12 @@ public class ClientService {
 		return false;
 	}
 
+	/**Method checks whether User has already registered on given Run.
+	 * @param run Run
+	 * @param userVO User value object
+	 * @return true if User has already registered
+	 * @throws NullPointerException
+	 */
 	private boolean checkForRegistrationOnRun(String run, UserVO userVO) throws NullPointerException{
 		TicketDAOImpl tdao = new TicketDAOImpl();
 		int userId = userVO.getId();
@@ -354,6 +448,12 @@ public class ClientService {
 		return isRegistered;
 	}
 
+	/**Method checks for amount of free seats on given Run.
+	 * @param stationFrom Departure Station
+	 * @param runId Run id
+	 * @return true if there are free seats
+	 * @throws NullPointerException
+	 */
 	private boolean checkForFreeSeats(String stationFrom, String runId) throws NullPointerException {
 		TimetableDAOImpl tdao = new TimetableDAOImpl();
 		
@@ -380,6 +480,13 @@ public class ClientService {
 	}
 
 
+	/**Method returns TimetableVO list by given Run id and list of Stations.
+	 * @param runId Run id
+	 * @param stationList List of Stations
+	 * @return TimetableVO list
+	 * @throws NullPointerException
+	 * @throws IllegalArgumentException
+	 */
 	public List<TimetableVO> getTimesFromStationList(int runId, List<StationVO> stationList) 
 			throws NullPointerException, IllegalArgumentException {
 		LOG.info("Checking input parameters");

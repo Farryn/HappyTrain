@@ -16,11 +16,24 @@ import entities.Route;
 import entities.Station;
 import entities.Train;
 
+/**
+ * @author Damir Tuktamyshev
+ * Service for Route.
+ */
 public class RouteService {
 	
+	/**
+	 * Logger.
+	 */
 	private static final Logger LOG = Logger.getLogger(RouteService.class);   
 	
+	/**
+	 * DAO for Route.
+	 */
 	private RouteDAO routeDao = new RouteDAOImpl();
+	/**
+	 * DAO for Station.
+	 */
 	private StationDAO stationDao = new StationDAOImpl();
 	
 	/**
@@ -39,6 +52,12 @@ public class RouteService {
 
 
 
+	/**Get Station list by given train id.
+	 * @param id Train id.
+	 * @return StationVO list
+	 * @throws IllegalStateException
+	 * @throws NullPointerException
+	 */
 	public List<StationVO> getStationsByTrain(int id) throws IllegalStateException, NullPointerException{
 		List<Station> stationList = new ArrayList<Station>();
 		List<StationVO> stationVOList = new ArrayList<StationVO>();
@@ -72,6 +91,12 @@ public class RouteService {
 	
 
 
+	/**Method adds Route into DB.
+	 * @param train Train
+	 * @param stationName Station name
+	 * @param count Count of seats
+	 * @throws NullPointerException
+	 */
 	public void addRoute(Train train, String stationName, int count) throws NullPointerException {
 		
 		Station station = stationDao.findByName(stationName);
