@@ -61,32 +61,13 @@ public class RegisterServlet extends HttpServlet {
     private void processRequest(HttpServletRequest req) {
     	LOG.info("Getting parameters from form");
 		String firstName = req.getParameter("first_name");
-		if (firstName == null || "".equals(firstName)) {
-    		LOG.warn("Empty first name field");
-			req.setAttribute("fail", 1);
-			return;
-    	}
-		
 		String lastName = req.getParameter("last_name");
-		if (lastName == null || "".equals(lastName)) {
-    		LOG.warn("Empty last name field");
-			req.setAttribute("fail", 1);
-			return;
-    	}
-		
 		String login = req.getParameter("login");
-		if (login == null || "".equals(login)) {
-    		LOG.warn("Empty login field");
-			req.setAttribute("fail", 1);
-			return;
-    	}
-		
 		String password = req.getParameter("password");
-		if (password == null || "".equals(password)) {
-    		LOG.warn("Empty password field");
+		if (wrongInput(firstName, lastName, login, password)) {
 			req.setAttribute("fail", 1);
 			return;
-    	}
+		}
 		
 		String birthDateString = req.getParameter("birth_date");
 		Date birthDate = null;
@@ -109,6 +90,29 @@ public class RegisterServlet extends HttpServlet {
 		
 	}
 	
+
+	private boolean wrongInput(String firstName, String lastName, String login, String password) {
+		if (firstName == null || "".equals(firstName)) {
+    		LOG.warn("Empty first name field");
+			return false;
+    	}
+		
+		if (lastName == null || "".equals(lastName)) {
+    		LOG.warn("Empty last name field");
+    		return false;
+    	}
+		
+		if (login == null || "".equals(login)) {
+    		LOG.warn("Empty login field");
+    		return false;
+    	}
+		
+		if (password == null || "".equals(password)) {
+    		LOG.warn("Empty password field");
+    		return false;
+    	}
+		return true;
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

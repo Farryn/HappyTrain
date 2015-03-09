@@ -151,13 +151,8 @@ public class TimetableService {
 				int seatsCount = train.getSeatsCount();
 				for (int i = 0; i < arrivalTime.length; i++) {
 					LOG.info("Creating new Timetable and adding it to DB");
-					Route route = routeDao.findRouteByStationStringAndTrainId(stationArray[i], trainId);
-					if (route == null) {
-						throw new NullPointerException();
-					}
-					Date arrDate = getDateFromString(arrivalTime[i]);
-					Date depDate = getDateFromString(departureTime[i]);
-					Timetable timetable = new Timetable(route, run, arrDate, depDate, seatsCount);
+					
+					Timetable timetable = createTimetable(stationArray[i], trainId, run, arrivalTime[i], departureTime[i], seatsCount);
 					timetableDao.persist(timetable);
 					
 				}
@@ -174,5 +169,20 @@ public class TimetableService {
 			
 		
 		
+	}
+
+
+	private Timetable createTimetable(String station, int trainId, Run run,
+			String arrivalTime, String departureTime, int seatsCount) 
+					throws IllegalArgumentException, ParseException, NullPointerException {
+		
+		Route route = routeDao.findRouteByStationStringAndTrainId(station, trainId);
+		if (route == null) {
+			throw new NullPointerException();
+		}
+		Date arrDate = getDateFromString(arrivalTime);
+		Date depDate = getDateFromString(departureTime);
+		Timetable timetable = new Timetable(route, run, arrDate, depDate, seatsCount);
+		return timetable;
 	}
 }
