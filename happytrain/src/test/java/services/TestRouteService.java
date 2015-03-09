@@ -26,7 +26,7 @@ import entities.Train;
  * @author 
  *
  */
-public class RouteServiceTest {
+public class TestRouteService {
 
 	
 	/**
