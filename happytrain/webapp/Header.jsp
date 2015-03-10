@@ -19,11 +19,13 @@
 		</div>
 		<div id="menu" class="container">
 			<ul>
-				<li class="current_page_item"><a href="/happytrain" accesskey="1" title="">Поиск поезда</a></li>
+				<li ><a href="/happytrain" accesskey="1" title="">Поиск поезда</a></li>
 				<li><a href="/happytrain/timetable" accesskey="1" title="">Расписание</a></li>
-				<li><a href="/happytrain/alltrains" accesskey="2" title="">Все поезда</a></li>
-				<li><a href="/happytrain/protected/AddStation.jsp" accesskey="3" title="">Добавить станцию</a></li>
-				<li><a href="/happytrain/protected/AddTrain.jsp" accesskey="4" title="">Добавить поезд</a></li>
+				<c:if test="${user.role.name == 'admin' or user.role.name == 'employee'}">
+					<li><a href="/happytrain/alltrains" accesskey="2" title="">Все поезда</a></li>
+					<li><a href="/happytrain/protected/AddStation.jsp" accesskey="3" title="">Добавить станцию</a></li>
+					<li><a href="/happytrain/protected/AddTrain.jsp" accesskey="4" title="">Добавить поезд</a></li>
+				</c:if>
 			</ul>
 		</div>
 	</div>

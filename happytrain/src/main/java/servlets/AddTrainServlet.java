@@ -41,9 +41,7 @@ public class AddTrainServlet extends HttpServlet {
    
     /**
      * @param req HttpServletRequest Object
-     * @param res HttpServletResponse Object
      */
-    
     private void processRequest(HttpServletRequest req) {
     	LOG.info("Getting parameters from form");
     	String trainNumber = req.getParameter("trainNumber");

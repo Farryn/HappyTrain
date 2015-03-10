@@ -22,12 +22,11 @@ public class RunService {
 	 * Logger.
 	 */
 	private static final Logger LOG = Logger.getLogger(RunService.class);
+	
 	/**
 	 * DAO for Run.
 	 */
 	private RunDAO dao = new RunDAOImpl();
-	
-
 	
 
 	/**
@@ -41,9 +40,8 @@ public class RunService {
 	 * @param id Run id
 	 * @return Run
 	 * @throws NullPointerException
-	 * @throws IllegalStateException
 	 */
-	public Run getRunById(int id) throws NullPointerException, IllegalStateException{
+	public Run getRunById(int id) throws NullPointerException {
 		Run run = null;
 		LOG.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
@@ -52,11 +50,11 @@ public class RunService {
 			run = dao.findById(id);
 			if (run == null) {
 				LOG.warn("run is null");
-				throw new IllegalStateException();
+				throw new NullPointerException();
 			}
 			LOG.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
-		} catch (IllegalStateException | NullPointerException | HibernateException e) {
+		} catch (NullPointerException | HibernateException e) {
 			LOG.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
 			throw e;

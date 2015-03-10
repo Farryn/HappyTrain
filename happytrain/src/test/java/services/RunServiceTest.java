@@ -69,9 +69,9 @@ public class RunServiceTest {
 	    	rs.getRunById(id);   
 	    	fail();
 		} catch (IllegalStateException e) {
-			
-		} catch (Exception e) {
 			fail();
+		} catch (Exception e) {
+			
 		} 
 	    
 	    //test3

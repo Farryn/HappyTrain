@@ -16,7 +16,6 @@ public class HibernateUtil {
 	}
 
 
-
 	public static void setCurrentSession(Session currentSession) {
 		HibernateUtil.currentSession = currentSession;
 	}
@@ -46,6 +45,9 @@ public class HibernateUtil {
       }
     }
 
+    private HibernateUtil(){
+    	
+    }
     public static SessionFactory getSessionFactory() {
       return SESSIONFACTORY;
     }

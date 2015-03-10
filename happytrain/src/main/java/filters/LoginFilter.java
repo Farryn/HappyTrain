@@ -23,7 +23,7 @@ import valueobjects.UserVO;
 /**
  * Servlet Filter implementation class LoginFilter.
  */
-@WebFilter//(urlPatterns = {"/protected/*", "/alltrains"})
+@WebFilter
 public class LoginFilter implements Filter {
 
 	/**

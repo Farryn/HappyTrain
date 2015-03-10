@@ -56,7 +56,7 @@ public class ShowAllTrainsServlet extends HttpServlet {
 		}
     	req.setAttribute("trainList", trainList);
     	
-    	StringBuffer url = req.getRequestURL();
+    	String url = req.getRequestURL().toString();
     	req.setAttribute("servletUrl", url);
     	
     }

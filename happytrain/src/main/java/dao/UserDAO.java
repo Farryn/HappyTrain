@@ -13,6 +13,12 @@ public interface UserDAO extends GenericDAO<Integer, User> {
 	 * @return User entity
 	 */
 	User findUser(String login, String password);
+
+	/**Get password hash from DB.
+	 * @param login Login
+	 * @return password hash
+	 */
+	String getPasswordForLogin(String login);
 	
 
 }

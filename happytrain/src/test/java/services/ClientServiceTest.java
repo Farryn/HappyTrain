@@ -19,6 +19,8 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import util.MyException;
 import valueobjects.StationVO;
 import valueobjects.TimetableVO;
 import valueobjects.UserVO;
@@ -62,7 +64,7 @@ public class ClientServiceTest {
 		try {
 			service.searchTrain("station", "station", "date", "date");
 			fail();
-		} catch (ParseException e) {
+		} catch (MyException e) {
 			
 		} catch (Exception e) {
 			fail();

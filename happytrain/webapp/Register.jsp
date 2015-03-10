@@ -39,7 +39,7 @@
 				</li>
 				<li>
 					<label>Пароль</label>
-					<input type="text" name="password" data-validate="required,alphanumeric"/>
+					<input type="password" name="password" data-validate="required,alphanumeric"/>
 				</li>
 			</ul>
 			<input type="submit" value="Добавить" class="button"/>

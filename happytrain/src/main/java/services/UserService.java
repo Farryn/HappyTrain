@@ -1,8 +1,9 @@
 package services;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -19,6 +20,7 @@ import entities.User;
 import util.HibernateUtil;
 import util.MyException;
 import valueobjects.UserVO;
+import util.PasswordHash;
 
 
 
@@ -58,6 +60,7 @@ public class UserService {
 		this.roleDao = roleDao;
 	}
 
+	
 	/**Get User by given login and password.
 	 * @param login Login
 	 * @param password Password
@@ -65,21 +68,31 @@ public class UserService {
 	 * @throws MyException if input was incorrect
 	 * @throws NullPointerException
 	 */
-	public UserVO findUserByLoginAndPass(String login, String password) throws MyException, NullPointerException {
+	public UserVO findUserByLoginAndPass(String login, String password) 
+			throws MyException, NullPointerException, NoSuchAlgorithmException, InvalidKeySpecException {
 		
 		LOG.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
 		HibernateUtil.beginTransaction();
 		UserVO userVO = null;
 		try {
-			User user = userDao.findUser(login, password);
+			String correctHash = userDao.getPasswordForLogin(login);
+			if (correctHash == null) {
+				throw new MyException("Пользователя с таким логином не существует");
+			}
+			
+			boolean validate = PasswordHash.validatePassword(password, correctHash);
+			if (!validate) {
+				throw new MyException("Неверный пароль");
+			}
+			User user = userDao.findUser(login, correctHash);
 			if (user == null) {
 				throw new MyException("Введены неверные данные");
 			}
 			userVO = new UserVO(user);
 			LOG.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
-		} catch (HibernateException | MyException  | NullPointerException e) {
+		} catch (HibernateException | MyException  | NullPointerException | NoSuchAlgorithmException | InvalidKeySpecException e) {
 			LOG.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
 			throw e;
@@ -90,6 +103,7 @@ public class UserService {
 		
 		return userVO;
 	}
+	
 
 	/**Check whether User is authenticated to browse given page.
 	 * @param userVO User
@@ -119,7 +133,7 @@ public class UserService {
 	 * @param password Password
 	 */
 	public void addUser(String firstName, String lastName, Date birthDate,
-			String login, String password)  {
+			String login, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		
 		LOG.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
@@ -127,12 +141,13 @@ public class UserService {
 		try {
 			LOG.info("Creating new User and adding it to DB");
 			Role role = roleDao.findByName("client");
-			User user = new User(firstName, lastName, login, password, birthDate, role);
+			String pass = PasswordHash.createHash(password);
+			User user = new User(firstName, lastName, login, pass, birthDate, role);
 			userDao.persist(user);
 			
 			LOG.info("Commiting transaction");
 			HibernateUtil.commitTransaction();
-		} catch (HibernateException e) {
+		} catch (HibernateException | NoSuchAlgorithmException | InvalidKeySpecException e) {
 			LOG.warn("Transaction was rollbacked");
 			HibernateUtil.rollbackTransaction();
 			throw e;

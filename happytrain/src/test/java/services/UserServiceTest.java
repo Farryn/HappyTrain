@@ -6,6 +6,8 @@ package services;
 
 import static org.junit.Assert.*;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 
 import org.hibernate.HibernateException;
@@ -17,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import util.MyException;
+import util.PasswordHash;
 import valueobjects.UserVO;
 import dao.RoleDAOImpl;
 import dao.UserDAOImpl;
@@ -50,21 +53,30 @@ public class UserServiceTest {
 		service.setUserDao(mockDAOuser);
 		String login = "Login";
 		String password = "Password";
-		
+		String hash = null;
+		try {
+			hash = PasswordHash.createHash("Password");
+		} catch (NoSuchAlgorithmException e1) {
+			e1.printStackTrace();
+		} catch (InvalidKeySpecException e1) {
+			e1.printStackTrace();
+		}
 		User user = new User("Name", "LastName", "login", "password", new Date(), new Role());
 		UserVO expected = new UserVO(user);
 		UserVO test = new UserVO(user);
-		Mockito.when(mockDAOuser.findUser(login, password)).thenReturn(user);
+		Mockito.when(mockDAOuser.getPasswordForLogin(Mockito.anyString())).thenReturn(hash);
+		Mockito.when(mockDAOuser.findUser(Mockito.anyString(), Mockito.anyString())).thenReturn(user);
 		try {
 			test = service.findUserByLoginAndPass(login, password);
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail();
 		} 
-	    Mockito.verify(mockDAOuser, Mockito.atLeastOnce()).findUser(login, password);
+	    Mockito.verify(mockDAOuser, Mockito.atLeastOnce()).findUser(Mockito.anyString(), Mockito.anyString());
 	    Assert.assertEquals(expected.getFirstName(), test.getFirstName());
 	    
 	    
-	    Mockito.when(mockDAOuser.findUser(login, password)).thenReturn(null);
+	    Mockito.when(mockDAOuser.findUser(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
 	    try {
 	    	service.findUserByLoginAndPass(login, password);   
 	    	fail();
@@ -74,7 +86,7 @@ public class UserServiceTest {
 			fail();
 		} 
 
-	    Mockito.when(mockDAOuser.findUser(login, password)).thenThrow(new HibernateException("Some info"));
+	    Mockito.when(mockDAOuser.findUser(Mockito.anyString(), Mockito.anyString())).thenThrow(new HibernateException("Some info"));
 	    try {
 	    	service.findUserByLoginAndPass(login, password);   
 	    	fail();

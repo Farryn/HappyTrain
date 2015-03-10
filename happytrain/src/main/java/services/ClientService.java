@@ -140,10 +140,10 @@ public class ClientService {
 	 * @throws NullPointerException 
 	 * @throws IllegalStateException
 	 * @throws IllegalArgumentException
-	 * @throws ParseException
+	 * @throws MyException
 	 */
 	public List<TimetableVO> searchTrain(String stationA, String stationB, String fromTime, String toTime) 
-			throws NullPointerException ,IllegalStateException, IllegalArgumentException, ParseException {
+			throws NullPointerException , IllegalArgumentException, MyException {
 		
 		Date from = getDateFromString(fromTime);
 		Date to = getDateFromString(toTime);
@@ -245,15 +245,19 @@ public class ClientService {
 	 * @param str String representing date
 	 * @return Date
 	 * @throws IllegalArgumentException
-	 * @throws ParseException
+	 * @throws MyException 
 	 */
-	private Date getDateFromString(String str) throws IllegalArgumentException, ParseException {
+	private Date getDateFromString(String str) throws IllegalArgumentException, MyException{
 		 if (str == null) {
 	    		throw new IllegalArgumentException();
 	    	}
 	    	Date date = new Date();
 	    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
-			date = sdf.parse(str);
+			try {
+				date = sdf.parse(str);
+			} catch (ParseException e) {
+				throw new MyException("Дата имеет неправильный формат.");
+			}
 			
 	    	return date;
 	    }
@@ -266,11 +270,10 @@ public class ClientService {
 	 * @param depTime Departure time
 	 * @param runId Run id
 	 * @throws MyException if checks failed
-	 * @throws ParseException 
 	 * @throws IllegalArgumentException 
 	 */
 	public void buyTicket(UserVO userVO,  String stationFrom, String stationTo, String depTime, String runId) 
-			throws NullPointerException, IllegalStateException, IllegalArgumentException, ParseException, MyException  {
+			throws NullPointerException, IllegalStateException, IllegalArgumentException, MyException  {
 		
 		if (checkForBuying(userVO, stationFrom, depTime, runId)) {
 			LOG.info("Opening Hibernate Session with transaction");
@@ -287,7 +290,7 @@ public class ClientService {
 				
 				LOG.info("Commiting transaction");
 				HibernateUtil.commitTransaction();
-			} catch (NullPointerException | IllegalStateException | HibernateException | IllegalArgumentException | ParseException e) {
+			} catch (NullPointerException | IllegalStateException | HibernateException | IllegalArgumentException e) {
 				LOG.warn("Transaction was rollbacked");
 				HibernateUtil.rollbackTransaction();
 				throw e;
@@ -340,11 +343,10 @@ public class ClientService {
 	 * @param stationTo Arrival Station
 	 * @param run Run
 	 * @param depTime Departure time
-	 * @throws ParseException
 	 * @throws NullPointerException
 	 */
 	private void addTicket(UserVO userVO, String stationFrom, String stationTo,
-			Run run, String depTime) throws ParseException, NullPointerException {
+			Run run, String depTime) throws MyException, NullPointerException {
 		
 		Date date = getDateFromString(depTime);
 		User user = userDao.findById(userVO.getId());
@@ -368,10 +370,9 @@ public class ClientService {
 	 * @param depTime Departure time
 	 * @param runId Run id
 	 * @return true if all checks were passed
-	 * @throws ParseException
 	 * @throws MyException
 	 */
-	private boolean checkForBuying(UserVO userVO,  String stationFrom, String depTime, String runId) throws ParseException, MyException{
+	private boolean checkForBuying(UserVO userVO,  String stationFrom, String depTime, String runId) throws  MyException{
 		
 		Date date = getDateFromString(depTime);
 		LOG.info("Checking for free seats in Run " + runId);

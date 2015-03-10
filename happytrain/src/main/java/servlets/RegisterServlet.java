@@ -64,7 +64,7 @@ public class RegisterServlet extends HttpServlet {
 		String lastName = req.getParameter("last_name");
 		String login = req.getParameter("login");
 		String password = req.getParameter("password");
-		if (wrongInput(firstName, lastName, login, password)) {
+		if (!wrongInput(firstName, lastName, login, password)) {
 			req.setAttribute("fail", 1);
 			return;
 		}
@@ -85,6 +85,7 @@ public class RegisterServlet extends HttpServlet {
 			LOG.error("Exception: " + e);
 			LOG.warn("Could not add User into DB");
 			req.setAttribute("fail", 1);
+			
 		}
 		
 		
