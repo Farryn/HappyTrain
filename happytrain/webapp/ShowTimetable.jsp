@@ -6,19 +6,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Расписание</title>
-<link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
-<script src="js/jquery.js"></script>
-<script src="js/jquery.datetimepicker.js"></script>
-<script src="js/global.js"></script>
+<link href="${pageContext.request.contextPath}/resources/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.datetimepicker.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/global.js"></script>
 <script src="https://raw.githubusercontent.com/jpillora/verifyjs/gh-pages/dist/verify.notify.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="wrapper">
 	<%@include file="Header.jsp" %>
 	<div id="portfolio" class="container">
-		<form  action="/happytrain/timetable" method="GET" id="main-form">
+		<form  action="timetable" method="POST" id="main-form">
 			    
 			 	<label>Станция</label>
 				<select name="station" >

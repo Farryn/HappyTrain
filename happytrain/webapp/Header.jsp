@@ -4,27 +4,30 @@
 	<div id="header-wrapper">
 		<div id="header" class="container">
 			<div id="logo">
-				<h1><a href="/happytrain"><span>HappyTrain</span></a></h1>
+				<h1><a href="${pageContext.request.contextPath}/"><span>HappyTrain</span></a></h1>
 			</div>
 			<div id="login">
 				<span>Добро пожаловать, </span>
-				<span id="name"><c:out value="${user.login}" default="Гость" /></span>
-					<c:if test="${user == null}">
-						<br/><span><a href="/happytrain/Login.jsp">Войдите</a> или <a href="/happytrain/Register.jsp">зарегистрируйтесь</a></span>
+				<span id="name"><c:out value="${pageContext.request.userPrincipal.name}" default="Гость" /></span>
+					<c:if test="${pageContext.request.userPrincipal.name == null}">
+						<br/><span><a href="${pageContext.request.contextPath}/login">Войдите</a> или 
+						<a href="${pageContext.request.contextPath}/Register.jsp">зарегистрируйтесь</a></span>
 					</c:if>
-					<c:if test="${user != null}">
-						<br/><span><a href="/happytrain/logout">Выйти</a></span>
+					<c:if test="${pageContext.request.userPrincipal.name != null}">
+						<br/><span><a href="j_spring_security_logout">Выйти</a></span>
 					</c:if>
 			</div>
 		</div>
 		<div id="menu" class="container">
 			<ul>
-				<li ><a href="/happytrain" accesskey="1" title="">Поиск поезда</a></li>
-				<li><a href="/happytrain/timetable" accesskey="1" title="">Расписание</a></li>
-				<c:if test="${user.role.name == 'admin' or user.role.name == 'employee'}">
-					<li><a href="/happytrain/alltrains" accesskey="2" title="">Все поезда</a></li>
-					<li><a href="/happytrain/protected/AddStation.jsp" accesskey="3" title="">Добавить станцию</a></li>
-					<li><a href="/happytrain/protected/AddTrain.jsp" accesskey="4" title="">Добавить поезд</a></li>
+				<li ><a href="${pageContext.request.contextPath}/" accesskey="1" title="">Поиск поезда</a></li>
+				<li><a href="${pageContext.request.contextPath}/timetable" accesskey="1" title="">Расписание</a></li>
+				<c:if test="${not empty pageContext.request.userPrincipal}">
+   					<c:if test="${pageContext.request.isUserInRole('ADMIN') || pageContext.request.isUserInRole('EMPLOYEE')}">
+						<li><a href="${pageContext.request.contextPath}/alltrains" accesskey="2" title="">Все поезда</a></li>
+						<li><a href="${pageContext.request.contextPath}/protected/AddStation.jsp" accesskey="3" title="">Добавить станцию</a></li>
+						<li><a href="${pageContext.request.contextPath}/protected/AddTrain.jsp" accesskey="4" title="">Добавить поезд</a></li>
+					</c:if>
 				</c:if>
 			</ul>
 		</div>

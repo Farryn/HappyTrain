@@ -5,10 +5,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
-<script src="/happytrain/js/jquery.js" type="text/javascript"></script>
-<script src="/happytrain/js/verify.notify.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<script src="${pageContext.request.contextPath}/resources/js/jquery.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/js/verify.notify.js" type="text/javascript"></script>
 <title>Добавить станцию</title>
 
 </head>

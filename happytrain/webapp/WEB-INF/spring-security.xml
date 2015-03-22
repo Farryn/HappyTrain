@@ -1,0 +1,41 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+ 
+	<http auto-config="true">
+		<intercept-url pattern="/buyticket" access="ROLE_USER, ROLE_EMPLOYEE, ROLE_ADMIN" />
+		<intercept-url pattern="/login" access="ROLE_ANONYMOUS, ROLE_USER, ROLE_EMPLOYEE, ROLE_ADMIN" />
+		<intercept-url pattern="/" access="ROLE_ANONYMOUS, ROLE_USER, ROLE_EMPLOYEE, ROLE_ADMIN" />
+		<intercept-url pattern="/timetable" access="ROLE_ANONYMOUS, ROLE_USER, ROLE_EMPLOYEE, ROLE_ADMIN" />
+		<intercept-url pattern="/route" access="ROLE_ANONYMOUS, ROLE_USER, ROLE_EMPLOYEE, ROLE_ADMIN" />
+		
+		<intercept-url pattern="/addrun" access="ROLE_EMPLOYEE, ROLE_ADMIN" />
+		<intercept-url pattern="/addtrain" access="ROLE_EMPLOYEE, ROLE_ADMIN" />
+		<intercept-url pattern="/addstation" access="ROLE_EMPLOYEE, ROLE_ADMIN" />
+		<intercept-url pattern="/passenger" access="ROLE_EMPLOYEE, ROLE_ADMIN" />
+		<intercept-url pattern="/alltrains" access="ROLE_EMPLOYEE, ROLE_ADMIN" />
+		<intercept-url pattern="/run" access="ROLE_EMPLOYEE, ROLE_ADMIN" />
+		
+		
+		<form-login 
+		    login-page="/login" 
+		    default-target-url="/" 
+			authentication-failure-url="/login?error" 
+			username-parameter="username"
+			password-parameter="password"/>
+       <logout logout-success-url="/" /> 
+	</http>
+ 
+ 		
+	<authentication-manager>
+	  <authentication-provider>
+	    <user-service>
+			<user name="user" password="user" authorities="ROLE_USER" />
+	    </user-service>
+	  </authentication-provider>
+	</authentication-manager>
+ 
+</beans:beans>

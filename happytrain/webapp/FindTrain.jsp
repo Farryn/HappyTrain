@@ -6,15 +6,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Поиск поезда</title>
-<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
+<link href="<c:url value="resources/css/default.css" />" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
 
 
-<script src="js/verify.notify.js" type="text/javascript"></script>
-<script src="js/jquery.datetimepicker.js"></script>
-<script src="js/global.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/verify.notify.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.datetimepicker.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/resources/js/global.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -53,7 +53,7 @@
 						    <td align="center" valign="top">Прибытие</td>
 						    <td align="center" valign="top">Места</td>
 						    <td align="center" valign="top">Маршрут</td>
-						    <c:if test="${user != null}">
+						    <c:if test="${pageContext.request.userPrincipal.name != null}">
 						    	<td align="center" valign="top">Покупка</td>
 						    </c:if>
 						    

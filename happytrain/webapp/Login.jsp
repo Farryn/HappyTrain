@@ -6,10 +6,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Login</title>
-<link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
-<script src="/happytrain/js/jquery.js"></script>
-<script src="/happytrain/js/verify.notify.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/verify.notify.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -20,19 +20,19 @@
 				${failMessage}
 			</div>
 		</c:if>
-		<form action="/happytrain/login" method="post" id="input-form">
+		<form action="<c:url value='/login' />" method='POST' id="input-form">
 			<ul id="wrapper-ul">
 				<li>
 					<label>Login</label>
-				    <input type="text" name="login" data-validate="required,alphanumeric">
+				    <input type="text" name="username" data-validate="required,alphanumeric">
 				</li>
 				<li>
 				    <label>Password</label>
 				    <input type="password" name="password" data-validate="required,alphanumeric">
 				</li>
 		    </ul>
-		    <input type="hidden" name="url" value="${URL}">
-			<input type="hidden" name="servletUrl" value="${servletUrl}">
+		   <!--   <input type="hidden" name="url" value="${URL}">
+			<input type="hidden" name="servletUrl" value="${servletUrl}"> -->
 			<input type="submit" value="Submit" class="button">
 		</form>
 	</div>

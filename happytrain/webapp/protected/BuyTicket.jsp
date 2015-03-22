@@ -6,15 +6,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Покупка билета</title>
-<link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 </head>
 <body>
 <div id="wrapper">
 	<%@include file="/Header.jsp" %>
 	<div id="portfolio" class="container">
 		<c:if test="${fail == null}">
-			<form action="/happytrain/buyticket" method="POST" id="input-form">
+			<form action="${pageContext.request.contextPath}/buyticket" method="POST" id="input-form">
 				<ul id="wrapper-ul">
 					<%--<li>
 						<label>Имя</label>

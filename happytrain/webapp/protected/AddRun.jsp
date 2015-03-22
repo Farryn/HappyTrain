@@ -6,13 +6,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Добавить рейс</title>
-<link href="/happytrain/css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="/happytrain/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
-<script src="js/jquery.js"></script>
-<script src="js/jquery.datetimepicker.js"></script>
-<script src="js/global.js"></script>
-<script src="/happytrain/js/verify.notify.js" type="text/javascript"></script>
+<link href="${pageContext.request.contextPath}/resources/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="${pageContext.request.contextPath}/resources/css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.datetimepicker.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/global.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/verify.notify.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="wrapper">
