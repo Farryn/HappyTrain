@@ -1,14 +1,19 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import util.HibernateUtil;
+import entities.Station;
 import entities.Ticket;
 
 /**
  * Implementation of TicketDAO.
  *
  */
+@Repository("ticketDao")
 public class TicketDAOImpl extends GenericDAOImpl<Integer, Ticket> implements
 		TicketDAO {
 
@@ -16,15 +21,19 @@ public class TicketDAOImpl extends GenericDAOImpl<Integer, Ticket> implements
 	 * @see dao.TicketDAO#findTicketByRunAndUserIds(int, int)
 	 */
 	@Override
-	public Ticket findTicketByRunAndUserIds(int runId, int userId) {
+	public List<Ticket> findTicketByRunAndUserIds(int runId, int userId) {
 		String hql = "SELECT t FROM Ticket t "
 					+ "WHERE t.userId.id=:userId "
 					+ "AND t.runId.id=:runId";
-		Ticket ticket = (Ticket) HibernateUtil.getCurrentSession().createQuery(hql)
+		@SuppressWarnings("unchecked")
+		List<Ticket> ticketList =  getSessionFactory().getCurrentSession().createQuery(hql)
 				.setParameter("userId", userId)
 				.setParameter("runId", runId)
-				.uniqueResult();
-		return ticket;
+				.list();
+		if (ticketList.isEmpty() || ticketList == null){
+			ticketList = new ArrayList<Ticket>();
+		}
+		return ticketList;
 	}
 
 	/**
@@ -34,9 +43,13 @@ public class TicketDAOImpl extends GenericDAOImpl<Integer, Ticket> implements
 	public List<Ticket> findTicketsByRunId(final int runId) {
 		String hql = "SELECT t FROM Ticket t "
 					+ "WHERE t.runId.id=:runId ";
-		List<Ticket> ticketList = (List<Ticket>) HibernateUtil.getCurrentSession().createQuery(hql)
+		@SuppressWarnings("unchecked")
+		List<Ticket> ticketList =  getSessionFactory().getCurrentSession().createQuery(hql)
 				.setParameter("runId", runId)
 				.list();
+		if (ticketList.isEmpty() || ticketList == null){
+			ticketList = new ArrayList<Ticket>();
+		}
 		return ticketList;
 	}
 

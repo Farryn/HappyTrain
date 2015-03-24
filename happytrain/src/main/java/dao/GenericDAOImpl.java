@@ -3,7 +3,12 @@ package dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import util.HibernateUtil;
 
@@ -21,8 +26,14 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	private Class<E> entityClass;
 
 	/**
+	 * 
+	 */
+	private SessionFactory sessionFactory;
+
+	/**
 	 * Default constructor.
 	 */
+	@SuppressWarnings("unchecked")
 	public GenericDAOImpl() {
 		ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
 		this.entityClass = (Class<E>) genericSuperclass.getActualTypeArguments()[1];
@@ -30,12 +41,29 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	
 	
 	
+	/**
+	 * @param sessionFactory
+	 */
+	@Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+	
+	/**
+	 * @return the sessionFactory
+	 */
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+
+
 	/** 
 	 * @see dao.GenericDAO#persist(java.lang.Object)
 	 */
 	@Override
 	public void persist(E entity) {
-		HibernateUtil.getCurrentSession().save(entity);
+		sessionFactory.getCurrentSession().save(entity);
 	}
 
 	
@@ -44,16 +72,17 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	 */
 	@Override
 	public void update(E entity) {
-		HibernateUtil.getCurrentSession().update(entity);
+		sessionFactory.getCurrentSession().update(entity);
 	}
 
 	
 	/**
 	 * @see dao.GenericDAO#findById(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public E findById(K id) {
-		E entity = (E) HibernateUtil.getCurrentSession().get(entityClass, (Serializable) id);
+		E entity = (E) sessionFactory.getCurrentSession().get(entityClass, (Serializable) id);
 		return entity; 
 	}
 
@@ -63,7 +92,7 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	 */
 	@Override
 	public void remove(E entity) {
-		HibernateUtil.getCurrentSession().delete(entity);
+		sessionFactory.getCurrentSession().delete(entity);
 	}
 
  
@@ -73,7 +102,29 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<E> findAll() {
-		List<E> list = (List<E>) HibernateUtil.getCurrentSession().createQuery("from "+entityClass.getName()).list();
+		Session session=null;
+		List<E> list = new ArrayList<E>();
+	    try 
+	    {
+	    session = sessionFactory.openSession();
+	    list = (List<E>) session //sessionFactory.getCurrentSession()
+				.createQuery("from " + entityClass.getName())
+				.list();
+	    
+	    }
+	    catch(Exception e)
+	    {
+	     //Logging
+	    }
+	    finally
+	    {
+	        if(session !=null && session.isOpen())
+	        {
+	          session.close();
+	          session=null;
+	        }
+	    }
+	    
 		return list;
 	}
 }

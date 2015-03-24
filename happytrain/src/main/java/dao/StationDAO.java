@@ -12,4 +12,5 @@ public interface StationDAO extends GenericDAO<Integer, Station> {
 	 * @return Station Entity
 	 */
 	Station findByName(final String str);
+
 }

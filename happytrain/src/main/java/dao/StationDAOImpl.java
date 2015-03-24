@@ -1,12 +1,18 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import util.HibernateUtil;
 import entities.Station;
 
 /**
- * Implementation of RunDAO.
+ * Implementation of StationDAO.
  *
  */
+@Repository("stationDao")
 public class StationDAOImpl extends GenericDAOImpl<Integer, Station> implements StationDAO {
 
 	
@@ -14,12 +20,18 @@ public class StationDAOImpl extends GenericDAOImpl<Integer, Station> implements 
 	 * @see dao.StationDAO#findByName(java.lang.String)
 	 */
 	@Override
-	public Station findByName(final String str) {
-		String hql = "SELECT s FROM Station s WHERE s.name=:name";
-		Station station = (Station) HibernateUtil.getCurrentSession().createQuery(hql)
+	public List<Station> findByName(final String str) {
+		String hql = "SELECT s "
+					+ "FROM Station s "
+					+ "WHERE s.name=:name";
+		@SuppressWarnings("unchecked")
+		List<Station> stationList =  getSessionFactory().getCurrentSession().createQuery(hql)
 				.setParameter("name", str)
-				.uniqueResult();
-		return station;
+				.list();
+		if (stationList.isEmpty() || stationList == null){
+			stationList = new ArrayList<Station>();
+		}
+		return stationList;
 	}
 
 	

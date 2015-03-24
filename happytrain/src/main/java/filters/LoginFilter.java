@@ -1,4 +1,4 @@
-package filters;
+/*package filters;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -20,33 +20,33 @@ import org.apache.log4j.Logger;
 import services.UserService;
 import valueobjects.UserVO;
 
-/**
+*//**
  * Servlet Filter implementation class LoginFilter.
- */
+ *//*
 @WebFilter
 public class LoginFilter implements Filter {
 
-	/**
+	*//**
 	 * Logger instance.
-	 */
+	 *//*
 	private static final Logger LOG = Logger.getLogger(LoginFilter.class);
 	
-	/**
+	*//**
 	 * Available URLs to Role mapping.
-	 */
+	 *//*
 	private Map<String, String> urlRoleMap;
-    /**
+    *//**
      * Default constructor. 
-     */
+     *//*
     public LoginFilter() {
     }
 
 	
 
 	
-	/**
+	*//**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-	 */
+	 *//*
     @Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		UserVO user = (UserVO) ((HttpServletRequest) request).getSession().getAttribute("user");
@@ -70,9 +70,9 @@ public class LoginFilter implements Filter {
 		}
 	}
 
-	/**
+	*//**
 	 * @see Filter#init(FilterConfig)
-	 */
+	 *//*
 	@Override
 	public void init(FilterConfig fConfig) throws ServletException {
 		urlRoleMap = new HashMap<String, String>();
@@ -92,3 +92,4 @@ public class LoginFilter implements Filter {
 	}
 
 }
+*/

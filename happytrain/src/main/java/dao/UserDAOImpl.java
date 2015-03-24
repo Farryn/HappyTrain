@@ -1,5 +1,10 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import util.HibernateUtil;
 import entities.User;
 
@@ -7,19 +12,26 @@ import entities.User;
  * Implementation of UserDAO.
  *
  */
+@Repository("userDao")
 public class UserDAOImpl extends GenericDAOImpl<Integer, User> implements UserDAO {
 
 	/**
 	 * @see dao.UserDAO#findUser(java.lang.String, java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public User findUser(String login, String hash) {
-		String hql = "SELECT u FROM User u WHERE u.login=:login AND u.password=:hash";
-		User user = (User) HibernateUtil.getCurrentSession().createQuery(hql)
+	public List<User> findUser(String login, String hash) {
+		String hql = "SELECT u "
+					+ "FROM User u "
+					+ "WHERE u.login=:login AND u.password=:hash";
+		List<User> userList =  getSessionFactory().getCurrentSession().createQuery(hql)
 				.setParameter("login", login)
 				.setParameter("hash", hash)
-				.uniqueResult();
-		return user;
+				.list();
+		if (userList.isEmpty() || userList == null){
+			userList = new ArrayList<User>();
+		}
+		return userList;
 	}
 
 	/**
@@ -27,10 +39,15 @@ public class UserDAOImpl extends GenericDAOImpl<Integer, User> implements UserDA
 	 */
 	@Override
 	public String getPasswordForLogin(String login) {
-		String hql = "SELECT u.password FROM User u WHERE u.login=:login";
-		String hash = (String) HibernateUtil.getCurrentSession().createQuery(hql)
+		String hql = "SELECT u.password "
+					+ "FROM User u "
+					+ "WHERE u.login=:login";
+		String hash = (String) getSessionFactory().getCurrentSession().createQuery(hql)
 				.setParameter("login", login)
 				.uniqueResult();
+		if (hash == null) {
+			hash="";
+		}
 		return hash;
 		
 	}

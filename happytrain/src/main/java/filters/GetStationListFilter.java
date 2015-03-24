@@ -23,9 +23,9 @@ import entities.Station;
 /**
  * Servlet Filter implementation class GetStationListFilter
  */
-@WebFilter(dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD} ,
+/*@WebFilter(dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD} ,
 								urlPatterns = {   "/FindTrain.jsp", "/ShowTimetable.jsp", "/alltrains",
-											"/protected/AddTrain.jsp", "/protected/ShowAllTrains.jsp", "/Register.jsp"})
+											"/protected/AddTrain.jsp", "/protected/ShowAllTrains.jsp", "/Register.jsp"})*/
 public class GetStationListFilter implements Filter {
 
 	/**

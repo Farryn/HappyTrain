@@ -12,7 +12,7 @@
     </appender>
     
     <appender name="WARN-ERROR-FILE-APPENDER" class="org.apache.log4j.FileAppender">
-        <param name="file" value="logs/error.log"/>
+        <param name="file" value="C:/Downloads/logs/error.log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} [%5p] %c %m at %l%n"/>
         </layout>
@@ -34,7 +34,7 @@
     </appender>
     
     <appender name="ALL-FILE-APPENDER" class="org.apache.log4j.FileAppender">
-        <param name="file" value="logs/all.log"/>
+        <param name="file" value="C:/Downloads/logs/all.log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} [%5p] %c %m at %l%n"/>
         </layout>

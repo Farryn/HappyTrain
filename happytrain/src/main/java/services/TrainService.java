@@ -5,9 +5,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import util.HibernateUtil;
 import valueobjects.TrainVO;
+import dao.StationDAO;
 import dao.TrainDAO;
 import dao.TrainDAOImpl;
 import entities.Train;
@@ -16,6 +20,7 @@ import entities.Train;
  * @author Damir Tuktamyshev
  * Service for Train.
  */
+@Service("trainService")
 public class TrainService {
 
 	/**
@@ -26,14 +31,15 @@ public class TrainService {
 	/**
 	 * DAO for Train.
 	 */
-	private TrainDAO dao = new TrainDAOImpl();
+	@Autowired
+	private TrainDAO trainDao;
 	
 
 	/**
 	 * @param dao the dao to set
 	 */
-	public void setDao(TrainDAO dao) {
-		this.dao = dao;
+	public void setTrainDao(TrainDAO trainDao) {
+		this.trainDao = trainDao;
 	}
 
 

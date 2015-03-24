@@ -1,8 +1,12 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import util.HibernateUtil;
+import entities.Role;
 import entities.Route;
 import entities.Run;
 import entities.Station;
@@ -12,6 +16,7 @@ import entities.Train;
  * Implementation of RouteDAO.
  *
  */
+@Repository("routeDao")
 public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements RouteDAO {
 
 	/**
@@ -24,10 +29,14 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 					+ "and r.stationId.name=:stationA "
 					+ "and r2.stationId.name=:stationB "
 					+ "and r.stationOrdinalNumber<r2.stationOrdinalNumber";
-		List<Route> routeList = HibernateUtil.getCurrentSession().createQuery(hql)
+		@SuppressWarnings("unchecked")
+		List<Route> routeList = getSessionFactory().getCurrentSession().createQuery(hql)
 				.setParameter("stationA", stationA)
 				.setParameter("stationB", stationB)
 				.list();
+		if (routeList.isEmpty() || routeList == null){
+			routeList = new ArrayList<Route>();
+		}
 		return routeList;
 	}
 
@@ -39,9 +48,13 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 		String hql = "SELECT r.stationId FROM Route r "
 					+ "WHERE r.trainId.id=:train "
 					+ "ORDER BY r.stationOrdinalNumber";
-		List<Station> stationList = HibernateUtil.getCurrentSession().createQuery(hql)
+		@SuppressWarnings("unchecked")
+		List<Station> stationList = getSessionFactory().getCurrentSession().createQuery(hql)
 			.setParameter("train", id)
 			.list();
+		if (stationList.isEmpty() || stationList == null){
+			stationList = new ArrayList<Station>();
+		}
 		return stationList;
 	}
 
@@ -53,7 +66,7 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 		String hql = "SELECT r.stationOrdinalNumber FROM Route r "
 					+ "WHERE r.stationId.name=:stationA "
 					+ "AND r.trainId =:train ";
-		int number = (Integer) HibernateUtil.getCurrentSession().createQuery(hql)
+		int number = (Integer) getSessionFactory().getCurrentSession().createQuery(hql)
 				.setParameter("stationA", stationA)
 				.setParameter("train", train)
 				.uniqueResult();
@@ -68,11 +81,15 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 		String hql = "SELECT r.stationId FROM Route r "
 					+ "WHERE r.trainId=:train "
 					+ "AND (r.stationOrdinalNumber BETWEEN :stationFromOrdinalNumber AND :stationToOrdinalNumber) ";
-		List<Station> stationList = HibernateUtil.getCurrentSession().createQuery(hql)
+		@SuppressWarnings("unchecked")
+		List<Station> stationList = getSessionFactory().getCurrentSession().createQuery(hql)
 			.setParameter("train", run.getTrainId())
 			.setParameter("stationFromOrdinalNumber", stationFromOrdinalNumber)
 			.setParameter("stationToOrdinalNumber", stationToOrdinalNumber)
 			.list();
+		if (stationList.isEmpty() || stationList == null){
+			stationList = new ArrayList<Station>();
+		}
 		return stationList;
 	}
 
@@ -80,15 +97,19 @@ public class RouteDAOImpl extends GenericDAOImpl<Integer, Route> implements Rout
 	 * @see dao.RouteDAO#findRouteByStationStringAndTrainId(java.lang.String, int)
 	 */
 	@Override
-	public Route findRouteByStationStringAndTrainId(String station, int trainId) {
+	public List<Route> findRouteByStationStringAndTrainId(String station, int trainId) {
 		String hql = "SELECT r FROM Route r "
 					+ "WHERE r.stationId.name=:station "
 					+ "AND r.trainId.id=:trainId";
-		Route route = (Route) HibernateUtil.getCurrentSession().createQuery(hql)
+		@SuppressWarnings("unchecked")
+		List<Route> routeList = getSessionFactory().getCurrentSession().createQuery(hql)
 				.setParameter("station", station)
 				.setParameter("trainId", trainId)
-				.uniqueResult();
-		return route;
+				.list();
+		if (routeList.isEmpty() || routeList == null){
+			routeList = new ArrayList<Route>();
+		}
+		return routeList;
 	}
 	
 	

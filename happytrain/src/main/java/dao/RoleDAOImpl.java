@@ -1,36 +1,50 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Repository;
 
 import util.HibernateUtil;
 import entities.Role;
+import entities.User;
 
 /**
  * Implementation of RoleDAO.
  *
  */
+@Repository("roleDao")
 public class RoleDAOImpl extends GenericDAOImpl<Integer, Role> implements RoleDAO {
 
 	/**
 	 * @see dao.RoleDAO#findAllRole()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Role> findAllRole() {
-		List<Role> roleList = HibernateUtil.getCurrentSession()
-				.createQuery("FROM Role r").list();
+		List<Role> roleList = getSessionFactory().getCurrentSession()
+				.createQuery("FROM Role r")
+				.list();
+		if (roleList.isEmpty() || roleList == null){
+			roleList = new ArrayList<Role>();
+		}
 		return roleList;
 	}
 	
 	/**
 	 * @see dao.RoleDAO#findByName(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public Role findByName(String str) {
+	public List<Role> findByName(String str) {
 		
 		String hql = "SELECT r FROM Role r WHERE r.name=:name";
-		Role role = (Role) HibernateUtil.getCurrentSession().createQuery(hql)
+		List<Role> roleList =  getSessionFactory().getCurrentSession().createQuery(hql)
 				.setParameter("name", str)
-				.uniqueResult();
-		return role;
+				.list();
+		if (roleList.isEmpty() || roleList == null){
+			roleList = new ArrayList<Role>();
+		}
+		return roleList;
 	}
 }
