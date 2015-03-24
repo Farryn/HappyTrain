@@ -43,7 +43,7 @@ public interface RouteDAO extends GenericDAO<Integer, Route> {
 	/**Get Route Entity which has given Station name and given Train Id.
 	 * @param station Station name
 	 * @param trainId Train Id
-	 * @return Route Entity
+	 * @return Route List
 	 */
-	Route findRouteByStationStringAndTrainId(String station, int trainId);
+	List<Route> findRouteByStationStringAndTrainId(String station, int trainId);
 }

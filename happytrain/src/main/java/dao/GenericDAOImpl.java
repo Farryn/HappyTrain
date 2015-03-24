@@ -10,8 +10,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import util.HibernateUtil;
-
 /**
 *
 *
@@ -28,6 +26,7 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	/**
 	 * 
 	 */
+	@Autowired
 	private SessionFactory sessionFactory;
 
 	/**
@@ -44,7 +43,7 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	/**
 	 * @param sessionFactory
 	 */
-	@Autowired
+	
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -102,29 +101,9 @@ public class GenericDAOImpl<K, E> implements GenericDAO<K, E> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<E> findAll() {
-		Session session=null;
-		List<E> list = new ArrayList<E>();
-	    try 
-	    {
-	    session = sessionFactory.openSession();
-	    list = (List<E>) session //sessionFactory.getCurrentSession()
+		List<E> list = (List<E>) sessionFactory.getCurrentSession() 
 				.createQuery("from " + entityClass.getName())
 				.list();
-	    
-	    }
-	    catch(Exception e)
-	    {
-	     //Logging
-	    }
-	    finally
-	    {
-	        if(session !=null && session.isOpen())
-	        {
-	          session.close();
-	          session=null;
-	        }
-	    }
-	    
 		return list;
 	}
 }

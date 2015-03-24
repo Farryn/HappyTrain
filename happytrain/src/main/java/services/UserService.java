@@ -1,4 +1,4 @@
-package services;
+/*package services;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -10,6 +10,9 @@ import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dao.RoleDAO;
 import dao.RoleDAOImpl;
@@ -24,52 +27,53 @@ import util.PasswordHash;
 
 
 
-/**
+*//**
  * @author Damir Tuktamyshev
  *	Service for User.
- */
+ *//*
+@Service("userService")
 public class UserService {
 
-	/**
+	*//**
 	 * Logger.
-	 */
+	 *//*
 	private static final Logger LOG = Logger.getLogger(UserService.class);
 	
-	/**
+	*//**
 	 * DAO for User.
-	 */
-	private UserDAO userDao = new UserDAOImpl();
-	/**
+	 *//*
+	@Autowired
+	private UserDAO userDao;
+	*//**
 	 * DAO for Role.
-	 */
-	private RoleDAO roleDao = new RoleDAOImpl();
+	 *//*
+	@Autowired
+	private RoleDAO roleDao;
 	
 	
 
-	/**
+	*//**
 	 * @param userDao the userDao to set
-	 */
+	 *//*
 	public void setUserDao(UserDAO userDao) {
 		this.userDao = userDao;
 	}
 
-	/**
+	*//**
 	 * @param roleDao the roleDao to set
-	 */
+	 *//*
 	public void setRoleDao(RoleDAO roleDao) {
 		this.roleDao = roleDao;
 	}
 
 	
-	/**Get User by given login and password.
+	*//**Get User by given login and password.
 	 * @param login Login
 	 * @param password Password
 	 * @return UserVO
-	 * @throws MyException if input was incorrect
-	 * @throws NullPointerException
-	 */
-	public UserVO findUserByLoginAndPass(String login, String password) 
-			throws MyException, NullPointerException, NoSuchAlgorithmException, InvalidKeySpecException {
+	 *//*
+	@Transactional
+	public UserVO findUserByLoginAndPass(String login, String password)  {
 		
 		LOG.info("Opening Hibernate Session with transaction");
 		HibernateUtil.openCurrentSession();
@@ -105,12 +109,12 @@ public class UserService {
 	}
 	
 
-	/**Check whether User is authenticated to browse given page.
+	*//**Check whether User is authenticated to browse given page.
 	 * @param userVO User
 	 * @param servletPath Page 
 	 * @param urlRoleMap Available Pages
 	 * @return true if User is authenticated
-	 */
+	 *//*
 	public boolean isUserAuth(UserVO userVO, String servletPath, Map<String, String> urlRoleMap) {
 		String currentUserRole = userVO.getRole().getName();
 		String availableURLs = urlRoleMap.get(currentUserRole);
@@ -125,13 +129,13 @@ public class UserService {
 		return false;
 	}
 
-	/**Adds User into DB.
+	*//**Adds User into DB.
 	 * @param firstName First name
 	 * @param lastName Last name
 	 * @param birthDate Date of birth
 	 * @param login Login
 	 * @param password Password
-	 */
+	 *//*
 	public void addUser(String firstName, String lastName, Date birthDate,
 			String login, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		
@@ -161,3 +165,4 @@ public class UserService {
 	
 
 }
+*/

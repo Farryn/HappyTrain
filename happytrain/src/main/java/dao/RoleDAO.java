@@ -17,7 +17,7 @@ public interface RoleDAO extends GenericDAO<Integer, Role> {
 	
 	/**Get Role from role table with given name.
 	 * @param str Role name
-	 * @return Role Entity
+	 * @return Role List
 	 */
-	Role findByName(String str);
+	List<Role> findByName(String str);
 }

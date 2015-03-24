@@ -8,25 +8,21 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import util.HibernateUtil;
+import util.EmptyResultException;
 import util.MyException;
 import valueobjects.StationVO;
 import valueobjects.TimetableVO;
 import valueobjects.UserVO;
 import dao.RouteDAO;
-import dao.RouteDAOImpl;
 import dao.RunDAO;
-import dao.RunDAOImpl;
 import dao.StationDAO;
-import dao.StationDAOImpl;
 import dao.TicketDAO;
-import dao.TicketDAOImpl;
 import dao.TimetableDAO;
-import dao.TimetableDAOImpl;
 import dao.UserDAO;
-import dao.UserDAOImpl;
 import entities.Route;
 import entities.Run;
 import entities.Station;
@@ -35,9 +31,10 @@ import entities.Timetable;
 import entities.User;
 
 /**
- * @author 
+ * @author Damir Tuktamyshev
  * Service for searching Trains and buying Tickets. 
  */
+@Service("clientService")
 public class ClientService {
 	
 	/**
@@ -49,40 +46,34 @@ public class ClientService {
 	/**
 	 * DAO for User.
 	 */
-	private UserDAO userDao = new UserDAOImpl();
+	@Autowired
+	private UserDAO userDao;
 	/**
 	 * DAO for Station.
 	 */
-	private StationDAO  stationDao = new StationDAOImpl();
+	@Autowired
+	private StationDAO  stationDao;
 	/**
 	 * DAO for Run.
 	 */
-	private RunDAO runDao = new RunDAOImpl();
+	@Autowired
+	private RunDAO runDao;
 	/**
 	 * DAO for Tickets.
 	 */
-	private TicketDAO ticketDao = new TicketDAOImpl();
+	@Autowired
+	private TicketDAO ticketDao;
 	/**
 	 * DAO for Route.
 	 */
-	private RouteDAO routeDao = new RouteDAOImpl();
+	@Autowired
+	private RouteDAO routeDao;
 	/**
 	 * DAO for Timetable.
 	 */
-	private TimetableDAO timetableDao = new TimetableDAOImpl();
-	/**
-	 * Service for Run.
-	 */
-	private RunService runService = new RunService();
+	@Autowired
+	private TimetableDAO timetableDao;
 	
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-
 	/**
 	 * @param userDao the userDao to set
 	 */
@@ -142,32 +133,23 @@ public class ClientService {
 	 * @throws IllegalArgumentException
 	 * @throws MyException
 	 */
-	public List<TimetableVO> searchTrain(String stationA, String stationB, String fromTime, String toTime) 
-			throws NullPointerException , IllegalArgumentException, MyException {
+	@Transactional
+	public List<TimetableVO> searchTrain(String stationA, String stationB, String fromTime, String toTime) {
 		
-		Date from = getDateFromString(fromTime);
-		Date to = getDateFromString(toTime);
-		LOG.info("Checking input parameters");
-		if (stationA == null || stationB == null || from == null || to == null) {
-			LOG.warn("Input parameter is null");
-			throw new IllegalArgumentException();
+		Date from;
+		Date to;
+		try {
+			from = getDateFromString(fromTime);
+			to = getDateFromString(toTime);
+		} catch (ParseException e) {
+			LOG.warn("Can't convert Date from String");
+			return new ArrayList<TimetableVO>();
 		}
 		
 		List<TimetableVO> timetableVOList = new ArrayList<TimetableVO>();
-		LOG.info("Opening Hibernate Session with transaction");
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		try {
-			timetableVOList = getSearchedTrains(stationA, stationB, from, to);
-			LOG.info("Commiting transaction");
-			HibernateUtil.commitTransaction();
-		} catch (NullPointerException | IllegalStateException | HibernateException | IllegalArgumentException e) {
-			LOG.warn("Transaction was rollbacked");
-			HibernateUtil.rollbackTransaction();
-			throw e;
-		} finally {
-			LOG.info("Closing Hibernate Session");
-			HibernateUtil.closeCurrentSession();
+		timetableVOList = getSearchedTrains(stationA, stationB, from, to);
+		if (timetableVOList.isEmpty()) {
+			LOG.warn("Received empty TimetableVO List from DAO");
 		}
 		return timetableVOList;
 	}
@@ -181,8 +163,7 @@ public class ClientService {
 	 * @return TimetableVO list
 	 * @throws IllegalStateException
 	 */
-	private List<TimetableVO> getSearchedTrains(String stationA,
-			String stationB, Date from, Date to) throws IllegalStateException{
+	private List<TimetableVO> getSearchedTrains(String stationA, String stationB, Date from, Date to) {
 		 
 		 	List<Run> runList = new ArrayList<Run>();
 		 	List<Route> routeList = new ArrayList<Route>();
@@ -191,19 +172,19 @@ public class ClientService {
 		    LOG.info("Getting Route between " + stationA + " and " + stationB);
 		 	routeList = routeDao.findRouteFromAtoB(stationA, stationB);
 			if (routeList.isEmpty()) {
-				throw new IllegalStateException();
+				return new ArrayList<TimetableVO>();
 			} 
 			
 			LOG.info("Getting Runs between period of time from" + from + " to " + to);
 			runList = timetableDao.findTrainWithDepTimeBetweenPeriodOfTime(routeList, from, to);
 			if (runList.isEmpty()) {
-				throw new IllegalStateException();
+				return new ArrayList<TimetableVO>();
 			}
 			
 			LOG.info("Getting TimetableVO list");
 			timetableVOList = getTimetableByRunList(runList, stationA, stationB);
 			if (timetableVOList.isEmpty()) {
-				throw new IllegalStateException();
+				return new ArrayList<TimetableVO>();
 			}
 		return timetableVOList;
 	}
@@ -216,8 +197,7 @@ public class ClientService {
 	 * @return TimetableVO list
 	 * @throws NullPointerException
 	 */
-	private List<TimetableVO> getTimetableByRunList(List<Run> runList, String stationA, String stationB)
-			 throws NullPointerException{
+	private List<TimetableVO> getTimetableByRunList(List<Run> runList, String stationA, String stationB) {
 		
 		List<TimetableVO> timetableVOList = new ArrayList<TimetableVO>();
 		LOG.info("Creating TimetableVO on every found Run");
@@ -228,7 +208,8 @@ public class ClientService {
 			int count = timetableDao.findAvailableSeatsCount(stationA, String.valueOf(run.getId()));
 				
 			if (departureTimeBeforeFormat == null || arrivalTimeBeforeFormat == null) {
-				throw new NullPointerException();
+				LOG.warn("Received no datetime from given Station from DAO");
+				return new ArrayList<TimetableVO>();
 			}
 			SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 			String departureTime = dt.format(departureTimeBeforeFormat);
@@ -244,23 +225,14 @@ public class ClientService {
 	/**Generates Date object from String.
 	 * @param str String representing date
 	 * @return Date
-	 * @throws IllegalArgumentException
-	 * @throws MyException 
+	 * @throws ParseException 
 	 */
-	private Date getDateFromString(String str) throws IllegalArgumentException, MyException{
-		 if (str == null) {
-	    		throw new IllegalArgumentException();
-	    	}
-	    	Date date = new Date();
-	    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
-			try {
-				date = sdf.parse(str);
-			} catch (ParseException e) {
-				throw new MyException("Дата имеет неправильный формат.");
-			}
-			
-	    	return date;
-	    }
+	private Date getDateFromString(String str) throws ParseException {
+		Date date = new Date();
+	    SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
+		date = sdf.parse(str);
+		return date;
+	}
 	
 	/**
 	 * Method for buying Ticket.
@@ -269,36 +241,20 @@ public class ClientService {
 	 * @param stationTo Arrival Station
 	 * @param depTime Departure time
 	 * @param runId Run id
-	 * @throws MyException if checks failed
-	 * @throws IllegalArgumentException 
+	 * @throws EmptyResultException 
 	 */
-	public void buyTicket(UserVO userVO,  String stationFrom, String stationTo, String depTime, String runId) 
-			throws NullPointerException, IllegalStateException, IllegalArgumentException, MyException  {
+	@Transactional
+	public void buyTicket(UserVO userVO,  String stationFrom, String stationTo, String depTime, String runId) throws EmptyResultException {
 		
-		if (checkForBuying(userVO, stationFrom, depTime, runId)) {
-			LOG.info("Opening Hibernate Session with transaction");
-			HibernateUtil.openCurrentSession();
-			HibernateUtil.beginTransaction();
-			try {
-				LOG.info("Creating new Ticket and adding it to DB");
-				Run run = runDao.findById(Integer.parseInt(runId));
-				if (run == null) {
-					throw new NullPointerException();
-				}
-				addTicket(userVO, stationFrom, stationTo, run, depTime);
-				updateTimetable(stationFrom, stationTo, run);
-				
-				LOG.info("Commiting transaction");
-				HibernateUtil.commitTransaction();
-			} catch (NullPointerException | IllegalStateException | HibernateException | IllegalArgumentException e) {
-				LOG.warn("Transaction was rollbacked");
-				HibernateUtil.rollbackTransaction();
-				throw e;
-			} finally {
-				LOG.info("Closing Hibernate Session");
-				HibernateUtil.closeCurrentSession();
+		if (checkForBuying(userVO, stationFrom, depTime, runId).equals("OK")) {
+			LOG.info("Creating new Ticket and adding it to DB");
+			Run run = runDao.findById(Integer.parseInt(runId));
+			if (run == null) {
+				LOG.warn("Received no Run with given ID from DAO");
+				throw new EmptyResultException("Received no Run with given ID from DAO");
 			}
-			
+			addTicket(userVO, stationFrom, stationTo, run, depTime);
+			updateTimetable(stationFrom, stationTo, run);
 		}
 		
 	}
@@ -307,10 +263,9 @@ public class ClientService {
 	 * @param stationFrom Departure Station
 	 * @param stationTo Arrival Station
 	 * @param run Run
-	 * @throws IllegalStateException
-	 * @throws NullPointerException
+	 * @throws EmptyResultException 
 	 */
-	private void updateTimetable(String stationFrom, String stationTo, Run run) throws IllegalStateException, NullPointerException{
+	private void updateTimetable(String stationFrom, String stationTo, Run run) throws EmptyResultException {
 		LOG.info("Searching ordinal numbers of first and last Station in order");
 		int stationFromOrdinalNumber = routeDao.getOrdinalNumber(stationFrom, run.getTrainId());
 		int stationToOrdinalNumber = routeDao.getOrdinalNumber(stationTo, run.getTrainId());
@@ -318,20 +273,20 @@ public class ClientService {
 		LOG.info("Searching for all Stations between first and last Station in order");
 		List<Station> stationList = routeDao.findStationsBetweenFromAndTo(run, stationFromOrdinalNumber, stationToOrdinalNumber);
 		if (stationList.isEmpty()) {
-			LOG.warn("Empty stationList returned");
-			throw new IllegalStateException();
+			LOG.warn("Received empty Station List from DAO");
+			throw new EmptyResultException("Received empty Station List from DAO");
 		}
 		for (Station station: stationList) {
 			LOG.info("Searching for Timetable");
-			Timetable timetable = timetableDao.findTimetableByRunAndStation(station, run);
-			if (timetable == null) {
+			List<Timetable> timetableList = timetableDao.findTimetableByRunAndStation(station, run);
+			if (timetableList.isEmpty()) {
 				LOG.warn("Could not get Timetable with Station name " + station.getName() + " and Run.Id " + run.getId());
-				throw new NullPointerException();
+				throw new EmptyResultException("Could not get Timetable with Station name " + station.getName() + " and Run.Id " + run.getId());
 			}
 			
 			LOG.info("Updating timetable available seats count");
-			timetable.setAvailableSeats(timetable.getAvailableSeats() - 1);
-			timetableDao.update(timetable);
+			timetableList.get(0).setAvailableSeats(timetableList.get(0).getAvailableSeats() - 1);
+			timetableDao.update(timetableList.get(0));
 		}
 		
 	}
@@ -343,22 +298,28 @@ public class ClientService {
 	 * @param stationTo Arrival Station
 	 * @param run Run
 	 * @param depTime Departure time
-	 * @throws NullPointerException
+	 * @throws EmptyResultException 
 	 */
-	private void addTicket(UserVO userVO, String stationFrom, String stationTo,
-			Run run, String depTime) throws MyException, NullPointerException {
+	private void addTicket(UserVO userVO, String stationFrom, String stationTo,	Run run, String depTime) throws EmptyResultException {
 		
-		Date date = getDateFromString(depTime);
+		Date date;
+		try {
+			date = getDateFromString(depTime);
+		} catch (ParseException e) {
+			LOG.warn("Can't convert Date from String");
+			throw new EmptyResultException("Can't convert Date from String");
+		}
 		User user = userDao.findById(userVO.getId());
-		Station stationA = stationDao.findByName(stationFrom);
-		Station stationB = stationDao.findByName(stationTo);
+		List<Station> stationA = stationDao.findByName(stationFrom);
+		List<Station> stationB = stationDao.findByName(stationTo);
 		
-		if (user == null || stationA == null || stationB == null) {
-			throw new NullPointerException();
+		if (user == null || stationA.isEmpty() || stationB.isEmpty()) {
+			LOG.warn("Received empty List from DAO");
+			throw new EmptyResultException("Received empty List from DAO");
 		}
 		
 		
-		Ticket ticket = new Ticket(user, run, stationA, stationB, date);
+		Ticket ticket = new Ticket(user, run, stationA.get(0), stationB.get(0), date);
 		ticketDao.persist(ticket);
 		
 	}
@@ -370,36 +331,38 @@ public class ClientService {
 	 * @param depTime Departure time
 	 * @param runId Run id
 	 * @return true if all checks were passed
-	 * @throws MyException
 	 */
-	private boolean checkForBuying(UserVO userVO,  String stationFrom, String depTime, String runId) throws  MyException{
+	private String checkForBuying(UserVO userVO,  String stationFrom, String depTime, String runId) {
 		
-		Date date = getDateFromString(depTime);
+		Date date;
+		try {
+			date = getDateFromString(depTime);
+		} catch (ParseException e) {
+			LOG.warn("Can't convert Date from String");
+			return "Can't convert Date from String";
+		}
 		LOG.info("Checking for free seats in Run " + runId);
 		boolean haveFreeSeats = checkForFreeSeats(stationFrom, runId);
 		if (!haveFreeSeats) {
 			LOG.info("Fail. There is no free seats");
-			throw new MyException("Нет свободных мест");
+			return "Нет свободных мест";
 		}
 		
 		LOG.info("Checking for User is already in passenger list on Run " + runId);
 		boolean isAlreadyInTicketList = checkForRegistrationOnRun(runId, userVO);
 		if (isAlreadyInTicketList) {
 			LOG.info("Fail. User is already registered on that Run");
-			throw new MyException("Вы уже зарегистрированы на этот поезд");
+			return "Вы уже зарегистрированы на этот поезд";
 		}
 		
 		LOG.info("Checking for time left until departure");
 		boolean haveEnoughTimeUntilDeparture = checkForEnoughTimeUntilDeparture(date);
 		if (!haveEnoughTimeUntilDeparture) {
 			LOG.info("Fail. There is no time left");
-			throw new MyException("До отправления поезда осталось менее 10 минут");
+			return "До отправления поезда осталось менее 10 минут";
 		}
 		
-		if (haveFreeSeats && !isAlreadyInTicketList && haveEnoughTimeUntilDeparture) {
-			return true;
-		}
-		return false;
+		return "OK";
 	}
 
 	/**Method checks for amount of time left until departure.
@@ -420,31 +383,16 @@ public class ClientService {
 	 * @param run Run
 	 * @param userVO User value object
 	 * @return true if User has already registered
-	 * @throws NullPointerException
 	 */
-	private boolean checkForRegistrationOnRun(String run, UserVO userVO) throws NullPointerException{
-		TicketDAOImpl tdao = new TicketDAOImpl();
+	@Transactional
+	private boolean checkForRegistrationOnRun(String run, UserVO userVO){
 		int userId = userVO.getId();
 		int runId = Integer.parseInt(run);
-		LOG.info("Opening Hibernate Session with transaction");
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
 		boolean isRegistered = true;
-		try {
-			LOG.info("Searching Ticket in DB");
-			Ticket ticket = tdao.findTicketByRunAndUserIds(runId, userId);
-			if (ticket == null) {
-				isRegistered = false;
-			}
-			LOG.info("Commiting transaction");
-			HibernateUtil.commitTransaction();
-		} catch (NullPointerException | HibernateException e) {
-			LOG.warn("Transaction was rollbacked");
-			HibernateUtil.rollbackTransaction();
-			throw e;
-		} finally {
-			LOG.info("Closing Hibernate Session");
-			HibernateUtil.closeCurrentSession();
+		LOG.info("Searching Ticket in DB");
+		List<Ticket> ticketList = ticketDao.findTicketByRunAndUserIds(runId, userId);
+		if (ticketList.isEmpty()) {
+			isRegistered = false;
 		}
 		return isRegistered;
 	}
@@ -453,27 +401,11 @@ public class ClientService {
 	 * @param stationFrom Departure Station
 	 * @param runId Run id
 	 * @return true if there are free seats
-	 * @throws NullPointerException
 	 */
-	private boolean checkForFreeSeats(String stationFrom, String runId) throws NullPointerException {
-		TimetableDAOImpl tdao = new TimetableDAOImpl();
-		
+	@Transactional
+	private boolean checkForFreeSeats(String stationFrom, String runId) {
 		int availableSeats = 0;
-		LOG.info("Opening Hibernate Session with transaction");
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		try {
-			availableSeats = tdao.findAvailableSeatsCount(stationFrom, runId);
-			LOG.info("Commiting transaction");
-			HibernateUtil.commitTransaction();
-		} catch (NullPointerException | HibernateException e) {
-			LOG.warn("Transaction was rollbacked");
-			HibernateUtil.rollbackTransaction();
-			throw e;
-		} finally {
-			LOG.info("Closing Hibernate Session");
-			HibernateUtil.closeCurrentSession();
-		}
+		availableSeats = timetableDao.findAvailableSeatsCount(stationFrom, runId);
 		if (availableSeats > 0) {
 			return true;
 		}
@@ -485,50 +417,37 @@ public class ClientService {
 	 * @param runId Run id
 	 * @param stationList List of Stations
 	 * @return TimetableVO list
-	 * @throws NullPointerException
-	 * @throws IllegalArgumentException
 	 */
-	public List<TimetableVO> getTimesFromStationList(int runId, List<StationVO> stationList) 
-			throws NullPointerException, IllegalArgumentException {
+	@Transactional
+	public List<TimetableVO> getTimesFromStationList(int runId, List<StationVO> stationList){
 		LOG.info("Checking input parameters");
 		if (stationList.isEmpty()) {
-			throw new IllegalArgumentException();
+			return new ArrayList<TimetableVO>();
 		}
 		
 		List<TimetableVO> timetableVOList = new ArrayList<TimetableVO>();
 		
 		LOG.info("Getting Run by id " + runId);
-		Run run =  runService.getRunById(runId);
-		
-		LOG.info("Opening Hibernate Session with transaction");
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		try {
-			LOG.info("Creating TimetableVO on every Station");
-			for (StationVO station: stationList) {
-				Date departureTimeBeforeFormat = timetableDao.findDepTimeFromStation(station.getName(), run);
-				Date arrivalTimeBeforeFormat = timetableDao.findArrTimeToStation(station.getName(), run);
-				if (departureTimeBeforeFormat == null || arrivalTimeBeforeFormat == null) {
-					throw new NullPointerException();
-				}
-				SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-				String departureTime = dt.format(departureTimeBeforeFormat);
-				String arrivalTime = dt.format(arrivalTimeBeforeFormat);
-				TimetableVO timetable = new TimetableVO(departureTime, arrivalTime);
-				timetableVOList.add(timetable);
-			}
-			LOG.info("Commiting transaction");
-			HibernateUtil.commitTransaction();
-		} catch (NullPointerException | HibernateException e) {
-			LOG.warn("Transaction was rollbacked");
-			HibernateUtil.rollbackTransaction();
-			throw e;
-		} finally {
-			LOG.info("Closing Hibernate Session");
-			HibernateUtil.closeCurrentSession();
+		Run run = runDao.findById(runId);
+		if (run == null) {
+			LOG.warn("Received no Run with given ID from DAO");
+			return new ArrayList<TimetableVO>();
 		}
 		
-		
+		LOG.info("Creating TimetableVO on every Station");
+		for (StationVO station: stationList) {
+			Date departureTimeBeforeFormat = timetableDao.findDepTimeFromStation(station.getName(), run);
+			Date arrivalTimeBeforeFormat = timetableDao.findArrTimeToStation(station.getName(), run);
+			if (departureTimeBeforeFormat == null || arrivalTimeBeforeFormat == null) {
+				LOG.warn("Received no date from DAO");
+				return new ArrayList<TimetableVO>();
+			}
+			SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			String departureTime = dt.format(departureTimeBeforeFormat);
+			String arrivalTime = dt.format(arrivalTimeBeforeFormat);
+			TimetableVO timetable = new TimetableVO(departureTime, arrivalTime);
+			timetableVOList.add(timetable);
+		}
 		return timetableVOList;
 	}
 }

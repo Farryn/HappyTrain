@@ -7,18 +7,16 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import util.HibernateUtil;
+import util.EmptyResultException;
 import valueobjects.TimetableVO;
 import dao.RouteDAO;
-import dao.RouteDAOImpl;
 import dao.RunDAO;
-import dao.RunDAOImpl;
 import dao.TimetableDAO;
-import dao.TimetableDAOImpl;
 import dao.TrainDAO;
-import dao.TrainDAOImpl;
 import entities.Route;
 import entities.Run;
 import entities.Timetable;
@@ -28,6 +26,7 @@ import entities.Train;
  * @author Damir Tuktamyshev
  * Service for Timetable.
  */
+@Service("timetableService")
 public class TimetableService {
 	
 	/**
@@ -38,19 +37,23 @@ public class TimetableService {
 	/**
 	 * DAO for Timetable.
 	 */
-	private TimetableDAO timetableDao = new TimetableDAOImpl();
+	@Autowired
+	private TimetableDAO timetableDao;
 	/**
 	 * DAO for Train.
 	 */
-	private TrainDAO trainDao = new TrainDAOImpl();
+	@Autowired
+	private TrainDAO trainDao;
 	/**
 	 * DAO for Run.
 	 */
-	private RunDAO runDao = new RunDAOImpl();
+	@Autowired
+	private RunDAO runDao;
 	/**
 	 * DAO for Route.
 	 */
-	private RouteDAO routeDao = new RouteDAOImpl();
+	@Autowired
+	private RouteDAO routeDao;
 	
 	/**
 	 * @param timetableDao the timetableDao to set
@@ -89,54 +92,42 @@ public class TimetableService {
 	 * @param fromTime Beginning of period
 	 * @param toTime End of period
 	 * @return TimetableVO list
-	 * @throws NullPointerException
-	 * @throws IllegalStateException
-	 * @throws IllegalArgumentException
-	 * @throws ParseException
 	 */
-	public List<TimetableVO> getTimetableByStation(String station, String fromTime, String toTime) 
-			throws NullPointerException, IllegalStateException, IllegalArgumentException, ParseException {
+	@Transactional
+	public List<TimetableVO> getTimetableByStation(String station, String fromTime, String toTime) {
 		
-		Date from = getDateFromString(fromTime);
-		Date to = getDateFromString(toTime);
-		List<Run> runList = new ArrayList<Run>();
-		List<TimetableVO> timetableVOList = new ArrayList<TimetableVO>();
-		
-		
-		LOG.info("Opening Hibernate Session with transaction");
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
+		Date from;
+		Date to;
 		try {
-			LOG.info("Getting Runs by Station between period of time");
-			runList = timetableDao.getRunFromTimetableByStation(station, from, to);
-			if (runList.isEmpty()) {
-				throw new IllegalStateException();
-			}
-			LOG.info("Creating TimetableVO for every Run");
-			for (Run run: runList){
-				LOG.info("Getting arrival and departure times by every Run in list and by Station");
-				Date departureTimeBeforeFormat = timetableDao.findDepTimeFromStation(station, run);
-				Date arrivalTimeBeforeFormat = timetableDao.findArrTimeToStation(station, run);
-				if (departureTimeBeforeFormat == null || arrivalTimeBeforeFormat == null) {
-					throw new NullPointerException();
-				}
-				SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-				String departureTime = dt.format(departureTimeBeforeFormat);
-				String arrivalTime = dt.format(arrivalTimeBeforeFormat);
-				TimetableVO timetable = new TimetableVO(run.getTrainId().getNumber(), departureTime, arrivalTime);
-				timetableVOList.add(timetable);
-			}
-			LOG.info("Commiting transaction");
-			HibernateUtil.commitTransaction();
-		} catch (NullPointerException | IllegalStateException | HibernateException e) {
-			LOG.warn("Transaction was rollbacked");
-			HibernateUtil.rollbackTransaction();
-			throw e;
-		} finally {
-			LOG.info("Closing Hibernate Session");
+			from = getDateFromString(fromTime);
+			to = getDateFromString(toTime);
+		} catch (ParseException e) {
+			LOG.warn("Can't convert Date from String");
+			return new ArrayList<TimetableVO>();
 		}
 		
-		
+		List<TimetableVO> timetableVOList = new ArrayList<TimetableVO>();
+		LOG.info("Getting Runs by Station between period of time");
+		List<Run> runList = timetableDao.getRunFromTimetableByStation(station, from, to);
+		if (runList.isEmpty()) {
+			LOG.warn("Received empty Station List from DAO");
+			return new ArrayList<TimetableVO>();
+		}
+		LOG.info("Creating TimetableVO for every Run");
+		for (Run run: runList){
+			LOG.info("Getting arrival and departure times by every Run in list and by Station");
+			Date departureTimeBeforeFormat = timetableDao.findDepTimeFromStation(station, run);
+			Date arrivalTimeBeforeFormat = timetableDao.findArrTimeToStation(station, run);
+			if (departureTimeBeforeFormat == null || arrivalTimeBeforeFormat == null) {
+				LOG.warn("Received no datetime from given Station from DAO");
+				return new ArrayList<TimetableVO>();
+			}
+			SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			String departureTime = dt.format(departureTimeBeforeFormat);
+			String arrivalTime = dt.format(arrivalTimeBeforeFormat);
+			TimetableVO timetable = new TimetableVO(run.getTrainId().getNumber(), departureTime, arrivalTime);
+			timetableVOList.add(timetable);
+		}
 		return timetableVOList;
 		
 	}
@@ -145,17 +136,12 @@ public class TimetableService {
 	/**Generates Date object from String.
 	 * @param str String representing date
 	 * @return Date
-	 * @throws IllegalArgumentException
-	 * @throws ParseException
+	 * @throws ParseException 
 	 */
-	private Date getDateFromString(String str) throws ParseException, IllegalArgumentException  {
-		if (str == null) {
-    		throw new IllegalArgumentException();
-    	}
-    	Date date = new Date();
+	private Date getDateFromString(String str) throws ParseException {
+		Date date = new Date();
     	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
 		date = sdf.parse(str);
-		
     	return date;
     }
 	
@@ -164,56 +150,45 @@ public class TimetableService {
 	 * @param stationArray Array of Stations
 	 * @param arrivalTime Arrival time
 	 * @param departureTime Departure time
-	 * @throws NullPointerException
-	 * @throws IllegalStateException
-	 * @throws IllegalArgumentException
-	 * @throws ParseException
+	 * @throws EmptyResultException 
 	 */
-	public void addRun(int trainId, String[] stationArray, String[] arrivalTime, String[] departureTime) 
-			throws NullPointerException, IllegalStateException, IllegalArgumentException, ParseException {
-			LOG.info("Opening Hibernate Session with transaction");
-			HibernateUtil.openCurrentSession();
-			HibernateUtil.beginTransaction();
-			try {
-				if (arrivalTime.length !=  stationArray.length || departureTime.length != stationArray.length) {
-					throw new IllegalArgumentException();
-				}
-				LOG.info("Searching for Train by Train.Id " + trainId);
-				Train train = trainDao.findById(trainId); 
-				if (train == null) {
-					throw new NullPointerException();
-				}
-				LOG.info("Getting departure time from first station");
-				Date depFromStart = getDateFromString(departureTime[0]);
-				
-				LOG.info("Getting arrival time to last station");
-				Date arrToFinish = getDateFromString(arrivalTime[arrivalTime.length-1]);
-				
-				LOG.info("Creating new Run and adding it to DB");
-				Run run = new Run(train, depFromStart, arrToFinish);
-				runDao.persist(run);
-				
-				int seatsCount = train.getSeatsCount();
-				for (int i = 0; i < arrivalTime.length; i++) {
-					LOG.info("Creating new Timetable and adding it to DB");
-					
-					Timetable timetable = createTimetable(stationArray[i], trainId, run, arrivalTime[i], departureTime[i], seatsCount);
-					timetableDao.persist(timetable);
-					
-				}
-				LOG.info("Commiting transaction");
-				HibernateUtil.commitTransaction();
-			} catch (NullPointerException | IllegalStateException | HibernateException | IllegalArgumentException e) {
-				LOG.warn("Transaction was rollbacked");
-				HibernateUtil.rollbackTransaction();
-				throw e;
-			} finally {
-				LOG.info("Closing Hibernate Session");
-				HibernateUtil.closeCurrentSession();
-			}
+	@Transactional
+	public void addRun(int trainId, String[] stationArray, String[] arrivalTime, String[] departureTime) throws EmptyResultException {
+		if (arrivalTime.length !=  stationArray.length || departureTime.length != stationArray.length) {
+			LOG.warn("Arrays length do not match");
+			throw new EmptyResultException("Arrays length do not match");
+		}
+		LOG.info("Searching for Train by Train.Id " + trainId);
+		Train train = trainDao.findById(trainId); 
+		if (train == null) {
+			LOG.warn("Received no Train with given ID from DAO");
+			throw new EmptyResultException("Received no Train with given ID from DAO");
+		}
+		
+		Date depFromStart;
+		Date arrToFinish;
+		try {
+			LOG.info("Getting departure time from first station");
+			depFromStart = getDateFromString(departureTime[0]);
 			
-		
-		
+			LOG.info("Getting arrival time to last station");
+			arrToFinish = getDateFromString(arrivalTime[arrivalTime.length-1]);
+		} catch (ParseException e) {
+			LOG.warn("Can't convert Date from String");
+			throw new EmptyResultException("Can't convert Date from String");
+		}
+			
+		LOG.info("Creating new Run and adding it to DB");
+		Run run = new Run(train, depFromStart, arrToFinish);
+		runDao.persist(run);
+			
+		int seatsCount = train.getSeatsCount();
+		for (int i = 0; i < arrivalTime.length; i++) {
+			LOG.info("Creating new Timetable and adding it to DB");
+			Timetable timetable = createTimetable(stationArray[i], trainId, run, arrivalTime[i], departureTime[i], seatsCount);
+			timetableDao.persist(timetable);
+					
+		}
 	}
 
 
@@ -225,21 +200,26 @@ public class TimetableService {
 	 * @param departureTime Departure time
 	 * @param seatsCount Count of seats
 	 * @return Timetable
-	 * @throws IllegalArgumentException
-	 * @throws ParseException
-	 * @throws NullPointerException
+	 * @throws EmptyResultException 
 	 */
-	private Timetable createTimetable(String station, int trainId, Run run,
-			String arrivalTime, String departureTime, int seatsCount) 
-					throws IllegalArgumentException, ParseException, NullPointerException {
+	private Timetable createTimetable(String station, int trainId, Run run, String arrivalTime, String departureTime, int seatsCount) throws EmptyResultException {
 		
-		Route route = routeDao.findRouteByStationStringAndTrainId(station, trainId);
-		if (route == null) {
-			throw new NullPointerException();
+		LOG.info("Getting Route by Station name: " + station + " and TrainId: " + trainId);
+		List<Route> routeList = routeDao.findRouteByStationStringAndTrainId(station, trainId);
+		if (routeList.isEmpty()) {
+			LOG.warn("Received empty Route List from DAO");
+			throw new EmptyResultException("Received empty Route List from DAO");
 		}
-		Date arrDate = getDateFromString(arrivalTime);
-		Date depDate = getDateFromString(departureTime);
-		Timetable timetable = new Timetable(route, run, arrDate, depDate, seatsCount);
+		Date arrDate;
+		Date depDate;
+		try {
+			arrDate = getDateFromString(arrivalTime);
+			depDate = getDateFromString(departureTime);
+		} catch (ParseException e) {
+			LOG.warn("Can't convert Date from String");
+			throw new EmptyResultException("Can't convert Date from String");
+		}
+		Timetable timetable = new Timetable(routeList.get(0), run, arrDate, depDate, seatsCount);
 		return timetable;
 	}
 }

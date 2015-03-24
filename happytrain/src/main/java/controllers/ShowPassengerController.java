@@ -9,17 +9,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import services.ClientService;
-import services.RouteService;
 import services.TicketService;
 import servlets.ShowFoundTrainsServlet;
-import valueobjects.StationVO;
 import valueobjects.TicketVO;
-import valueobjects.TimetableVO;
 
 /**
  * @author Damir Tuktamyshev
@@ -39,7 +36,8 @@ public class ShowPassengerController {
 	 */
 	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
        
-	
+	@Autowired
+	private TicketService ticketService;
 	
 	/** Process data from request.
      * @param req HttpServletRequest Object
@@ -53,7 +51,7 @@ public class ShowPassengerController {
 		LOG.info("Getting passenger list from TicketService");
 		List<TicketVO> passengerList = new ArrayList<TicketVO>();
 		try {
-			passengerList = new TicketService().getTicketsByRunId(runId);
+			passengerList = ticketService.getTicketsByRunId(runId);
 		} catch (Exception e) {
 			LOG.warn("Exception: " + e);
 			LOG.info("No result was found");

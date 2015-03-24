@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.List;
+
 import entities.Station;
 
 /**
@@ -9,8 +11,8 @@ import entities.Station;
 public interface StationDAO extends GenericDAO<Integer, Station> {
 	/**Get Station by given name.
 	 * @param str Station name
-	 * @return Station Entity
+	 * @return Station List
 	 */
-	Station findByName(final String str);
+	List<Station> findByName(final String str);
 
 }

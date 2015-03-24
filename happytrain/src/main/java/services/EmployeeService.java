@@ -1,15 +1,18 @@
 package services;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import util.EmptyResultException;
 import entities.Train;
-import util.HibernateUtil;
 
 /**
- * @author 
+ * @author Damir Tuktamyshev
  * Service for Employee.
  */
+@Service("employeeService")
 public class EmployeeService {
 	
 	/**
@@ -19,11 +22,13 @@ public class EmployeeService {
 	/**
 	 * Service for Train.
 	 */
-	private TrainService trainService = new TrainService();
+	@Autowired
+	private TrainService trainService;
 	/**
 	 * Service for Route.
 	 */
-	private RouteService routeService = new RouteService();
+	@Autowired
+	private RouteService routeService;
 	
 	/**
 	 * @param trainService the trainService to set
@@ -43,42 +48,23 @@ public class EmployeeService {
 	 * @param name Train number
 	 * @param seatsCount Count of seats
 	 * @param stationArray Station array
-	 * @throws NullPointerException
-	 * @throws IllegalStateException
+	 * @throws EmptyResultException 
 	 */
-	public void addTrain(String name, int seatsCount, String[] stationArray) throws NullPointerException, IllegalStateException {
+	@Transactional
+	public void addTrain(String name, int seatsCount, String[] stationArray) throws EmptyResultException {
 		
 		LOG.info("Creating new Train with name " + name);
 		Train train = new Train(name, seatsCount);
 		
-		LOG.info("Opening Hibernate Session with transaction");
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		try {
-			LOG.info("Adding Train to DB");
-			trainService.addTrain(train);
-			
-			LOG.info("Adding Route to DB");
-			int count = 0;
-			if (stationArray == null) {
-				throw new NullPointerException();
-			}
-			if (stationArray.length < 1) {
-				throw new IllegalStateException();
-			}
-			for (String stationName: stationArray) {
-				count++;
-				routeService.addRoute(train, stationName, count);
-			}
-			LOG.info("Commiting transaction");
-			HibernateUtil.commitTransaction();
-		} catch (HibernateException | NullPointerException | IllegalStateException e) {
-			LOG.warn("Transaction was rollbacked");
-			HibernateUtil.rollbackTransaction();
-			throw e;
-		} finally {
-			LOG.info("Closing Hibernate Session");
-			HibernateUtil.closeCurrentSession();
+		LOG.info("Adding Train to DB");
+		trainService.addTrain(train);
+		
+		LOG.info("Adding Route to DB");
+		int count = 0;
+		
+		for (String stationName: stationArray) {
+			count++;
+			routeService.addRoute(train, stationName, count);
 		}
 	}
 }

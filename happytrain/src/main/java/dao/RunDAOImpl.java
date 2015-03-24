@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import util.HibernateUtil;
-import entities.Route;
 import entities.Run;
 
 /**

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import util.HibernateUtil;
+import util.EmptyResultException;
 import valueobjects.StationVO;
 import dao.RouteDAO;
-import dao.RouteDAOImpl;
 import dao.StationDAO;
-import dao.StationDAOImpl;
 import entities.Route;
 import entities.Station;
 import entities.Train;
@@ -20,6 +20,7 @@ import entities.Train;
  * @author Damir Tuktamyshev
  * Service for Route.
  */
+@Service("routeService")
 public class RouteService {
 	
 	/**
@@ -30,11 +31,13 @@ public class RouteService {
 	/**
 	 * DAO for Route.
 	 */
-	private RouteDAO routeDao = new RouteDAOImpl();
+	@Autowired
+	private RouteDAO routeDao;
 	/**
 	 * DAO for Station.
 	 */
-	private StationDAO stationDao = new StationDAOImpl();
+	@Autowired
+	private StationDAO stationDao;
 	
 	/**
 	 * @param routeDao the routeDao to set
@@ -55,34 +58,16 @@ public class RouteService {
 	/**Get Station list by given train id.
 	 * @param id Train id.
 	 * @return StationVO list
-	 * @throws IllegalStateException
-	 * @throws NullPointerException
 	 */
-	public List<StationVO> getStationsByTrain(int id) throws IllegalStateException, NullPointerException{
+	@Transactional
+	public List<StationVO> getStationsByTrain(int id){
 		List<Station> stationList = new ArrayList<Station>();
 		List<StationVO> stationVOList = new ArrayList<StationVO>();
-		
-		
-		LOG.info("Opening Hibernate Session with transaction");
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		try {
-			LOG.info("Getting Stations with Train.id " + id);
-			stationList = routeDao.findStationsByTrain(id);
-			if (stationList.isEmpty()) {
-				throw new IllegalStateException();
-			}
-			LOG.info("Commiting transaction");
-			HibernateUtil.commitTransaction();
-		} catch (IllegalStateException | HibernateException | NullPointerException e) {
-			LOG.warn("Transaction was rollbacked");
-			HibernateUtil.rollbackTransaction();
-			throw e;
-		} finally {
-			LOG.info("Closing Hibernate Session");
-			HibernateUtil.closeCurrentSession();
+		LOG.info("Getting Stations with Train.id " + id);
+		stationList = routeDao.findStationsByTrain(id);
+		if (stationList.isEmpty()) {
+			LOG.warn("Received empty Station List from DAO");
 		}
-		
 		for (Station station: stationList) {
 			stationVOList.add(new StationVO(station));
 		}
@@ -97,13 +82,14 @@ public class RouteService {
 	 * @param count Count of seats
 	 * @throws NullPointerException
 	 */
-	public void addRoute(Train train, String stationName, int count) throws NullPointerException {
+	public void addRoute(Train train, String stationName, int count) throws EmptyResultException {
 		
-		Station station = stationDao.findByName(stationName);
-		if (station == null) {
-			throw new NullPointerException();
+		List<Station> stationList = stationDao.findByName(stationName);
+		if (stationList.isEmpty()) {
+			LOG.warn("Received no Station with given name from DAO");
+			throw new EmptyResultException("Ошибка при добавлении");
 		}
-		Route route = new Route(train, station, count);
+		Route route = new Route(train, stationList.get(0), count);
 		routeDao.persist(route);
 		
 	}

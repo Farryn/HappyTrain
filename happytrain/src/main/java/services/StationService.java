@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import util.HibernateUtil;
 import valueobjects.StationVO;
 import dao.StationDAO;
-import dao.StationDAOImpl;
 import entities.Station;
 
 /**
@@ -44,32 +41,14 @@ public class StationService {
 
 	/**Get all Stations.
 	 * @return List of Stations
-	 * @throws NullPointerException
-	 * @throws IllegalStateException
 	 */
 	@Transactional
 	public List<Station> getAllStations(){
 		List<Station> stationList = new ArrayList<Station>();
-		
-		LOG.info("Opening Hibernate Session with transaction");
-		//HibernateUtil.openCurrentSession();
-		//HibernateUtil.beginTransaction();
-		try {
-			LOG.info("Searching for all stations");
-			stationList = stationDao.findAll();
-			if (stationList.isEmpty()) {
-				throw new IllegalStateException();
-			}
-			LOG.info("Commiting transaction");
-			//HibernateUtil.commitTransaction();
-		} catch (NullPointerException | HibernateException | IllegalStateException e) {
-			LOG.warn("Transaction was rollbacked");
-			e.printStackTrace();
-			//HibernateUtil.rollbackTransaction();
-			throw e;
-		} finally {
-			LOG.info("Closing Hibernate Session");
-			//HibernateUtil.closeCurrentSession();
+		LOG.info("Searching for all stations");
+		stationList = stationDao.findAll();
+		if (stationList.isEmpty()) {
+			LOG.warn("Received empty Station List from DAO");
 		}
 		
 		return stationList;
@@ -94,26 +73,12 @@ public class StationService {
 	/**Add station into DB.
 	 * @param stationName
 	 */
+	@Transactional
 	public void addStation(String stationName) {
-		
-		LOG.info("Opening Hibernate Session with transaction");
-		HibernateUtil.openCurrentSession();
-		HibernateUtil.beginTransaction();
-		try {
-			LOG.info("Creating Station and adding it into DB");
-			Station station = new Station(stationName);
-			stationDao.persist(station);
+		LOG.info("Creating Station and adding it into DB");
+		Station station = new Station(stationName);
+		stationDao.persist(station);
 			
-			LOG.info("Commiting transaction");
-			HibernateUtil.commitTransaction();
-		} catch (HibernateException e) {
-			LOG.warn("Transaction was rollbacked");
-			HibernateUtil.rollbackTransaction();
-			throw e;
-		} finally {
-			LOG.info("Closing Hibernate Session");
-			HibernateUtil.closeCurrentSession();
-		}
 	}
 
 	

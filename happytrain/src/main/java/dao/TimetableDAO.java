@@ -52,7 +52,7 @@ public interface TimetableDAO extends GenericDAO<Integer, Timetable> {
 	/**Get Timetable Entity with given Station(by name) and given Run.
 	 * @param station Station name
 	 * @param run Run
-	 * @return Timetable Entity
+	 * @return Timetable List
 	 */
-	Timetable findTimetableByRunAndStation(Station station, Run run);
+	List<Timetable> findTimetableByRunAndStation(Station station, Run run);
 }

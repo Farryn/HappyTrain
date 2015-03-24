@@ -23,7 +23,7 @@
 				<li ><a href="${pageContext.request.contextPath}/" accesskey="1" title="">Поиск поезда</a></li>
 				<li><a href="${pageContext.request.contextPath}/timetable" accesskey="1" title="">Расписание</a></li>
 				<c:if test="${not empty pageContext.request.userPrincipal}">
-   					<c:if test="${pageContext.request.isUserInRole('ADMIN') || pageContext.request.isUserInRole('EMPLOYEE')}">
+   					<c:if test="${pageContext.request.userPrincipal.name == 'admin' || pageContext.request.isUserInRole('employee')}">
 						<li><a href="${pageContext.request.contextPath}/alltrains" accesskey="2" title="">Все поезда</a></li>
 						<li><a href="${pageContext.request.contextPath}/protected/AddStation.jsp" accesskey="3" title="">Добавить станцию</a></li>
 						<li><a href="${pageContext.request.contextPath}/protected/AddTrain.jsp" accesskey="4" title="">Добавить поезд</a></li>

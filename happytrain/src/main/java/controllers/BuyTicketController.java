@@ -6,13 +6,14 @@ package controllers;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import services.ClientService;
 import servlets.ShowFoundTrainsServlet;
-import util.MyException;
+import util.EmptyResultException;
 import valueobjects.UserVO;
 
 /**
@@ -34,6 +35,8 @@ public class BuyTicketController {
 	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
        
 	
+	@Autowired
+	private ClientService clientService;
 	
 	/** Process data from request.
      * @param req HttpServletRequest Object
@@ -49,9 +52,9 @@ public class BuyTicketController {
 		UserVO user = (UserVO) req.getSession().getAttribute("user");
 		LOG.info("Buying Ticket using ClientService");
 		try {
-			new ClientService().buyTicket(user, stationFrom, stationTo, depTime, runId);
+			clientService.buyTicket(user, stationFrom, stationTo, depTime, runId);
 			req.setAttribute("fail", 0);
-		} catch (MyException e) {
+		} catch (EmptyResultException e) {
 			LOG.warn("Exception: " + e);
 			req.setAttribute("failMessage", e.getMessage());
 			req.setAttribute("fail", 1);

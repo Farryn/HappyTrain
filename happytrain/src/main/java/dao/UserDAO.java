@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.List;
+
 import entities.User;
 
 /**
@@ -10,9 +12,9 @@ public interface UserDAO extends GenericDAO<Integer, User> {
 	/**Get User by login and password.
 	 * @param login Login
 	 * @param password Password
-	 * @return User entity
+	 * @return User List
 	 */
-	User findUser(String login, String password);
+	List<User> findUser(String login, String password);
 
 	/**Get password hash from DB.
 	 * @param login Login

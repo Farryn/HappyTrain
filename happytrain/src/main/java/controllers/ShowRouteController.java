@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,7 +38,11 @@ public class ShowRouteController {
 	 */
 	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
        
+	@Autowired
+	private RouteService routeService;
 	
+	@Autowired
+	private ClientService clientService;
 	
 	/** Process data from request.
      * @param req HttpServletRequest Object
@@ -50,7 +55,6 @@ public class ShowRouteController {
 		int trainId = Integer.parseInt(trainStr);
 		
 		LOG.info("Getting Stations from RouteService");
-		RouteService routeService = new RouteService();
 		List<StationVO> stationList = new ArrayList<StationVO>();
 		try {
 			stationList = routeService.getStationsByTrain(trainId);
@@ -69,7 +73,6 @@ public class ShowRouteController {
 			int runId = Integer.parseInt(runStr);
 			
 			LOG.info("Getting Timetable with Run.Id " + runId + " on every Station");
-			ClientService clientService = new ClientService();
 			List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
 			try {
 				timetableList = clientService.getTimesFromStationList(runId, stationList);

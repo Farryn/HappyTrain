@@ -6,6 +6,7 @@ package controllers;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +32,8 @@ public class AddTrainController {
 	 */
 	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
        
-	
+	@Autowired
+	private EmployeeService employeeService;
 	
 	/** Process data from request.
      * @param req HttpServletRequest Object
@@ -63,7 +65,7 @@ public class AddTrainController {
 		
 		LOG.info("Adding Train into DB");
 		try {
-			new EmployeeService().addTrain(trainNumber, seatsCount, stationArray);
+			employeeService.addTrain(trainNumber, seatsCount, stationArray);
 			req.setAttribute("fail", 0);
 		} catch (Exception e) {
 			req.setAttribute("fail", 1);

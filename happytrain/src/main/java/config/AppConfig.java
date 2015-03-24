@@ -39,7 +39,6 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	            prop.put("hibernate.show_sql", "true");
 	            prop.put("hibernate.dialect", 
 	                "org.hibernate.dialect.MySQL5Dialect");
-	            prop.put("hibernate.current_session_context_class", "thread");
 	            return prop;
 	    }
 	

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +36,8 @@ public class ShowRunController {
 	 */
 	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
        
-	
+	@Autowired
+	private RunService runService;
 	
 	/** Process data from request.
      * @param req HttpServletRequest Object
@@ -49,7 +51,7 @@ public class ShowRunController {
     	LOG.info("Getting Runs list from RunService");
 		List<RunVO> runList = new ArrayList<RunVO>();
 		try {
-			runList = new RunService().getRunByTrainId(trainId);
+			runList = runService.getRunByTrainId(trainId);
 		} catch (Exception e) {
 			LOG.warn("Exception: " + e);
 			LOG.info("No result was found");

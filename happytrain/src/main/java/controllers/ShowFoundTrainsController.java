@@ -37,6 +37,8 @@ public class ShowFoundTrainsController {
 	@Autowired
 	private StationService stationService;// = new StationService();
 	
+	@Autowired
+	private ClientService clientService;
 	/**
 	 * @param stationService the stationService to set
 	 */
@@ -58,10 +60,9 @@ public class ShowFoundTrainsController {
 			String to = req.getParameter("to");
 			
 			LOG.info("Getting timetable list from ClientService");
-			ClientService cs = new ClientService();
 			List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
 			try {
-				timetableList = cs.searchTrain(stationA, stationB, from, to);
+				timetableList = clientService.searchTrain(stationA, stationB, from, to);
 			} catch (Exception e) {
 				LOG.warn("Exception: " + e);
 				LOG.info("No result was found");

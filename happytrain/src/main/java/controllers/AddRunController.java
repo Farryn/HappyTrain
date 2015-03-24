@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +36,13 @@ public class AddRunController {
 	 * Logger instance.
 	 */
 	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
-       
+    
+	@Autowired
+	private RouteService routeService;
+	
+	@Autowired
+	private TimetableService timetableService;
+	
 	
 	/** Process data from request.
      * @param req HttpServletRequest Object
@@ -49,7 +56,7 @@ public class AddRunController {
 		LOG.info("Getting Station list by Train.Id from RouteService");
 		List<StationVO> stationList = new ArrayList<StationVO>();
 		try {
-			stationList = new RouteService().getStationsByTrain(id);
+			stationList = routeService.getStationsByTrain(id);
 		} catch (Exception e) {
 			LOG.warn("Exception: " + e);
 			LOG.info("No result was found");
@@ -73,7 +80,7 @@ public class AddRunController {
 		int trainId = Integer.parseInt(req.getParameter("train"));
 		LOG.info("Adding Run to DB using TimetableService");
 		try {
-			new TimetableService().addRun(trainId, stationArray, arrivalTime, departureTime);
+			timetableService.addRun(trainId, stationArray, arrivalTime, departureTime);
 			req.setAttribute("fail", 0);
 		} catch (Exception e) {
 			LOG.error("Exception: " + e);
