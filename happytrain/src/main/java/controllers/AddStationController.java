@@ -35,6 +35,17 @@ public class AddStationController {
 	@Autowired
 	private StationService stationService;
 	
+	
+	/** Process data from request.
+     * @param req HttpServletRequest Object
+     * @return page 
+     */
+	@RequestMapping(value = "/addstation", method = RequestMethod.GET)
+	public String processGet(HttpServletRequest req) {
+		return "protected/AddStation";
+	}
+	
+	
 	/** Process data from request.
      * @param req HttpServletRequest Object
      * @return page 

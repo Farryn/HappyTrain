@@ -50,10 +50,8 @@ public class ShowPassengerController {
 		
 		LOG.info("Getting passenger list from TicketService");
 		List<TicketVO> passengerList = new ArrayList<TicketVO>();
-		try {
-			passengerList = ticketService.getTicketsByRunId(runId);
-		} catch (Exception e) {
-			LOG.warn("Exception: " + e);
+		passengerList = ticketService.getTicketsByRunId(runId);
+		if (passengerList.isEmpty()) {
 			LOG.info("No result was found");
 			req.setAttribute("emptyList", 1);
 		}

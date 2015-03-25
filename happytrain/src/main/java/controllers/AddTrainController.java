@@ -3,6 +3,11 @@
  */
 package controllers;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -12,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import services.EmployeeService;
+import services.StationService;
 import servlets.ShowFoundTrainsServlet;
+import util.EmptyResultException;
+import valueobjects.StationVO;
 
 /**
  * @author Damir Tuktamyshev
@@ -34,6 +42,19 @@ public class AddTrainController {
        
 	@Autowired
 	private EmployeeService employeeService;
+	
+	@Autowired
+	private StationService stationService;
+	
+	/** Process data from request.
+     * @param req HttpServletRequest Object
+     * @return page 
+     */
+	@RequestMapping(value = "/addtrain", method = RequestMethod.GET)
+	public String processGet(HttpServletRequest req) {
+		getStationListAndTime(req);
+		return "protected/AddTrain";
+	}
 	
 	/** Process data from request.
      * @param req HttpServletRequest Object
@@ -67,6 +88,10 @@ public class AddTrainController {
 		try {
 			employeeService.addTrain(trainNumber, seatsCount, stationArray);
 			req.setAttribute("fail", 0);
+		} catch (EmptyResultException e) {
+			LOG.warn("Exception: " + e);
+			req.setAttribute("failMessage", e.getMessage());
+			req.setAttribute("fail", 1);
 		} catch (Exception e) {
 			req.setAttribute("fail", 1);
 			LOG.error("Exception: " + e);
@@ -74,5 +99,25 @@ public class AddTrainController {
 			
 		}
 		return "protected/AddTrain";
+	}
+	
+	private void getStationListAndTime(HttpServletRequest req){
+		List<StationVO> stationList = new ArrayList<StationVO>();
+	    String strDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
+		stationList = stationService.getAllStationVO();
+		if (stationList.isEmpty()) {
+			LOG.info("No station was found");
+		}
+		if (req.getParameter("from") != null) {
+			req.setAttribute("from", req.getParameter("from"));
+		} else {
+			req.setAttribute("from", strDate);
+		}
+		if (req.getParameter("to") != null) {
+			req.setAttribute("to", req.getParameter("to"));
+		} else {
+			req.setAttribute("to", strDate);
+		}
+		req.setAttribute("stationList", stationList);
 	}
 }

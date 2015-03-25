@@ -67,6 +67,7 @@ public class RouteService {
 		stationList = routeDao.findStationsByTrain(id);
 		if (stationList.isEmpty()) {
 			LOG.warn("Received empty Station List from DAO");
+			return new ArrayList<StationVO>();
 		}
 		for (Station station: stationList) {
 			stationVOList.add(new StationVO(station));

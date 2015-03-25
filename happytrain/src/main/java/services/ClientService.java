@@ -128,10 +128,6 @@ public class ClientService {
 	 * @param fromTime Beginning of period
 	 * @param toTime End of period
 	 * @return TimetableVO list
-	 * @throws NullPointerException 
-	 * @throws IllegalStateException
-	 * @throws IllegalArgumentException
-	 * @throws MyException
 	 */
 	@Transactional
 	public List<TimetableVO> searchTrain(String stationA, String stationB, String fromTime, String toTime) {
@@ -161,7 +157,6 @@ public class ClientService {
 	 * @param from Beginning of period
 	 * @param to End of period
 	 * @return TimetableVO list
-	 * @throws IllegalStateException
 	 */
 	private List<TimetableVO> getSearchedTrains(String stationA, String stationB, Date from, Date to) {
 		 
@@ -422,6 +417,7 @@ public class ClientService {
 	public List<TimetableVO> getTimesFromStationList(int runId, List<StationVO> stationList){
 		LOG.info("Checking input parameters");
 		if (stationList.isEmpty()) {
+			LOG.warn("Empty Station List input ");
 			return new ArrayList<TimetableVO>();
 		}
 		

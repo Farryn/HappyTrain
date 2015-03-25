@@ -56,10 +56,8 @@ public class ShowRouteController {
 		
 		LOG.info("Getting Stations from RouteService");
 		List<StationVO> stationList = new ArrayList<StationVO>();
-		try {
-			stationList = routeService.getStationsByTrain(trainId);
-		} catch (Exception e) {
-			LOG.warn("Exception: " + e);
+		stationList = routeService.getStationsByTrain(trainId);
+		if (stationList.isEmpty()) {
 			LOG.info("No result was found");
 			req.setAttribute("emptyList", 1);
 		}
@@ -74,10 +72,8 @@ public class ShowRouteController {
 			
 			LOG.info("Getting Timetable with Run.Id " + runId + " on every Station");
 			List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
-			try {
-				timetableList = clientService.getTimesFromStationList(runId, stationList);
-			} catch (Exception e) {
-				LOG.warn("Exception: " + e);
+			timetableList = clientService.getTimesFromStationList(runId, stationList);
+			if (timetableList.isEmpty()) {
 				LOG.info("No time was found");
 				req.setAttribute("emptyList", 1);
 			}

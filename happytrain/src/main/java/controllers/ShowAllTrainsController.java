@@ -47,17 +47,15 @@ public class ShowAllTrainsController {
 	public String processGet(HttpServletRequest req) {
 		LOG.info("Getting all trains from db");
     	List<TrainVO> trainList = new ArrayList<TrainVO>();
-		try {
-			trainList = trainService.getAllTrains();
-		} catch (Exception e) {
-			LOG.warn("Exception: " + e);
+		trainList = trainService.getAllTrains();
+		if (trainList.isEmpty()) {
 			LOG.info("No result was found");
 			req.setAttribute("emptyList", 1);
 		}
     	req.setAttribute("trainList", trainList);
     	
-    	String url = req.getRequestURL().toString();
-    	req.setAttribute("servletUrl", url);
+    	//String url = req.getRequestURL().toString();
+    	//req.setAttribute("servletUrl", url);
 		return "protected/ShowAllTrains";
 	}
 }

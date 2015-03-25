@@ -50,6 +50,7 @@ public class TrainService {
 		trainList = trainDao.findAll();
 		if (trainList.isEmpty()) {
 			LOG.warn("Received empty Train List from DAO");
+			return new ArrayList<TrainVO>();
 		}
 		
 		for (Train train: trainList) {

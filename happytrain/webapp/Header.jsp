@@ -11,7 +11,7 @@
 				<span id="name"><c:out value="${pageContext.request.userPrincipal.name}" default="Гость" /></span>
 					<c:if test="${pageContext.request.userPrincipal.name == null}">
 						<br/><span><a href="${pageContext.request.contextPath}/login">Войдите</a> или 
-						<a href="${pageContext.request.contextPath}/Register.jsp">зарегистрируйтесь</a></span>
+						<a href="${pageContext.request.contextPath}/register">зарегистрируйтесь</a></span>
 					</c:if>
 					<c:if test="${pageContext.request.userPrincipal.name != null}">
 						<br/><span><a href="j_spring_security_logout">Выйти</a></span>
@@ -25,8 +25,8 @@
 				<c:if test="${not empty pageContext.request.userPrincipal}">
    					<c:if test="${pageContext.request.userPrincipal.name == 'admin' || pageContext.request.isUserInRole('employee')}">
 						<li><a href="${pageContext.request.contextPath}/alltrains" accesskey="2" title="">Все поезда</a></li>
-						<li><a href="${pageContext.request.contextPath}/protected/AddStation.jsp" accesskey="3" title="">Добавить станцию</a></li>
-						<li><a href="${pageContext.request.contextPath}/protected/AddTrain.jsp" accesskey="4" title="">Добавить поезд</a></li>
+						<li><a href="${pageContext.request.contextPath}/addstation" accesskey="3" title="">Добавить станцию</a></li>
+						<li><a href="${pageContext.request.contextPath}/addtrain" accesskey="4" title="">Добавить поезд</a></li>
 					</c:if>
 				</c:if>
 			</ul>

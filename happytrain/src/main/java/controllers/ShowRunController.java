@@ -50,10 +50,8 @@ public class ShowRunController {
     	
     	LOG.info("Getting Runs list from RunService");
 		List<RunVO> runList = new ArrayList<RunVO>();
-		try {
-			runList = runService.getRunByTrainId(trainId);
-		} catch (Exception e) {
-			LOG.warn("Exception: " + e);
+		runList = runService.getRunByTrainId(trainId);
+		if (runList.isEmpty()) {
 			LOG.info("No result was found");
 			req.setAttribute("emptyList", 1);
 		}

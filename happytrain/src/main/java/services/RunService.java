@@ -67,6 +67,7 @@ public class RunService {
 		runList = runDao.findByTrainId(trainId);
 		if (runList.isEmpty()) {
 			LOG.warn("Received empty Run List from DAO");
+			return new ArrayList<RunVO>();
 		}
 		for (Run run: runList) {
 			runVOList.add(new RunVO(run));

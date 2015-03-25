@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import services.RouteService;
 import services.TimetableService;
 import servlets.ShowFoundTrainsServlet;
+import util.EmptyResultException;
 import valueobjects.StationVO;
 
 /**
@@ -55,10 +56,8 @@ public class AddRunController {
 		
 		LOG.info("Getting Station list by Train.Id from RouteService");
 		List<StationVO> stationList = new ArrayList<StationVO>();
-		try {
-			stationList = routeService.getStationsByTrain(id);
-		} catch (Exception e) {
-			LOG.warn("Exception: " + e);
+		stationList = routeService.getStationsByTrain(id);
+		if (stationList.isEmpty()) {
 			LOG.info("No result was found");
 			req.setAttribute("emptyList", 1);
 		}
@@ -82,6 +81,10 @@ public class AddRunController {
 		try {
 			timetableService.addRun(trainId, stationArray, arrivalTime, departureTime);
 			req.setAttribute("fail", 0);
+		} catch (EmptyResultException e) {
+			LOG.warn("Exception: " + e);
+			req.setAttribute("failMessage", e.getMessage());
+			req.setAttribute("fail", 1);
 		} catch (Exception e) {
 			LOG.error("Exception: " + e);
 			LOG.warn("Could not add run into DB");

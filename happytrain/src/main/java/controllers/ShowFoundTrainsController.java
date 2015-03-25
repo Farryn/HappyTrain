@@ -61,10 +61,8 @@ public class ShowFoundTrainsController {
 			
 			LOG.info("Getting timetable list from ClientService");
 			List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
-			try {
-				timetableList = clientService.searchTrain(stationA, stationB, from, to);
-			} catch (Exception e) {
-				LOG.warn("Exception: " + e);
+			timetableList = clientService.searchTrain(stationA, stationB, from, to);
+			if (timetableList.isEmpty()) {
 				LOG.info("No result was found");
 				req.setAttribute("emptyList", 1);
 			}
@@ -90,10 +88,8 @@ public class ShowFoundTrainsController {
 	private void getStationListAndTime(HttpServletRequest req){
 		List<StationVO> stationList = new ArrayList<StationVO>();
 	    String strDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
-		try {
-			stationList = stationService.getAllStationVO();
-		} catch (Exception e) {
-			LOG.warn("Exception: " + e);
+		stationList = stationService.getAllStationVO();
+		if (stationList.isEmpty()) {
 			LOG.info("No station was found");
 		}
 		if (req.getParameter("from") != null) {

@@ -71,7 +71,7 @@
 									<td ><c:out value="${item.arrivalDateTime}" /></td>
 									<td ><c:out value="${item.availableSeats}" /></td>
 									<td ><a href="route?train=${item.trainId}&run=${item.runId}">Список станций</a></td>
-									<c:if test="${user != null}">
+									<c:if test="${pageContext.request.userPrincipal.name != null}">
 										<td >
 											<a href="protected/BuyTicket.jsp?train=${item.trainNumber}&run=${item.runId}&stationFrom=${stationFrom}&stationTo=${stationTo}&depTime=${item.departureDateTime}">
 												Купить билет
