@@ -1,14 +1,15 @@
 package config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import services.StationService;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -16,15 +17,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	
 	@Autowired
-	@Qualifier("stationService")
-	StationService stationService;
+	private UserDetailsService userDetailsService;
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+		/*auth.inMemoryAuthentication()
 				.withUser("user").password("user").roles("user")
 				.and()
-				.withUser("admin").password("admin").roles("admin");
+				.withUser("admin").password("admin").roles("admin");*/
 	}
 
 	@Override
@@ -34,9 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/", "/login", "/timetable", "/route")
 				.permitAll()
 			.antMatchers("/buyticket")
-				.hasAnyRole("user, admin, employee")
+				.hasAnyAuthority("user, admin, employee")
 			.antMatchers("/addrun", "/addtrain", "/addstation", "/alltrains", "/passenger", "/run")
-				.hasAnyRole("admin, employee")
+				.hasAnyAuthority("admin, employee")
 			.and()
 				.formLogin()
 					.loginPage("/login")
@@ -47,7 +48,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.logout().logoutSuccessUrl("/")
 		    .and()
-		    	.csrf().disable(); 
+		    	.csrf().disable();
+		    	
 		
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder(){
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder;
 	}
 }

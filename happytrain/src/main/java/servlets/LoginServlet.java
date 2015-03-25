@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import services.UserService;
+import services.MyUserDetailsService;
 import util.MyException;
 import valueobjects.UserVO;
 
@@ -63,7 +63,7 @@ public class LoginServlet extends HttpServlet {
 				LOG.warn("Empty password");
 				throw new MyException("Empty password");
 			}
-			user = new UserService().findUserByLoginAndPass(login, password);
+			user = new MyUserDetailsService().findUserByLoginAndPass(login, password);
 			request.getSession().setAttribute("user", user); 
 			LOG.info("User was authentificated");
 		    if (servletUrl.isEmpty()) {

@@ -45,11 +45,11 @@ public class UserServiceTest {
 	}
 	
 	/**
-	 * Test method for {@link services.UserService#findUserByLoginAndPass(java.lang.String, java.lang.String)}.
+	 * Test method for {@link services.MyUserDetailsService#findUserByLoginAndPass(java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testFindUserByLoginAndPass() {
-		UserService service = new UserService(); 
+		MyUserDetailsService service = new MyUserDetailsService(); 
 		service.setUserDao(mockDAOuser);
 		String login = "Login";
 		String password = "Password";
@@ -97,7 +97,7 @@ public class UserServiceTest {
 	}
 
 	/**
-	 * Test method for {@link services.UserService#isUserAuth(valueobjects.UserVO, java.lang.String, java.util.HashMap)}.
+	 * Test method for {@link services.MyUserDetailsService#isUserAuth(valueobjects.UserVO, java.lang.String, java.util.HashMap)}.
 	 */
 	@Test
 	public void testIsUserAuth() {
@@ -105,11 +105,11 @@ public class UserServiceTest {
 	}
 
 	/**
-	 * Test method for {@link services.UserService#addUser(java.lang.String, java.lang.String, java.util.Date, java.lang.String, java.lang.String)}.
+	 * Test method for {@link services.MyUserDetailsService#addUser(java.lang.String, java.lang.String, java.util.Date, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testAddUser() {
-		UserService service = new UserService(); 
+		MyUserDetailsService service = new MyUserDetailsService(); 
 		service.setUserDao(mockDAOuser);
 		service.setRoleDao(mockDAOrole);
 		String login = "client";

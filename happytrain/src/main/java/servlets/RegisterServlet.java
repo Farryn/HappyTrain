@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import services.UserService;
+import services.MyUserDetailsService;
 
 /**
  * Servlet implementation class RegisterServlet.
@@ -79,7 +79,7 @@ public class RegisterServlet extends HttpServlet {
 		
 		LOG.info("Adding User using UserService");
 		try {
-			new UserService().addUser(firstName, lastName, birthDate, login, password);
+			new MyUserDetailsService().addUser(firstName, lastName, birthDate, login, password);
 			req.setAttribute("fail", 0);
 		} catch (Exception e) {
 			LOG.error("Exception: " + e);

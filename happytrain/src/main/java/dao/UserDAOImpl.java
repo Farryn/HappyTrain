@@ -16,7 +16,7 @@ public class UserDAOImpl extends GenericDAOImpl<Integer, User> implements UserDA
 
 	/**
 	 * @see dao.UserDAO#findUser(java.lang.String, java.lang.String)
-	 */
+	 *//*
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> findUser(String login, String hash) {
@@ -31,8 +31,25 @@ public class UserDAOImpl extends GenericDAOImpl<Integer, User> implements UserDA
 			userList = new ArrayList<User>();
 		}
 		return userList;
-	}
+	}*/
 
+	/**
+	 * @see dao.UserDAO#findUser(java.lang.String, java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> findByUserName(String login) {
+		String hql = "SELECT u "
+					+ "FROM User u "
+					+ "WHERE u.login=:login";
+		List<User> userList =  getSessionFactory().getCurrentSession().createQuery(hql)
+				.setParameter("login", login)
+				.list();
+		if (userList.isEmpty() || userList == null){
+			userList = new ArrayList<User>();
+		}
+		return userList;
+	}
 	/**
 	 * @see dao.UserDAO#getPasswordForLogin(java.lang.String)
 	 */
