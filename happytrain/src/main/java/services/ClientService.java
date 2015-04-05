@@ -239,16 +239,16 @@ public class ClientService {
 	 * @throws EmptyResultException 
 	 */
 	@Transactional
-	public void buyTicket(UserVO userVO,  String stationFrom, String stationTo, String depTime, String runId) throws EmptyResultException {
+	public void buyTicket(String login,  String stationFrom, String stationTo, String depTime, String runId) throws EmptyResultException {
 		
-		if (checkForBuying(userVO, stationFrom, depTime, runId).equals("OK")) {
+		if (checkForBuying(login, stationFrom, depTime, runId).equals("OK")) {
 			LOG.info("Creating new Ticket and adding it to DB");
 			Run run = runDao.findById(Integer.parseInt(runId));
 			if (run == null) {
 				LOG.warn("Received no Run with given ID from DAO");
 				throw new EmptyResultException("Received no Run with given ID from DAO");
 			}
-			addTicket(userVO, stationFrom, stationTo, run, depTime);
+			addTicket(login, stationFrom, stationTo, run, depTime);
 			updateTimetable(stationFrom, stationTo, run);
 		}
 		
@@ -295,7 +295,7 @@ public class ClientService {
 	 * @param depTime Departure time
 	 * @throws EmptyResultException 
 	 */
-	private void addTicket(UserVO userVO, String stationFrom, String stationTo,	Run run, String depTime) throws EmptyResultException {
+	private void addTicket(String login, String stationFrom, String stationTo,	Run run, String depTime) throws EmptyResultException {
 		
 		Date date;
 		try {
@@ -304,15 +304,15 @@ public class ClientService {
 			LOG.warn("Can't convert Date from String");
 			throw new EmptyResultException("Can't convert Date from String");
 		}
-		User user = userDao.findById(userVO.getId());
+		List<User> userList = userDao.findByUserName(login);
 		List<Station> stationA = stationDao.findByName(stationFrom);
 		List<Station> stationB = stationDao.findByName(stationTo);
 		
-		if (user == null || stationA.isEmpty() || stationB.isEmpty()) {
+		if (userList.isEmpty() || stationA.isEmpty() || stationB.isEmpty()) {
 			LOG.warn("Received empty List from DAO");
 			throw new EmptyResultException("Received empty List from DAO");
 		}
-		
+		User user = userList.get(0);
 		
 		Ticket ticket = new Ticket(user, run, stationA.get(0), stationB.get(0), date);
 		ticketDao.persist(ticket);
@@ -327,7 +327,7 @@ public class ClientService {
 	 * @param runId Run id
 	 * @return true if all checks were passed
 	 */
-	private String checkForBuying(UserVO userVO,  String stationFrom, String depTime, String runId) {
+	private String checkForBuying(String login,  String stationFrom, String depTime, String runId) {
 		
 		Date date;
 		try {
@@ -344,7 +344,7 @@ public class ClientService {
 		}
 		
 		LOG.info("Checking for User is already in passenger list on Run " + runId);
-		boolean isAlreadyInTicketList = checkForRegistrationOnRun(runId, userVO);
+		boolean isAlreadyInTicketList = checkForRegistrationOnRun(runId, login);
 		if (isAlreadyInTicketList) {
 			LOG.info("Fail. User is already registered on that Run");
 			return "¬ы уже зарегистрированы на этот поезд";
@@ -380,12 +380,11 @@ public class ClientService {
 	 * @return true if User has already registered
 	 */
 	@Transactional
-	private boolean checkForRegistrationOnRun(String run, UserVO userVO){
-		int userId = userVO.getId();
+	private boolean checkForRegistrationOnRun(String run, String login){
 		int runId = Integer.parseInt(run);
 		boolean isRegistered = true;
 		LOG.info("Searching Ticket in DB");
-		List<Ticket> ticketList = ticketDao.findTicketByRunAndUserIds(runId, userId);
+		List<Ticket> ticketList = ticketDao.findTicketByRunAndLogin(runId, login);
 		if (ticketList.isEmpty()) {
 			isRegistered = false;
 		}

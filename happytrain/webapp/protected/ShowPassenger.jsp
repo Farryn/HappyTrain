@@ -17,7 +17,6 @@
 	   <tr>
 	    	<td align="center" valign="top">Имя</td>
 	    	<td align="center" valign="top">Фамилия</td>
-		    <td align="center" valign="top">Дата рождения</td>
 		    <td align="center" valign="top">Станция отправления</td>
 		    <td align="center" valign="top">Станция прибытия</td>
 	   </tr>
@@ -28,9 +27,8 @@
 		</c:if>
 	   <c:forEach var="item" items="${passengerList}" varStatus="status">
 			<tr>
-				<td ><c:out value="${item.userId.firstName}" /></td>
-				<td ><c:out value="${item.userId.lastName}" /></td>
-				<td ><c:out value="${item.userId.birthDate}" /></td>
+				<td ><c:out value="${item.firstName}" /></td>
+				<td ><c:out value="${item.lastName}" /></td>
 				<td ><c:out value="${item.stationFrom}" /></td>
 				<td ><c:out value="${item.stationTo}" /></td>
 			</tr>

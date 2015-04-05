@@ -13,9 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import services.TicketService;
-import servlets.ShowFoundTrainsServlet;
 import valueobjects.TicketVO;
 
 /**
@@ -34,7 +35,7 @@ public class ShowPassengerController {
 	/**
 	 * Logger instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
+	private static final Logger LOG = Logger.getLogger(ShowPassengerController.class);
        
 	@Autowired
 	private TicketService ticketService;
@@ -44,18 +45,21 @@ public class ShowPassengerController {
      * @return page 
      */
 	@RequestMapping(value = "/passenger", method = RequestMethod.GET)
-	public String processGet(HttpServletRequest req) {
-		LOG.info("Getting parameters from GET");
-		int runId = Integer.parseInt(req.getParameter("run"));
+	public ModelAndView processGet(@RequestParam(value="run") int runId) {
+		ModelAndView modelAndView = new ModelAndView("protected/ShowPassenger");
+		//LOG.info("Getting parameters from GET");
+		//int runId = Integer.parseInt(req.getParameter("run"));
 		
 		LOG.info("Getting passenger list from TicketService");
 		List<TicketVO> passengerList = new ArrayList<TicketVO>();
 		passengerList = ticketService.getTicketsByRunId(runId);
 		if (passengerList.isEmpty()) {
 			LOG.info("No result was found");
-			req.setAttribute("emptyList", 1);
+			modelAndView.addObject("emptyList", 1);
+			//req.setAttribute("emptyList", 1);
 		}
-		req.setAttribute("passengerList", passengerList);
-		return "protected/ShowPassenger";
+		modelAndView.addObject("passengerList", passengerList);
+		//req.setAttribute("passengerList", passengerList);
+		return modelAndView;
 	}
 }

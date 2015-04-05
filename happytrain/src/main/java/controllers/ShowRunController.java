@@ -13,9 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import services.RunService;
-import servlets.ShowFoundTrainsServlet;
 import valueobjects.RunVO;
 
 /**
@@ -34,7 +35,7 @@ public class ShowRunController {
 	/**
 	 * Logger instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
+	private static final Logger LOG = Logger.getLogger(ShowRunController.class);
        
 	@Autowired
 	private RunService runService;
@@ -44,18 +45,21 @@ public class ShowRunController {
      * @return page 
      */
 	@RequestMapping(value = "/run", method = RequestMethod.GET)
-	public String processGet(HttpServletRequest req) {
-		LOG.info("Getting parameters from GET");
-    	int trainId = Integer.parseInt(req.getParameter("train"));
+	public ModelAndView processGet(@RequestParam(value="train") int trainId) {
+		ModelAndView modelAndView = new ModelAndView("protected/ShowRun");
+		//LOG.info("Getting parameters from GET");
+    	//int trainId = Integer.parseInt(req.getParameter("train"));
     	
     	LOG.info("Getting Runs list from RunService");
 		List<RunVO> runList = new ArrayList<RunVO>();
 		runList = runService.getRunByTrainId(trainId);
 		if (runList.isEmpty()) {
 			LOG.info("No result was found");
-			req.setAttribute("emptyList", 1);
+			modelAndView.addObject("emptyList", 1);
+			//req.setAttribute("emptyList", 1);
 		}
-		req.setAttribute("runList", runList);
-		return "protected/ShowRun";
+		modelAndView.addObject("runList", runList);
+		//req.setAttribute("runList", runList);
+		return modelAndView;
 	}
 }

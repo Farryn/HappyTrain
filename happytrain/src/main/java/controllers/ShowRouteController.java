@@ -13,10 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import services.ClientService;
 import services.RouteService;
-import servlets.ShowFoundTrainsServlet;
 import valueobjects.StationVO;
 import valueobjects.TimetableVO;
 
@@ -36,7 +37,7 @@ public class ShowRouteController {
 	/**
 	 * Logger instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
+	private static final Logger LOG = Logger.getLogger(ShowRouteController.class);
        
 	@Autowired
 	private RouteService routeService;
@@ -49,23 +50,27 @@ public class ShowRouteController {
      * @return page 
      */
 	@RequestMapping(value = "/route", method = RequestMethod.GET)
-	public String processGet(HttpServletRequest req) {
-		LOG.info("Getting parameters from GET");
-    	String trainStr = req.getParameter("train");
+	public ModelAndView processGet(@RequestParam(value="train") String trainStr,
+									@RequestParam(value="run") String runStr) {
+		ModelAndView modelAndView = new ModelAndView("ShowRoute");
+		//LOG.info("Getting parameters from GET");
+    	//String trainStr = req.getParameter("train");
 		int trainId = Integer.parseInt(trainStr);
 		
 		LOG.info("Getting Stations from RouteService");
 		List<StationVO> stationList = new ArrayList<StationVO>();
 		stationList = routeService.getStationsByTrain(trainId);
 		if (stationList.isEmpty()) {
-			LOG.info("No result was found");
-			req.setAttribute("emptyList", 1);
+			modelAndView.addObject("emptyList", 1);			
+			//req.setAttribute("emptyList", 1);
 		}
-		req.setAttribute("haveRun", 0);
-		req.setAttribute("stationList", stationList);
+		modelAndView.addObject("haveRun", 0);
+		modelAndView.addObject("stationList", stationList);
+		//req.setAttribute("haveRun", 0);
+		//req.setAttribute("stationList", stationList);
 		
 		
-		String runStr = req.getParameter("run");
+		//String runStr = req.getParameter("run");
 		if (runStr != null) {
 			LOG.info("We have Run parameter");
 			int runId = Integer.parseInt(runStr);
@@ -75,12 +80,14 @@ public class ShowRouteController {
 			timetableList = clientService.getTimesFromStationList(runId, stationList);
 			if (timetableList.isEmpty()) {
 				LOG.info("No time was found");
-				req.setAttribute("emptyList", 1);
+				modelAndView.addObject("emptyList", 1);	
+				//req.setAttribute("emptyList", 1);
 			}
-			
-			req.setAttribute("timetableList", timetableList);
-	    	req.setAttribute("haveRun", 1);
+			modelAndView.addObject("timetableList", timetableList);	
+			modelAndView.addObject("haveRun", 1);	
+			//req.setAttribute("timetableList", timetableList);
+	    	//req.setAttribute("haveRun", 1);
 		}
-		return "ShowRoute";
+		return modelAndView;
 	}
 }

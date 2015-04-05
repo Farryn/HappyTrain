@@ -10,9 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import services.StationService;
-import servlets.ShowFoundTrainsServlet;
 
 /**
  * @author Damir Tuktamyshev
@@ -30,7 +31,7 @@ public class AddStationController {
 	/**
 	 * Logger instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
+	private static final Logger LOG = Logger.getLogger(AddStationController.class);
        
 	@Autowired
 	private StationService stationService;
@@ -51,23 +52,27 @@ public class AddStationController {
      * @return page 
      */
 	@RequestMapping(value = "/addstation", method = RequestMethod.POST)
-	public String processPost(HttpServletRequest req) {
+	public ModelAndView processPost(@RequestParam(value = "stationName") String stationName) {
+		ModelAndView modelAndView = new ModelAndView("protected/AddStation");
 		LOG.info("Getting parameters from form");
-    	String stationName = req.getParameter("stationName");
+    	//String stationName = req.getParameter("stationName");
     	if (stationName == null || "".equals(stationName)) {
     		LOG.warn("Empty station name");
-			req.setAttribute("fail", 1);
-			return "protected/AddStation";
+    		modelAndView.addObject("fail", 1);
+			//req.setAttribute("fail", 1);
+			return modelAndView;
     	}
     	LOG.info("Adding Station into DB");
     	try {
 			stationService.addStation(stationName);
-			req.setAttribute("fail", 0);
+			modelAndView.addObject("fail", 0);
+			//req.setAttribute("fail", 0);
 		} catch (Exception e) {
 			LOG.error("Exception: " + e);
 			LOG.warn("Could not add station into DB");
-			req.setAttribute("fail", 1);
+			modelAndView.addObject("fail", 1);
+			//req.setAttribute("fail", 1);
 		}
-		return "protected/AddStation";
+		return modelAndView;
 	}
 }

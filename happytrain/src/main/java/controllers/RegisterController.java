@@ -14,9 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import services.UserService;
-import servlets.ShowFoundTrainsServlet;
 import util.EmptyResultException;
 
 /**
@@ -31,7 +32,7 @@ public class RegisterController {
 	/**
 	 * Logger instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
+	private static final Logger LOG = Logger.getLogger(RegisterController.class);
 	
 	@Autowired
 	private UserService userService;
@@ -49,38 +50,47 @@ public class RegisterController {
      * @return page 
      */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String processPost(HttpServletRequest req) {
-		LOG.info("Getting parameters from form");
+	public ModelAndView processPost(@RequestParam(value="first_name") String firstName,
+									@RequestParam(value="last_name") String lastName,
+									@RequestParam(value="login") String login,
+									@RequestParam(value="password") String password,
+									@RequestParam(value="birth_date") String birthDateString) {
+		ModelAndView modelAndView = new ModelAndView("Register");
+		/*LOG.info("Getting parameters from form");
 		String firstName = req.getParameter("first_name");
 		String lastName = req.getParameter("last_name");
 		String login = req.getParameter("login");
-		String password = req.getParameter("password");
+		String password = req.getParameter("password");*/
 		
 		if (!wrongInput(firstName, lastName, login, password)) {
-			req.setAttribute("fail", 1);
-			return "Register";
+			modelAndView.addObject("fail", 1);
+			//req.setAttribute("fail", 1);
+			return modelAndView;
 		}
 		
-		String birthDateString = req.getParameter("birth_date");
+		//String birthDateString = req.getParameter("birth_date");
 		Date birthDate = null;
 		try {
 			birthDate = getDateFromString(birthDateString);
 		} catch (ParseException e) {
 			LOG.warn("Exception: " + e);
-			req.setAttribute("fail", 1);
-			return "Register";
+			modelAndView.addObject("fail", 1);
+			//req.setAttribute("fail", 1);
+			return modelAndView;
 		} 
 		
 		LOG.info("Adding User using UserService");
 		try {
 			userService.addUser(firstName, lastName, birthDate, login, password);
-			req.setAttribute("fail", 0);
+			modelAndView.addObject("fail", 0);
+			//req.setAttribute("fail", 0);
 		} catch (EmptyResultException e) {
 			LOG.warn("Could not add User into DB");
-			req.setAttribute("fail", 1);
+			modelAndView.addObject("fail", 1);
+			//req.setAttribute("fail", 1);
 		}
 		
-	    return "Register";
+	    return modelAndView;
 	}
 	
 	private boolean wrongInput(String firstName, String lastName, String login, String password) {

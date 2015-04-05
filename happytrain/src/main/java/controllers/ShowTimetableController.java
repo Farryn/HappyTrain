@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,10 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import services.StationService;
 import services.TimetableService;
-import servlets.ShowFoundTrainsServlet;
 import valueobjects.StationVO;
 import valueobjects.TimetableVO;
  
@@ -32,7 +34,7 @@ public class ShowTimetableController {
 	/**
 	 * Logger instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
+	private static final Logger LOG = Logger.getLogger(ShowTimetableController.class);
        
 	/**
 	 * 
@@ -52,53 +54,63 @@ public class ShowTimetableController {
      * @return page 
      */
 	@RequestMapping(value = "/timetable", method = RequestMethod.GET)
-	public String processGet(HttpServletRequest req) {
-		getStationListAndTime(req);
-		req.setAttribute("haveResult", 0);
-	    return "ShowTimetable";
+	public ModelAndView processGet() {
+		ModelAndView modelAndView = new ModelAndView("ShowTimetable");
+		modelAndView = getStationListAndTime(modelAndView);
+		modelAndView.addObject("haveResult", 0);
+		//req.setAttribute("haveResult", 0);
+	    return modelAndView;
 	}
 
 	
 	@RequestMapping(value = "/timetable", method = RequestMethod.POST)
-	public String processPost(HttpServletRequest req) {
-		getStationListAndTime(req);
-		LOG.info("Getting parameters from form");
+	public ModelAndView processPost(@RequestParam(value="station") String stationA,
+									@RequestParam(value="from") String from,
+									@RequestParam(value="to") String to) {
+		ModelAndView modelAndView = new ModelAndView("ShowTimetable");
+		modelAndView = getStationListAndTime(modelAndView);
+		/*LOG.info("Getting parameters from form");
 		String stationA = req.getParameter("station");
 		String from = req.getParameter("from");
-		String to = req.getParameter("to");
+		String to = req.getParameter("to");*/
 		
 		LOG.info("Getting Timetables by Station " + stationA + " between "+ from + "and" + to);
 		List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
 		timetableList = timetableService.getTimetableByStation(stationA, from, to);
 		if (timetableList.isEmpty()) {
 			LOG.info("No result was found");
-			req.setAttribute("emptyList", 1);
+			modelAndView.addObject("emptyList", 1);
+			//req.setAttribute("emptyList", 1);
 		}
-		req.setAttribute("haveResult", 1);
+		modelAndView.addObject("haveResult", 1);
+		modelAndView.addObject("station", stationA);
+		modelAndView.addObject("timetableList", timetableList);
+		modelAndView.addObject("from", from);
+		modelAndView.addObject("to", to);
+		
+		/*req.setAttribute("haveResult", 1);
 		req.setAttribute("station", stationA);
 		req.setAttribute("timetableList", timetableList);
 		req.setAttribute("from", from);
-		req.setAttribute("to", to);
-		return "ShowTimetable";
+		req.setAttribute("to", to);*/
+		return modelAndView;
 	}
 	
-	private void getStationListAndTime(HttpServletRequest req){
+	private ModelAndView getStationListAndTime(ModelAndView modelAndView){
 		List<StationVO> stationList = new ArrayList<StationVO>();
 	    String strDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
 		stationList = stationService.getAllStationVO();
 		if (stationList.isEmpty()) {
 			LOG.info("No station was found");
 		}
-		if (req.getParameter("from") != null) {
-			req.setAttribute("from", req.getParameter("from"));
-		} else {
-			req.setAttribute("from", strDate);
+		Map<String, Object> map = modelAndView.getModel();
+		if (!map.containsKey("from")) {
+			modelAndView.addObject("from", strDate);
 		}
-		if (req.getParameter("to") != null) {
-			req.setAttribute("to", req.getParameter("to"));
-		} else {
-			req.setAttribute("to", strDate);
+		if (!map.containsKey("to")) {
+			modelAndView.addObject("to", strDate);
 		}
-		req.setAttribute("stationList", stationList);
+		modelAndView.addObject("stationList", stationList);
+		return modelAndView;
 	}
 }

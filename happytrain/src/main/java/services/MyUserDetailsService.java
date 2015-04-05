@@ -70,7 +70,9 @@ public class MyUserDetailsService implements UserDetailsService{
 	@Transactional(readOnly=true)
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
  
-		User user = userDao.findByUserName(username).get(0);
+		List<User> userList = userDao.findByUserName(username);
+		if(userList.isEmpty()) throw new UsernameNotFoundException("");
+		User user = userList.get(0);
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getRole());
  
 		return buildUserForAuthentication(user, authorities);

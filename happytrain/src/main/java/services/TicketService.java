@@ -1,6 +1,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -52,6 +53,26 @@ public class TicketService {
 			LOG.warn("Received empty Ticket List from DAO");
 		}
 		for (Ticket ticket: ticketList) {
+			ticketVOList.add(new TicketVO(ticket));
+		}
+		return ticketVOList;
+	}
+	
+	/**Get list of Tickets between period of time
+	 * @param startDate beginning of period
+	 * @param endDate end of period
+	 * @return Ticket list
+	 */
+	@Transactional
+	public List<TicketVO> getTicketsBetweenTimePeriod(Date startDate, Date endDate){
+		List<Ticket> ticketList = new ArrayList<Ticket>();
+		List<TicketVO> ticketVOList = new ArrayList<TicketVO>();
+		LOG.info("Searching for Tickets between " + startDate + " and " + endDate);
+		ticketList = ticketDao.findTicketsBetweenTimePeriod(startDate, endDate);
+		if (ticketList.isEmpty()) {
+			LOG.warn("Received empty Ticket List from DAO");
+		}
+		for(Ticket ticket: ticketList){
 			ticketVOList.add(new TicketVO(ticket));
 		}
 		return ticketVOList;

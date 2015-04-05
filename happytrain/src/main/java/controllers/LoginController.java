@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import services.ClientService;
-import servlets.ShowFoundTrainsServlet;
 import valueobjects.TimetableVO;
  
 /**
@@ -26,17 +25,15 @@ public class LoginController {
 	/**
 	 * Logger instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(ShowFoundTrainsServlet.class);
+	private static final Logger LOG = Logger.getLogger(LoginController.class);
        
 
 	
 	/** Process data from request.
-     * @param req HttpServletRequest Object
      * @return page 
      */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String processRequest() {
-			
 	    	return "Login";
 	}
 
