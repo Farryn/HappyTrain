@@ -13,10 +13,19 @@ import org.hibernate.HibernateException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import config.AppConfig;
+import config.SecurityConfig;
 import valueobjects.RunVO;
 import valueobjects.TrainVO;
 import dao.RunDAOImpl;
@@ -25,11 +34,14 @@ import entities.Run;
 import entities.Train;
 
 /**
- * @author Mup4uk
+ * @author Damir Tuktamyshev
  *
  */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes =  AppConfig.class , 
+						loader = AnnotationConfigWebContextLoader.class)
 public class TrainServiceTest {
-
 
 	@Mock
 	private TrainDAOImpl mockDAO;
@@ -39,13 +51,15 @@ public class TrainServiceTest {
 		MockitoAnnotations.initMocks(this);
 	}
 	
+	@Autowired
+	private TrainService trainService;
+	
 	/**
 	 * Test method for {@link services.TrainService#getAllTrains()}.
 	 */
 	@Test
 	public void testGetAllTrains() {
-		TrainService service = new TrainService(); 
-		service.setDao(mockDAO);
+		trainService.setTrainDao(mockDAO);
 		int id = 1;
 		
 		//test1
@@ -55,7 +69,7 @@ public class TrainServiceTest {
 		List<TrainVO> test = new ArrayList<TrainVO>();
 		Mockito.when(mockDAO.findAll()).thenReturn(trainList);
 		try {
-			test = service.getAllTrains();
+			test = trainService.getAllTrains();
 		} catch (Exception e) {
 			fail();
 		} 
@@ -65,7 +79,7 @@ public class TrainServiceTest {
 	    //test2
 	    Mockito.when(mockDAO.findAll()).thenReturn(null);
 	    try {
-	    	service.getAllTrains();   
+	    	trainService.getAllTrains();   
 	    	fail();
 		} catch (NullPointerException e) {
 			
@@ -76,18 +90,15 @@ public class TrainServiceTest {
 	    //test3
 	    Mockito.when(mockDAO.findAll()).thenReturn(new ArrayList<Train>());
 	    try {
-	    	service.getAllTrains();   
-	    	fail();
-		} catch (IllegalStateException e) {
-			
-		} catch (Exception e) {
+	    	trainService.getAllTrains();   
+	    } catch (Exception e) {
 			fail();
 		}
 	    
 	    //test4
 	    Mockito.when(mockDAO.findAll()).thenThrow(new HibernateException("Some info"));
 	    try {
-	    	service.getAllTrains();   
+	    	trainService.getAllTrains();   
 	    	fail();
 		} catch (Exception e) {
 			
@@ -99,16 +110,15 @@ public class TrainServiceTest {
 	 */
 	@Test
 	public void testAddTrain() {
-		TrainService service = new TrainService(); 
-		service.setDao(mockDAO);
+		trainService.setTrainDao(mockDAO);
 		
 		Train train = new Train();
-		service.addTrain(train);
+		trainService.addTrain(train);
 		Mockito.verify(mockDAO, Mockito.atLeastOnce()).persist(train);
 		
 		Mockito.doThrow(new HibernateException("Some info"));
 		try {
-		    service.addTrain(train);  
+		    trainService.addTrain(train);  
 		    fail();
 		} catch (Exception e) {
 				

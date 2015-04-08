@@ -7,20 +7,34 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import config.AppConfig;
 import dao.RunDAOImpl;
 import entities.Train;
 
 /**
- * @author Mup4uk
+ * @author Damir Tuktamyshev
  *
  */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes =  AppConfig.class , 
+						loader = AnnotationConfigWebContextLoader.class)
 public class EmployeeServiceTest {
 
+	
+	@Autowired
+	private EmployeeService employeeService;
 	/**
 	 * Mock Service.
 	 */
@@ -46,16 +60,15 @@ public class EmployeeServiceTest {
 	@Test
 	public void testAddTrain() {
 		
-		EmployeeService service = new EmployeeService();
-		service.setRouteService(mockRoute);
-		service.setTrainService(mockTrain);
+		employeeService.setRouteService(mockRoute);
+		employeeService.setTrainService(mockTrain);
 		
 		//test1
 		String[] array = new String[2];
 		array[0] = "string1";
 		array[1] = "string2";
 		try {
-			service.addTrain("Name", 0, array);
+			employeeService.addTrain("Name", 0, array);
 		} catch (Exception e) {
 			fail();
 		}
@@ -63,19 +76,19 @@ public class EmployeeServiceTest {
 		//test2
 		String[] array2 = new String[0];
 		try {
-			service.addTrain("Name", 0, array2);
-			fail();
-		} catch (Exception e) {
+			employeeService.addTrain("Name", 0, array2);
 			
+		} catch (Exception e) {
+			fail();
 		}
 		
 		//test3
 		array = null;
 		try {
-			service.addTrain("Name", 0, array2);
-			fail();
-		} catch (Exception e) {
+			employeeService.addTrain("Name", 0, array2);
 			
+		} catch (Exception e) {
+			fail();
 		}
 		
 	}

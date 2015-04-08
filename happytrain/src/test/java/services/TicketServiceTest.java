@@ -11,10 +11,17 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import config.AppConfig;
 import dao.TicketDAOImpl;
 import entities.Run;
 import entities.Station;
@@ -22,11 +29,17 @@ import entities.Ticket;
 import entities.User;
 
 /**
- * @author 
+ * @author Damir Tuktamyshev
  *
  */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes =  AppConfig.class , 
+						loader = AnnotationConfigWebContextLoader.class)
 public class TicketServiceTest {
-
+	
+	@Autowired
+	private TicketService ticketService;
 	
 
 	/**
@@ -48,8 +61,7 @@ public class TicketServiceTest {
 	 */
 	@Test
 	public void testGetTicketsByRunId() {
-		TicketService service = new TicketService();
-		service.setTdao(mockDAO);
+		ticketService.setTicketdao(mockDAO);
 		
 		//test1
 		Ticket ticket = new Ticket(new User(), new Run(), new Station(), new Station(), new Date());
@@ -57,7 +69,7 @@ public class TicketServiceTest {
 		ticketList.add(ticket);
 		Mockito.when(mockDAO.findTicketsByRunId(Mockito.anyInt())).thenReturn(ticketList);
 		try {
-			service.getTicketsByRunId(0);
+			ticketService.getTicketsByRunId(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -67,7 +79,7 @@ public class TicketServiceTest {
 	    //test2
 	    Mockito.when(mockDAO.findTicketsByRunId(Mockito.anyInt())).thenReturn(null);
 		try {
-			service.getTicketsByRunId(0);
+			ticketService.getTicketsByRunId(0);
 			fail();
 		} catch (NullPointerException e) {
 			
@@ -78,11 +90,8 @@ public class TicketServiceTest {
 		//test3
 		Mockito.when(mockDAO.findTicketsByRunId(Mockito.anyInt())).thenReturn(new ArrayList<Ticket>());
 		try {
-			service.getTicketsByRunId(0);
-			fail();
-		} catch (IllegalStateException e) {
-			
-		} catch (Exception e) {
+			ticketService.getTicketsByRunId(0);
+		}  catch (Exception e) {
 			fail();
 		} 
 	}

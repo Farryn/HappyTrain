@@ -47,6 +47,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	            prop.put("hibernate.show_sql", "true");
 	            prop.put("hibernate.dialect", 
 	                "org.hibernate.dialect.MySQL5Dialect");
+	            prop.put("javax.persistence.validation.mode", "none");
 	            return prop;
 	    }
 	

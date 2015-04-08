@@ -11,10 +11,17 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import config.AppConfig;
 import dao.RouteDAOImpl;
 import dao.RunDAOImpl;
 import dao.StationDAOImpl;
@@ -23,11 +30,17 @@ import entities.Station;
 import entities.Train;
 
 /**
- * @author 
+ * @author Damir Tuktamyshev
  *
  */
-public class TestRouteService {
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes =  AppConfig.class , 
+						loader = AnnotationConfigWebContextLoader.class)
+public class RouteServiceTest {
 
+	@Autowired
+	private RouteService routeService;
 	
 	/**
 	 * Mock DAO.
@@ -50,8 +63,7 @@ public class TestRouteService {
 	 */
 	@Test
 	public void testGetStationsByTrain() {
-		RouteService service = new RouteService();
-		service.setRouteDao(mockDAOroute);
+		routeService.setRouteDao(mockDAOroute);
 		
 		//test1
 		List<Station> stationList = new ArrayList<Station>();
@@ -59,7 +71,7 @@ public class TestRouteService {
 		stationList.add(station);
 		Mockito.when(mockDAOroute.findStationsByTrain(Mockito.anyInt())).thenReturn(stationList);
 		try {
-			service.getStationsByTrain(0);
+			routeService.getStationsByTrain(0);
 		} catch (Exception e) {
 			fail();
 		} 
@@ -68,7 +80,7 @@ public class TestRouteService {
 	  //test2
 	    Mockito.when(mockDAOroute.findStationsByTrain(Mockito.anyInt())).thenReturn(null);
 	    try {
-	    	service.getStationsByTrain(0);   
+	    	routeService.getStationsByTrain(0);   
 	    	fail();
 		} catch (NullPointerException e) {
 			
@@ -79,18 +91,15 @@ public class TestRouteService {
 	    //test3
 	    Mockito.when(mockDAOroute.findStationsByTrain(Mockito.anyInt())).thenReturn(new ArrayList<Station>());
 	    try {
-	    	service.getStationsByTrain(0);   
-	    	fail();
-		} catch (IllegalStateException e) {
-			
-		} catch (Exception e) {
+	    	routeService.getStationsByTrain(0);   
+		}  catch (Exception e) {
 			fail();
 		}
 	    
 	    //test4
 	    Mockito.when(mockDAOroute.findStationsByTrain(Mockito.anyInt())).thenThrow(new HibernateException("Some info"));
 	    try {
-	    	service.getStationsByTrain(0);   
+	    	routeService.getStationsByTrain(0);   
 	    	fail();
 		} catch (Exception e) {
 			
@@ -102,14 +111,15 @@ public class TestRouteService {
 	 */
 	@Test
 	public void testAddRoute() {
-		RouteService service = new RouteService();
-		service.setRouteDao(mockDAOroute);
-		service.setStationDao(mockDAOstation);
+		routeService.setRouteDao(mockDAOroute);
+		routeService.setStationDao(mockDAOstation);
 		
 		//test1
-		Mockito.when(mockDAOstation.findByName(Mockito.anyString())).thenReturn(new Station());
+		List<Station> stationList = new ArrayList<Station>();
+		stationList.add(new Station());
+		Mockito.when(mockDAOstation.findByName(Mockito.anyString())).thenReturn(stationList);
 		try {
-			service.addRoute(new Train(), "station", 2);
+			routeService.addRoute(new Train(), "station", 2);
 		} catch (Exception e) {
 			fail();
 		}
@@ -118,7 +128,7 @@ public class TestRouteService {
 		//test2
 		Mockito.doThrow(new HibernateException("Some info"));
 		try {
-			service.addRoute(new Train(), "station", 2);   
+			routeService.addRoute(new Train(), "station", 2);   
 			fail();
 		} catch (Exception e) {
 						
@@ -127,7 +137,7 @@ public class TestRouteService {
 		//test3
 		Mockito.when(mockDAOstation.findByName(Mockito.anyString())).thenReturn(null);
 		try {
-			service.addRoute(new Train(), "station", 2);
+			routeService.addRoute(new Train(), "station", 2);
 			fail();
 		} catch (NullPointerException e) {
 			

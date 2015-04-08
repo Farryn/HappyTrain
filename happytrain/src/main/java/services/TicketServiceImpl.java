@@ -34,7 +34,7 @@ public class TicketServiceImpl implements TicketService{
 	/**
 	 * @param ticketDao the ticketDao to set
 	 */
-	public void setTdao(TicketDAO ticketDao) {
+	public void setTicketdao(TicketDAO ticketDao) {
 		this.ticketDao = ticketDao;
 	}
 	

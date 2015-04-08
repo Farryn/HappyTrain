@@ -27,13 +27,14 @@ public class TrainServiceImpl implements TrainService{
 	/**
 	 * DAO for Train.
 	 */
-	@Autowired
+	
 	private TrainDAO trainDao;
 	
 
 	/**
 	 * @param dao the dao to set
 	 */
+	@Autowired
 	public void setTrainDao(TrainDAO trainDao) {
 		this.trainDao = trainDao;
 	}

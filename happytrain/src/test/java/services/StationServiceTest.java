@@ -11,21 +11,34 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import config.AppConfig;
 import dao.RunDAOImpl;
 import dao.StationDAOImpl;
 import entities.Station;
 import entities.Train;
 
 /**
- * @author 
+ * @author Damir Tuktamyshev
  *
  */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes =  AppConfig.class , 
+						loader = AnnotationConfigWebContextLoader.class)
 public class StationServiceTest {
 
+	@Autowired
+	private StationService stationService;
 	
 	/**
 	 * Mock DAO.
@@ -45,8 +58,7 @@ public class StationServiceTest {
 	 */
 	@Test
 	public void testGetAllStations() {
-		StationService service = new StationService();
-		service.setDao(mockDAO);
+		stationService.setStationDao(mockDAO);
 		
 		//test1
 		List<Station> stationList = new ArrayList<Station>();
@@ -54,7 +66,7 @@ public class StationServiceTest {
 		stationList.add(station);
 		Mockito.when(mockDAO.findAll()).thenReturn(stationList);
 		try {
-			service.getAllStations();
+			stationService.getAllStations();
 		} catch (Exception e) {
 			fail();
 		} 
@@ -63,7 +75,7 @@ public class StationServiceTest {
 	    //test2
 	    Mockito.when(mockDAO.findAll()).thenReturn(null);
 	    try {
-	    	service.getAllStations();   
+	    	stationService.getAllStations();   
 	    	fail();
 		} catch (NullPointerException e) {
 			
@@ -74,10 +86,7 @@ public class StationServiceTest {
 	    //test3
 	    Mockito.when(mockDAO.findAll()).thenReturn(new ArrayList<Station>());
 	    try {
-	    	service.getAllStations();   
-	    	fail();
-		} catch (IllegalStateException e) {
-			
+	    	stationService.getAllStations();   
 		} catch (Exception e) {
 			fail();
 		}
@@ -85,7 +94,7 @@ public class StationServiceTest {
 	    //test4
 	    Mockito.when(mockDAO.findAll()).thenThrow(new HibernateException("Some info"));
 	    try {
-	    	service.getAllStations();   
+	    	stationService.getAllStations();   
 	    	fail();
 		} catch (Exception e) {
 			
@@ -98,12 +107,11 @@ public class StationServiceTest {
 	 */
 	@Test
 	public void testAddStation() {
-		StationService service = new StationService();
-		service.setDao(mockDAO);
+		stationService.setStationDao(mockDAO);
 		
 		//test1
 		try {
-			service.addStation("Station");
+			stationService.addStation("Station");
 		} catch (Exception e) {
 			fail();
 		}
@@ -112,7 +120,7 @@ public class StationServiceTest {
 		//test2
 		Mockito.doThrow(new HibernateException("Some info"));
 		try {
-		    service.addStation("Station");   
+		    stationService.addStation("Station");   
 		    fail();
 		} catch (Exception e) {
 				

@@ -32,12 +32,12 @@ public class UserServiceImpl implements UserService{
 	/**
 	 * DAO for User.
 	 */
-	@Autowired
+	
 	private UserDAO userDao;
 	/**
 	 * DAO for Role.
 	 */
-	@Autowired
+	
 	private RoleDAO roleDao;
 	
 	
@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService{
 	/**
 	 * @param userDao the userDao to set
 	 */
+	@Autowired
 	public void setUserDao(UserDAO userDao) {
 		this.userDao = userDao;
 	}
@@ -52,6 +53,7 @@ public class UserServiceImpl implements UserService{
 	/**
 	 * @param roleDao the roleDao to set
 	 */
+	@Autowired
 	public void setRoleDao(RoleDAO roleDao) {
 		this.roleDao = roleDao;
 	}

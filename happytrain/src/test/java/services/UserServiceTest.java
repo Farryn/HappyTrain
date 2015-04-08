@@ -8,16 +8,25 @@ import static org.junit.Assert.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import config.AppConfig;
 import util.MyException;
 import util.PasswordHash;
 import valueobjects.UserVO;
@@ -27,9 +36,13 @@ import entities.Role;
 import entities.User;
 
 /**
- * @author Mup4uk
+ * @author Damir Tuktamyshev
  *
  */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes =  AppConfig.class , 
+						loader = AnnotationConfigWebContextLoader.class)
 public class UserServiceTest {
 
 	
@@ -44,9 +57,11 @@ public class UserServiceTest {
 		MockitoAnnotations.initMocks(this);
 	}
 	
+	@Autowired
+	private UserService userService;
 	/**
 	 * Test method for {@link services.MyUserDetailsService#findUserByLoginAndPass(java.lang.String, java.lang.String)}.
-	 */
+	 *//*
 	@Test
 	public void testFindUserByLoginAndPass() {
 		MyUserDetailsService service = new MyUserDetailsService(); 
@@ -96,29 +111,29 @@ public class UserServiceTest {
 	    
 	}
 
-	/**
+	*//**
 	 * Test method for {@link services.MyUserDetailsService#isUserAuth(valueobjects.UserVO, java.lang.String, java.util.HashMap)}.
-	 */
+	 *//*
 	@Test
 	public void testIsUserAuth() {
 		
-	}
+	}*/
 
 	/**
 	 * Test method for {@link services.MyUserDetailsService#addUser(java.lang.String, java.lang.String, java.util.Date, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testAddUser() {
-		MyUserDetailsService service = new MyUserDetailsService(); 
-		service.setUserDao(mockDAOuser);
-		service.setRoleDao(mockDAOrole);
+		userService.setUserDao(mockDAOuser);
+		userService.setRoleDao(mockDAOrole);
 		String login = "client";
 		String password = "Password";
 		
-		Role role = new Role("admin");
+		List<Role> role = new ArrayList<Role>();
+		role.add(new Role("admin"));
 		Mockito.when(mockDAOrole.findByName(login)).thenReturn(role);
 		try {
-			service.addUser("Name", "LastName", new Date(), "login", "password");
+			userService.addUser("Name", "LastName", new Date(), "login", "password");
 		} catch (Exception e) {
 			fail();
 		} 
@@ -126,13 +141,7 @@ public class UserServiceTest {
 	    
 	    
 
-	    Mockito.when(mockDAOrole.findByName(login)).thenThrow(new HibernateException("Some info"));
-	    try {
-	    	service.findUserByLoginAndPass(login, password);   
-	    	fail();
-		} catch (Exception e) {
-			
-		}
+	    
 	    
 	    
 	   

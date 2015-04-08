@@ -13,21 +13,35 @@ import org.hibernate.HibernateException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import config.AppConfig;
 import valueobjects.RunVO;
 import dao.RunDAOImpl;
 import entities.Run;
 import entities.Train;
 
 /**
- * @author 
+ * @author Damir Tuktamyshev
  *
  */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes =  AppConfig.class , 
+						loader = AnnotationConfigWebContextLoader.class)
 public class RunServiceTest {
 
+	@Autowired
+	private RunService runService;
+	
 	
 	/**
 	 * Mock DAO.
@@ -47,8 +61,7 @@ public class RunServiceTest {
 	 */
 	@Test
 	public void testGetRunById() {
-		RunService rs = new RunService(); 
-		rs.setDao(mockDAO);
+		runService.setRunDao(mockDAO);
 		int id = 1;
 		
 		//test1
@@ -56,7 +69,7 @@ public class RunServiceTest {
 		Run test = new Run();
 		Mockito.when(mockDAO.findById(id)).thenReturn(run);
 		try {
-			test = rs.getRunById(id);
+			test = runService.getRunById(id);
 		} catch (Exception e) {
 			fail();
 		} 
@@ -66,7 +79,7 @@ public class RunServiceTest {
 	    //test2
 	    Mockito.when(mockDAO.findById(id)).thenReturn(null);
 	    try {
-	    	rs.getRunById(id);   
+	    	runService.getRunById(id);   
 	    	fail();
 		} catch (IllegalStateException e) {
 			fail();
@@ -77,7 +90,7 @@ public class RunServiceTest {
 	    //test3
 	    Mockito.when(mockDAO.findById(id)).thenThrow(new HibernateException("Some info"));
 	    try {
-	    	rs.getRunById(id);   
+	    	runService.getRunById(id);   
 	    	fail();
 		} catch (Exception e) {
 			
@@ -90,8 +103,7 @@ public class RunServiceTest {
 	 */
 	@Test
 	public void testGetRunByTrainId() {
-		RunService rs = new RunService(); 
-		rs.setDao(mockDAO);
+		runService.setRunDao(mockDAO);
 		int id = 1;
 		
 		//test1
@@ -101,7 +113,7 @@ public class RunServiceTest {
 		List <RunVO> test = new ArrayList<RunVO>();
 		Mockito.when(mockDAO.findByTrainId(id)).thenReturn(runList);
 		try {
-			test = rs.getRunByTrainId(id);
+			test = runService.getRunByTrainId(id);
 		} catch (Exception e) {
 			fail();
 		} 
@@ -111,7 +123,7 @@ public class RunServiceTest {
 	    //test2
 	    Mockito.when(mockDAO.findByTrainId(id)).thenReturn(null);
 	    try {
-	    	rs.getRunByTrainId(id);   
+	    	runService.getRunByTrainId(id);   
 	    	fail();
 		} catch (NullPointerException e) {
 			
@@ -122,10 +134,7 @@ public class RunServiceTest {
 	    //test3
 	    Mockito.when(mockDAO.findByTrainId(id)).thenReturn(new ArrayList<Run>());
 	    try {
-	    	rs.getRunByTrainId(id);   
-	    	fail();
-		} catch (IllegalStateException e) {
-			
+	    	runService.getRunByTrainId(id);   
 		} catch (Exception e) {
 			fail();
 		}
@@ -133,7 +142,7 @@ public class RunServiceTest {
 	    //test4
 	    Mockito.when(mockDAO.findByTrainId(id)).thenThrow(new HibernateException("Some info"));
 	    try {
-	    	rs.getRunByTrainId(id);   
+	    	runService.getRunByTrainId(id);   
 	    	fail();
 		} catch (Exception e) {
 			
