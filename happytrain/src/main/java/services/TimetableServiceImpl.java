@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import util.DateFormatUtil;
 import util.EmptyResultException;
 import valueobjects.TimetableVO;
 import dao.RouteDAO;
@@ -33,6 +34,9 @@ public class TimetableServiceImpl implements TimetableService{
 	 * Logger.
 	 */
 	private static final Logger LOG = Logger.getLogger(TimetableServiceImpl.class);
+	
+	@Autowired
+	private DateFormatUtil dateFormatUtil;
 	
 	/**
 	 * DAO for Timetable.
@@ -99,8 +103,8 @@ public class TimetableServiceImpl implements TimetableService{
 		Date from;
 		Date to;
 		try {
-			from = getDateFromString(fromTime);
-			to = getDateFromString(toTime);
+			from = dateFormatUtil.getFullDateFromString(fromTime);
+			to = dateFormatUtil.getFullDateFromString(toTime);
 		} catch (ParseException e) {
 			LOG.warn("Can't convert Date from String");
 			return new ArrayList<TimetableVO>();
@@ -133,17 +137,7 @@ public class TimetableServiceImpl implements TimetableService{
 	}
 
 	
-	/**Generates Date object from String.
-	 * @param str String representing date
-	 * @return Date
-	 * @throws ParseException 
-	 */
-	private Date getDateFromString(String str) throws ParseException {
-		Date date = new Date();
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
-		date = sdf.parse(str);
-    	return date;
-    }
+	
 	
 	/**Add Run into DB. 
 	 * @param trainId Train id
@@ -170,10 +164,10 @@ public class TimetableServiceImpl implements TimetableService{
 		Date arrToFinish;
 		try {
 			LOG.info("Getting departure time from first station");
-			depFromStart = getDateFromString(departureTime[0]);
+			depFromStart = dateFormatUtil.getFullDateFromString(departureTime[0]);
 			
 			LOG.info("Getting arrival time to last station");
-			arrToFinish = getDateFromString(arrivalTime[arrivalTime.length-1]);
+			arrToFinish = dateFormatUtil.getFullDateFromString(arrivalTime[arrivalTime.length-1]);
 		} catch (ParseException e) {
 			LOG.warn("Can't convert Date from String");
 			throw new EmptyResultException("Can't convert Date from String");
@@ -214,8 +208,8 @@ public class TimetableServiceImpl implements TimetableService{
 		Date arrDate;
 		Date depDate;
 		try {
-			arrDate = getDateFromString(arrivalTime);
-			depDate = getDateFromString(departureTime);
+			arrDate = dateFormatUtil.getFullDateFromString(arrivalTime);
+			depDate = dateFormatUtil.getFullDateFromString(departureTime);
 		} catch (ParseException e) {
 			LOG.warn("Can't convert Date from String");
 			throw new EmptyResultException("Can't convert Date from String");

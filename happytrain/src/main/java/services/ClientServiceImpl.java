@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import util.DateFormatUtil;
 import util.EmptyResultException;
-import util.MyException;
 import valueobjects.StationVO;
 import valueobjects.TimetableVO;
 import valueobjects.UserVO;
@@ -73,6 +73,9 @@ public class ClientServiceImpl implements ClientService{
 	 */
 	@Autowired
 	private TimetableDAO timetableDao;
+	
+	@Autowired
+	private DateFormatUtil dateFormatUtil;
 	
 	/**
 	 * @param userDao the userDao to set
@@ -135,8 +138,8 @@ public class ClientServiceImpl implements ClientService{
 		Date from;
 		Date to;
 		try {
-			from = getDateFromString(fromTime);
-			to = getDateFromString(toTime);
+			from = dateFormatUtil.getFullDateFromString(fromTime);
+			to = dateFormatUtil.getFullDateFromString(toTime);
 		} catch (ParseException e) {
 			LOG.warn("Can't convert Date from String");
 			return new ArrayList<TimetableVO>();
@@ -217,17 +220,7 @@ public class ClientServiceImpl implements ClientService{
 	}
 
 
-	/**Generates Date object from String.
-	 * @param str String representing date
-	 * @return Date
-	 * @throws ParseException 
-	 */
-	private Date getDateFromString(String str) throws ParseException {
-		Date date = new Date();
-	    SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
-		date = sdf.parse(str);
-		return date;
-	}
+	
 	
 	/**
 	 * Method for buying Ticket.
@@ -299,7 +292,7 @@ public class ClientServiceImpl implements ClientService{
 		
 		Date date;
 		try {
-			date = getDateFromString(depTime);
+			date = dateFormatUtil.getFullDateFromString(depTime);
 		} catch (ParseException e) {
 			LOG.warn("Can't convert Date from String");
 			throw new EmptyResultException("Can't convert Date from String");
@@ -331,7 +324,7 @@ public class ClientServiceImpl implements ClientService{
 		
 		Date date;
 		try {
-			date = getDateFromString(depTime);
+			date = dateFormatUtil.getFullDateFromString(depTime);
 		} catch (ParseException e) {
 			LOG.warn("Can't convert Date from String");
 			return "Can't convert Date from String";

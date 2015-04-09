@@ -15,7 +15,7 @@
 						<a href="${pageContext.request.contextPath}/register">зарегистрируйтесь</a></span>
 					</c:if>
 					<c:if test="${pageContext.request.userPrincipal.name != null}">
-						<br/><span><a href="j_spring_security_logout">Выйти</a></span>
+						<br/><span><a href="${pageContext.request.contextPath}/j_spring_security_logout">Выйти</a></span>
 					</c:if>
 			</div>
 		</div>

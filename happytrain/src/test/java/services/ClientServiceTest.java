@@ -27,7 +27,6 @@ import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import config.AppConfig;
-import util.MyException;
 import valueobjects.StationVO;
 import valueobjects.TimetableVO;
 import valueobjects.UserVO;

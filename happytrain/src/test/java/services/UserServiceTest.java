@@ -27,8 +27,6 @@ import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import config.AppConfig;
-import util.MyException;
-import util.PasswordHash;
 import valueobjects.UserVO;
 import dao.RoleDAOImpl;
 import dao.UserDAOImpl;

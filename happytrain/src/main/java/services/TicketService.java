@@ -16,6 +16,6 @@ import valueobjects.TicketVO;
  */
 public interface TicketService {
 	public List<TicketVO> getTicketsByRunId(int runId);
-	public List<TicketVO> getTicketsBetweenTimePeriod(Date startDate, Date endDate);
+	public List<TicketVO> getTicketsBetweenTimePeriod(String startDate, String endDate);
 	public void setTicketdao(TicketDAO ticketDAO);
 }

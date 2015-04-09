@@ -100,7 +100,7 @@ public class SecurityConfig  {
 						.passwordParameter("password")
 						.defaultSuccessUrl("/")
 				.and()
-					.logout().logoutSuccessUrl("/")
+					.logout().logoutSuccessUrl("/").logoutUrl("/j_spring_security_logout")
 			    .and()
 			    	.csrf().disable();
 		}

@@ -51,7 +51,7 @@ public class ShowRouteController {
      */
 	@RequestMapping(value = "/route", method = RequestMethod.GET)
 	public ModelAndView processGet(@RequestParam(value="train") String trainStr,
-									@RequestParam(value="run") String runStr) {
+									@RequestParam(value="run", required = false) String runStr) {
 		ModelAndView modelAndView = new ModelAndView("ShowRoute");
 		//LOG.info("Getting parameters from GET");
     	//String trainStr = req.getParameter("train");

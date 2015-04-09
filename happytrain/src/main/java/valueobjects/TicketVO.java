@@ -1,5 +1,7 @@
 package valueobjects;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import entities.Ticket;
@@ -10,7 +12,7 @@ public class TicketVO {
 	private String lastName;
 	private String stationFrom;
 	private String stationTo;
-	private Date depTime;
+	private String depTime;
 	
 	public TicketVO(){
 		
@@ -28,19 +30,20 @@ public class TicketVO {
 	}*/
 	
 	public TicketVO(Ticket ticket) {
+		DateFormat df = new SimpleDateFormat("dd-M-yyyy HH:mm");
 		this.firstName = ticket.getUserId().getFirstName();
 		this.lastName = ticket.getUserId().getLastName();
 		this.stationFrom = ticket.getStationFrom().getName();
 		this.stationTo = ticket.getStationTo().getName();
-		this.depTime = ticket.getDepTime();
+		this.depTime = df.format(ticket.getDepTime());
 	}
 	
 	
-	public Date getDepTime() {
+	public String getDepTime() {
 		return depTime;
 	}
 
-	public void setDepTime(Date depTime) {
+	public void setDepTime(String depTime) {
 		this.depTime = depTime;
 	}
 

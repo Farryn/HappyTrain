@@ -67,15 +67,7 @@ public class RestServiceController {
 	@RequestMapping(value = "/tickets/{start}/{end}", method = RequestMethod.POST , headers="Accept=application/x-www-form-urlencoded", produces="application/json")
 	public ResponseEntity<TicketListVO> getTickets(@PathVariable String start, @PathVariable String end) {
 		List<TicketVO> ticketList = new ArrayList<TicketVO>();
-		Date startDate = null;
-		Date endDate = null;
-		try {
-			startDate = getDateFromString(start);
-			endDate = getDateFromString(end);
-		} catch (ParseException e) {
-			LOG.warn("Exception: " + e);
-		}
-		ticketList = ticketService.getTicketsBetweenTimePeriod(startDate, endDate);
+		ticketList = ticketService.getTicketsBetweenTimePeriod(start, end);
 		ResponseEntity<TicketListVO> res = new ResponseEntity<TicketListVO>(new TicketListVO(ticketList), HttpStatus.OK);
     	return res;
 		//return new TicketListVO(ticketList);
@@ -101,15 +93,5 @@ public class RestServiceController {
 		
 	}
 
-	/**Generates Date object from String.
-	 * @param str String representing date
-	 * @return Date
-	 * @throws ParseException 
-	 */
-	private Date getDateFromString(String str) throws ParseException {
-		Date date = new Date();
-	    SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
-		date = sdf.parse(str);
-		return date;
-	}
+	
 }
