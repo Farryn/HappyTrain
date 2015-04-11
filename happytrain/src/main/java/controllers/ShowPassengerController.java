@@ -45,8 +45,13 @@ public class ShowPassengerController {
      * @return page 
      */
 	@RequestMapping(value = "/passenger", method = RequestMethod.GET)
-	public ModelAndView processGet(@RequestParam(value="run") int runId) {
+	public ModelAndView processGet(@RequestParam(value="run", required=false) Integer runId,
+									@RequestParam(value="lang", required = false) String lang) {
 		ModelAndView modelAndView = new ModelAndView("protected/ShowPassenger");
+		if (lang != null) {
+			modelAndView.addObject("emptyList", 1);	
+			return modelAndView;
+		}
 		//LOG.info("Getting parameters from GET");
 		//int runId = Integer.parseInt(req.getParameter("run"));
 		

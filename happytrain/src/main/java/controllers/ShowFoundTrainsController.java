@@ -53,17 +53,22 @@ public class ShowFoundTrainsController {
      * @param req HttpServletRequest Object
      * @return page 
      */
-	@RequestMapping(value = "/showtrain", method = RequestMethod.GET)
-	public ModelAndView processRequest(@RequestParam(value="stationFrom") String stationA,
-								@RequestParam(value="stationTo") String stationB,
-								@RequestParam(value="from") String from,
-								@RequestParam(value="to") String to) {
+	@RequestMapping(value = "/showtrain", method = RequestMethod.POST)
+	public ModelAndView processRequest(@RequestParam(value="stationFrom", required=false) String stationA,
+								@RequestParam(value="stationTo", required=false) String stationB,
+								@RequestParam(value="from", required=false) String from,
+								@RequestParam(value="to", required=false) String to) {
 			//LOG.info("Getting parameters from form");
 	    	//String stationA = req.getParameter("stationFrom");
 			//String stationB = req.getParameter("stationTo");
 			//String from = req.getParameter("from");
 			//String to = req.getParameter("to");
 			ModelAndView modelAndView = new ModelAndView("FindTrain");
+			modelAndView = getStationListAndTime(modelAndView);
+			/*if (lang != null) {
+				modelAndView.addObject("haveResult", 0);
+				return modelAndView;
+			}*/
 			LOG.info("Getting timetable list from ClientService");
 			List<TimetableVO> timetableList = new ArrayList<TimetableVO>();
 			timetableList = clientService.searchTrain(stationA, stationB, from, to);
@@ -85,20 +90,27 @@ public class ShowFoundTrainsController {
 			req.setAttribute("from", from);
 			req.setAttribute("to", to);
 	    	req.setAttribute("timetableList", timetableList);*/
-			modelAndView = getStationListAndTime(modelAndView);
+			
 	    	return modelAndView;
 	}
 
+	@RequestMapping(value = "/showtrain", method = RequestMethod.GET)
+	public ModelAndView langRequest() {
+		return process();
+	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView startRequest() {
+		return process();
+	}
+	
+	private ModelAndView process() {
 		ModelAndView modelAndView = new ModelAndView("FindTrain");
 		modelAndView = getStationListAndTime(modelAndView);
 		modelAndView.addObject("haveResult", 0);
 		//req.setAttribute("haveResult", 0);
 		return modelAndView;
 	}
-	
 	private ModelAndView getStationListAndTime(ModelAndView modelAndView){
 		List<StationVO> stationList = new ArrayList<StationVO>();
 	    String strDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());

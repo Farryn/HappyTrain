@@ -565,7 +565,7 @@ ul.style3 .first {
 /*********************************************************************************/
 /* Social Icon Styles                                                            */
 /*********************************************************************************/
-/*
+
 	ul.contact
 	{
 		margin: 0;
@@ -601,7 +601,7 @@ ul.style3 .first {
 		text-align: center;
 		color: rgba(255,255,255,1);
 	}
-	*/
+	
 /*********************************************************************************/
 /* Addition                                                           */
 /*********************************************************************************/
@@ -753,7 +753,8 @@ ul.style3 .first {
 		font-size: 1em;
 		text-align: right;
 		padding-top: 1em;
-		padding-left: 1em;
+		padding-left: 2em;
+		padding-right: 2em;
 	}
 	
 	#login a
@@ -859,4 +860,30 @@ ul.style3 .first {
 		letter-spacing: 0.10em;
 		color: #2B73B7;
 		
+	}
+	
+	#locale
+	{
+		position: absolute;
+		top: 9em;
+		right: 0;
+		height: 50px;
+		text-align: right;
+		padding-top: 2em;
+		padding-right: 3em;
+	}
+	
+	#locale ul
+	{
+		list-style:none;
+	}
+	
+	#locale ul li 
+	{
+		display: inline; 
+		margin-right: 2em;
+	}
+	#locale ul li span a
+	{
+		text-decoration:none;
 	}

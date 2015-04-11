@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +39,7 @@ $(document).ready(function() {
 });
 
 </script>
-<title>Добавить поезд</title>
+<title><spring:message code="menu.addTrain"  /></title>
 
 </head>
 <body>
@@ -49,17 +50,18 @@ $(document).ready(function() {
 				<form  action="/happytrain/addtrain" method="POST" id="input-form">
 					<ul id="wrapper-ul">
 						<li>
-							<label>Номер поезда</label>
+							<label><!-- Номер поезда --><spring:message code="beauty-table.trainNumber"  /></label>
 							<input type="text" name="trainNumber" data-validate="required,alphanumeric"/>
 						</li>
 						<li>
-							<label>Число мест</label>
+							<label><!-- Число мест --><spring:message code="beauty-table.seatsCount"  /></label>
 							<input type="text" name="seatsCount" data-validate="required,number" />
 						</li>
 						
 						<li>
-							<label>Маршрут</label>
-							<input type="button" value="Добавить станцию" class="button" id="add_button">
+							<label><!-- Маршрут --><spring:message code="beauty-table.route"  /></label>
+							<spring:message code="input-form.add"  var="add"/>
+							<input type="button" value="${add}" class="button" id="add_button">
 						</li>
 						<li>
 							<select name="stationList[]" >
@@ -78,14 +80,15 @@ $(document).ready(function() {
 						
 						
 					</ul>
-					<input type="submit"  value="Отправить" class="button">
+					<spring:message code="input-form.submit"  var="submit"/>
+					<input type="submit"  value="${submit }" class="button">
 				</form>
 			</c:if>
 			<c:if test="${fail == 0}">
-				<div id="message"> Операция завершена успешно</div>
+				<div id="message"><!-- Операция завершена успешно --> <spring:message code="message.success" /></div>
 			</c:if>
 			<c:if test="${fail == 1}">
-				<div id="message"> Ошибка при добавлении данных</div>
+				<div id="message"> <!-- Ошибка при добавлении данных --> <spring:message code="message.failAdding" /></div>
 			</c:if>
 		</div>	
 </div>	

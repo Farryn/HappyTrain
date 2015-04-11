@@ -50,9 +50,14 @@ public class ShowRouteController {
      * @return page 
      */
 	@RequestMapping(value = "/route", method = RequestMethod.GET)
-	public ModelAndView processGet(@RequestParam(value="train") String trainStr,
-									@RequestParam(value="run", required = false) String runStr) {
+	public ModelAndView processGet(@RequestParam(value="train", required=false) String trainStr,
+									@RequestParam(value="run", required = false) String runStr,
+									@RequestParam(value="lang", required = false) String lang) {
 		ModelAndView modelAndView = new ModelAndView("ShowRoute");
+		if (lang != null) {
+			modelAndView.addObject("emptyList", 1);	
+			return modelAndView;
+		}
 		//LOG.info("Getting parameters from GET");
     	//String trainStr = req.getParameter("train");
 		int trainId = Integer.parseInt(trainStr);

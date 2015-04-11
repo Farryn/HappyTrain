@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html >
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Добавить рейс</title>
+<title><spring:message code="menu.addRun"  /></title>
 <link href="${pageContext.request.contextPath}/resources/css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="${pageContext.request.contextPath}/resources/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <link href="${pageContext.request.contextPath}/resources/css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
@@ -23,9 +24,15 @@
 				 <table  id="beauty-table" >
 				   <thead>
 					   <tr>
-					    	<td align="center" valign="top">Станция</td>
-						    <td align="center" valign="top">Прибытие</td>
-						    <td align="center" valign="top">Отправление</td>
+					    	<td align="center" valign="top">
+					    		<!-- Станция --> <spring:message code="beauty-table.stationName"  />
+					    	</td>
+						    <td align="center" valign="top">
+						    	<!-- Прибытие --> <spring:message code="beauty-table.arrival"  />
+						    </td>
+						    <td align="center" valign="top">
+						   		<!-- Отправление --> <spring:message code="beauty-table.departure"  />
+						    </td>
 					   </tr>
 				   </thead>
 				   <tbody>
@@ -43,7 +50,8 @@
 						   <tr>
 						   		<td colspan="3">
 									<input type="hidden" name="train" value="${train}"/>			   			
-						   			<input type="submit" value="Добавить" class="button" />
+						   			<spring:message code="input-form.submit"  var="submit"/>
+									<input type="submit"  value="${submit }" class="button">
 						   		</td>
 						   </tr>
 					   
@@ -52,10 +60,10 @@
 			 </form>
 		</c:if>
 		<c:if test="${fail == 0}">
-			<span id="message"> Операция завершена успешно</span>
+			<span id="message"> <!-- Операция завершена успешно --> <spring:message code="message.success" /></span>
 		</c:if>
 		<c:if test="${fail == 1}">
-			<span id="message"> Ошибка при добавлении данных</span>
+			<span id="message"> <!-- Ошибка при добавлении данных --> <spring:message code="message.failAdding" /></span>
 		</c:if>
 	</div>
 </div>

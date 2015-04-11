@@ -233,8 +233,8 @@ public class ClientServiceImpl implements ClientService{
 	 */
 	@Transactional
 	public void buyTicket(String login,  String stationFrom, String stationTo, String depTime, String runId) throws EmptyResultException {
-		
-		if (checkForBuying(login, stationFrom, depTime, runId).equals("OK")) {
+		String result = checkForBuying(login, stationFrom, depTime, runId);
+		if (result.equals("OK")) {
 			LOG.info("Creating new Ticket and adding it to DB");
 			Run run = runDao.findById(Integer.parseInt(runId));
 			if (run == null) {
@@ -243,6 +243,8 @@ public class ClientServiceImpl implements ClientService{
 			}
 			addTicket(login, stationFrom, stationTo, run, depTime);
 			updateTimetable(stationFrom, stationTo, run);
+		} else {
+			throw new EmptyResultException(result);
 		}
 		
 	}

@@ -57,7 +57,7 @@ public class BuyTicketController {
 	public ModelAndView processPost(@RequestParam(value="stationFrom") String stationFrom,
 									@RequestParam(value="stationTo") String stationTo,
 									@RequestParam(value="depTime") String depTime,
-									@RequestParam(value="runId") String runId) {
+									@RequestParam(value="run") String runId) {
 		ModelAndView modelAndView = new ModelAndView("protected/BuyTicket");
 		/*LOG.info("Getting parameters from form");
 		String stationFrom = req.getParameter("stationFrom");
@@ -72,15 +72,20 @@ public class BuyTicketController {
 			//req.setAttribute("fail", 0);
 		} catch (EmptyResultException e) {
 			LOG.warn("Exception: " + e);
-			modelAndView.addObject("failMessage", e.getMessage());
-			modelAndView.addObject("fail", 1);
+			switch(e.getMessage()) {
+				case "Нет свободных мест": modelAndView.addObject("fail", 1);break;
+				case "Вы уже зарегистрированы на этот поезд": modelAndView.addObject("fail", 2);break;
+				case "До отправления поезда осталось менее 10 минут": modelAndView.addObject("fail", 3);break;
+				default: modelAndView.addObject("fail", 4);
+			}
+			
 			//req.setAttribute("failMessage", e.getMessage());
 			//req.setAttribute("fail", 1);
 		} catch (Exception e) {
 			LOG.error("Exception: " + e);
 			LOG.warn("Could not add Ticket");
 			modelAndView.addObject("failMessage", "Ошибка при покупке билета");
-			modelAndView.addObject("fail", 1);
+			modelAndView.addObject("fail", 4);
 			//req.setAttribute("failMessage", "Ошибка при покупке билета");
 			//req.setAttribute("fail", 1);
 		}

@@ -47,8 +47,13 @@ public class AddRunController {
      * @return page 
      */
 	@RequestMapping(value = "/addrun", method = RequestMethod.GET)
-	public ModelAndView processGet(@RequestParam(value="train") int id) {
+	public ModelAndView processGet(@RequestParam(value="train", required=false) Integer id,
+									@RequestParam(value="lang", required = false) String lang) {
 		ModelAndView modelAndView = new ModelAndView("protected/AddRun");
+		if (lang != null) {
+			modelAndView.addObject("emptyList", 1);	
+			return modelAndView;
+		}
 		LOG.info("Getting parameters from GET");
 		//int id = Integer.parseInt(request.getParameter("train"));
 		

@@ -28,6 +28,7 @@ public class DateFormatUtilImpl implements DateFormatUtil{
 	 * @throws ParseException 
 	 */
 	public Date getFullDateFromString(String str) throws ParseException {
+		if(str == null) throw new ParseException("Null", 0);
 		Date date = new Date();
 	    SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yyyy HH:mm");
 		date = sdf.parse(str);
@@ -40,6 +41,7 @@ public class DateFormatUtilImpl implements DateFormatUtil{
 	 * @throws ParseException 
 	 */
 	public Date getShortDateFromString(String str) throws ParseException {
+		if(str == null) throw new ParseException("Null", 0);
 		Date date = new Date();
 	    SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
 		date = sdf.parse(str);

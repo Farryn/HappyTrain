@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html >
 <html>
 <head>
@@ -9,7 +10,7 @@
 <link href="${pageContext.request.contextPath}/resources/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <script src="${pageContext.request.contextPath}/resources/js/jquery.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/js/verify.notify.js" type="text/javascript"></script>
-<title>Добавить станцию</title>
+<title><spring:message code="menu.addStation"  /></title>
 
 </head>
 <body>
@@ -20,18 +21,19 @@
 				<form  action="/happytrain/addstation" method="POST" id="input-form">
 					<ul id="wrapper-ul">
 						<li>
-							<label>Название станции</label>
+							<label><!-- Название станции --><spring:message code="beauty-table.stationName"  /> </label>
 							<input type="text" name="stationName" data-validate="required,alphanumeric"/>
 						</li>
 					</ul>
-					<input type="submit"  value="Отправить" class="button">
+					<spring:message code="input-form.submit" var="submit" />
+					<input type="submit"  value="${submit }" class="button">
 				</form>
 			</c:if>
 			<c:if test="${fail == 0}">
-				<div id="message"> Операция завершена успешно</div>
+				<div id="message"> <!-- Операция завершена успешно --><spring:message code="message.success" /></div>
 			</c:if>
 			<c:if test="${fail == 1}">
-				<div id="message"> Ошибка при добавлении данных</div>
+				<div id="message"> <!-- Ошибка при добавлении данных --> <spring:message code="message.failAdding" /></div>
 			</c:if>
 		</div>	
 			

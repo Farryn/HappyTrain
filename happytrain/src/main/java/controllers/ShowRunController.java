@@ -45,8 +45,13 @@ public class ShowRunController {
      * @return page 
      */
 	@RequestMapping(value = "/run", method = RequestMethod.GET)
-	public ModelAndView processGet(@RequestParam(value="train") int trainId) {
+	public ModelAndView processGet(@RequestParam(value="train", required=false) Integer trainId,
+									@RequestParam(value="lang", required = false) String lang) {
 		ModelAndView modelAndView = new ModelAndView("protected/ShowRun");
+		if (lang != null) {
+			modelAndView.addObject("emptyList", 1);	
+			return modelAndView;
+		}
 		//LOG.info("Getting parameters from GET");
     	//int trainId = Integer.parseInt(req.getParameter("train"));
     	
