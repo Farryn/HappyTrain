@@ -47,31 +47,24 @@ public class AddStationController {
 	}
 	
 	
-	/** Process data from request.
-     * @param req HttpServletRequest Object
-     * @return page 
-     */
+	
 	@RequestMapping(value = "/addstation", method = RequestMethod.POST)
 	public ModelAndView processPost(@RequestParam(value = "stationName") String stationName) {
 		ModelAndView modelAndView = new ModelAndView("protected/AddStation");
 		LOG.info("Getting parameters from form");
-    	//String stationName = req.getParameter("stationName");
     	if (stationName == null || "".equals(stationName)) {
     		LOG.warn("Empty station name");
     		modelAndView.addObject("fail", 1);
-			//req.setAttribute("fail", 1);
 			return modelAndView;
     	}
     	LOG.info("Adding Station into DB");
     	try {
 			stationService.addStation(stationName);
 			modelAndView.addObject("fail", 0);
-			//req.setAttribute("fail", 0);
 		} catch (Exception e) {
 			LOG.error("Exception: " + e);
 			LOG.warn("Could not add station into DB");
 			modelAndView.addObject("fail", 1);
-			//req.setAttribute("fail", 1);
 		}
 		return modelAndView;
 	}

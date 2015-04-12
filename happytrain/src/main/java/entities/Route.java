@@ -5,8 +5,6 @@ import java.util.List;
 import javax.persistence.*;
 
 import valueobjects.RouteVO;
-import valueobjects.StationVO;
-import valueobjects.TrainVO;
 
 @Entity
 @Table(name = "route")

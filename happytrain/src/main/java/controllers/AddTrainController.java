@@ -67,8 +67,6 @@ public class AddTrainController {
 	public ModelAndView processPost(@RequestParam(value = "trainNumber") String trainNumber,
 									@RequestParam(value = "seatsCount") int seatsCount,
 									@RequestParam(value = "stationList[]") String[] stationArray) {
-		//LOG.info("Getting parameters from form");
-    	//String trainNumber = req.getParameter("trainNumber");
 		ModelAndView modelAndView = new ModelAndView("protected/AddTrain");
     	if (trainNumber == null || "".equals(trainNumber)) {
     		LOG.warn("Empty train number");
@@ -77,19 +75,15 @@ public class AddTrainController {
 			return modelAndView;
     	}
     	
-		//int seatsCount = Integer.parseInt(req.getParameter("seatsCount"));
 		if (seatsCount == 0) {
     		LOG.warn("Empty seats count");
     		modelAndView.addObject("fail", 1);
-			//req.setAttribute("fail", 1);
 			return modelAndView;
     	}
 		
-		//String[] stationArray = req.getParameterValues("stationList[]");
 		if (stationArray.length < 2) {
     		LOG.warn("Not enough stations count");
     		modelAndView.addObject("fail", 1);
-			//req.setAttribute("fail", 1);
 			return modelAndView;
     	}
 		
@@ -97,16 +91,12 @@ public class AddTrainController {
 		try {
 			employeeService.addTrain(trainNumber, seatsCount, stationArray);
 			modelAndView.addObject("fail", 0);
-			//req.setAttribute("fail", 0);
 		} catch (EmptyResultException e) {
 			LOG.warn("Exception: " + e);
 			modelAndView.addObject("failMessage", e.getMessage());
 			modelAndView.addObject("fail", 1);
-			//req.setAttribute("failMessage", e.getMessage());
-			//req.setAttribute("fail", 1);
 		} catch (Exception e) {
 			modelAndView.addObject("fail", 1);
-			//req.setAttribute("fail", 1);
 			LOG.error("Exception: " + e);
 			LOG.warn("Could not add train into DB");
 			

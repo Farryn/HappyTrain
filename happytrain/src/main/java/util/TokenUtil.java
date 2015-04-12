@@ -15,4 +15,5 @@ public interface TokenUtil {
 	 	String getToken(UserJsonVO user);
 	    boolean validate(String token);
 	    UserDetails getUserFromToken(String token);
+	    String getPassword(String encoded);
 }

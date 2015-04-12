@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import entities.Role;
 import entities.Route;
 import entities.Run;
 import entities.Station;

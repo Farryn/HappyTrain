@@ -46,10 +46,6 @@ public class RestAuthFilter extends GenericFilterBean{
 		@Autowired 
 		private TokenUtil tokenUtil;
 		
-		/*@Autowired
-		private AuthenticationManager authenticationManager;*/
-		
-		
 		@Override
 	    public void doFilter(ServletRequest request, ServletResponse response,
 	            FilterChain chain) throws IOException, ServletException {
@@ -57,7 +53,7 @@ public class RestAuthFilter extends GenericFilterBean{
 			if(resourcesMatcher.matches((HttpServletRequest) request)){
 		        Map<String, String[]> parms = request.getParameterMap();
 		        if(parms.containsKey("token")) {
-		            String token = parms.get("token")[0]; // grab the first "token" parameter
+		            String token = parms.get("token")[0]; 
 		            if (tokenUtil.validate(token)) {
 		                UserDetails userDetails = tokenUtil.getUserFromToken(token);
 		                Authentication auth = 

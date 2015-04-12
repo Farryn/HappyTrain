@@ -42,21 +42,21 @@
 					<ul >
 						<li>
 							<span>
-								<a href="?lang=en">
+								<a href="${pageContext.request.contextPath}/?lang=en">
 									<img src="${pageContext.request.contextPath}/resources/css/images/GB.png"/>
 								</a>
 							</span>
 						</li>
 						<li>
 							<span>
-								<a href="?lang=ru">
+								<a href="${pageContext.request.contextPath}/?lang=ru">
 									<img src="${pageContext.request.contextPath}/resources/css/images/RU.png"/>
 								</a>
 							</span>
 						</li>
 						<li>
 							<span>
-								<a href="?lang=de">
+								<a href="${pageContext.request.contextPath}/?lang=de">
 									<img src="${pageContext.request.contextPath}/resources/css/images/DE.png"/>
 								</a>
 							</span>

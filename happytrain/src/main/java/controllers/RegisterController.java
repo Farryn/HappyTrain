@@ -5,6 +5,7 @@ package controllers;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,26 +57,22 @@ public class RegisterController {
 									@RequestParam(value="password") String password,
 									@RequestParam(value="birth_date") String birthDateString) {
 		ModelAndView modelAndView = new ModelAndView("Register");
-		/*LOG.info("Getting parameters from form");
-		String firstName = req.getParameter("first_name");
-		String lastName = req.getParameter("last_name");
-		String login = req.getParameter("login");
-		String password = req.getParameter("password");*/
+		
 		
 		if (!wrongInput(firstName, lastName, login, password)) {
 			modelAndView.addObject("fail", 1);
-			//req.setAttribute("fail", 1);
 			return modelAndView;
 		}
 		
-		//String birthDateString = req.getParameter("birth_date");
 		Date birthDate = null;
 		try {
 			birthDate = getDateFromString(birthDateString);
+			Calendar cal = Calendar.getInstance();
+			Date current = cal.getTime();
+			if (current.compareTo(birthDate) <= 0 ) throw new ParseException(birthDateString, 0);
 		} catch (ParseException e) {
 			LOG.warn("Exception: " + e);
 			modelAndView.addObject("fail", 1);
-			//req.setAttribute("fail", 1);
 			return modelAndView;
 		} 
 		
@@ -83,11 +80,9 @@ public class RegisterController {
 		try {
 			userService.addUser(firstName, lastName, birthDate, login, password);
 			modelAndView.addObject("fail", 0);
-			//req.setAttribute("fail", 0);
 		} catch (EmptyResultException e) {
 			LOG.warn("Could not add User into DB");
 			modelAndView.addObject("fail", 1);
-			//req.setAttribute("fail", 1);
 		}
 		
 	    return modelAndView;

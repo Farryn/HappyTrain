@@ -3,33 +3,21 @@
  */
 package controllers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
-
 import org.apache.log4j.Logger;
-import org.jboss.security.auth.login.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -78,9 +66,11 @@ public class RestServiceController {
 		try{
 			UserDetails user = userDetailsService.loadUserByUsername(userJson.getUsername());
 			GrantedAuthority auth = new SimpleGrantedAuthority("admin");
+			String password = tokenUtil.getPassword(userJson.getPassword());
 			if(!user.getAuthorities().contains(auth)
-							|| !passwordEncoder.matches(userJson.getPassword(), user.getPassword())) {
-				throw new UsernameNotFoundException("");
+							|| !passwordEncoder.matches(password, user.getPassword())) {
+				//throw new UsernameNotFoundException("");
+				return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
 			}
 			String token = tokenUtil.getToken(userJson);
 			

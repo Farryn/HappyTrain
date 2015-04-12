@@ -52,6 +52,9 @@ public class TicketDAOImpl extends GenericDAOImpl<Integer, Ticket> implements
 		return ticketList;
 	}
 	
+	/** 
+	 * @see dao.TicketDAO#findTicketsBetweenTimePeriod(java.util.Date, java.util.Date)
+	 */
 	@Override
 	public	List<Ticket> findTicketsBetweenTimePeriod(final Date startDate, Date endDate) {
 		String hql = "SELECT t FROM Ticket t "

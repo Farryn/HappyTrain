@@ -67,6 +67,9 @@ public class MyUserDetailsService implements UserDetailsService{
 
 	
 	
+	/* (non-Javadoc)
+	 * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
+	 */
 	@Transactional(readOnly=true)
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
  
@@ -80,12 +83,21 @@ public class MyUserDetailsService implements UserDetailsService{
 	}
 	
 	
+	/**Convert from entity.User to spring User
+	 * @param user user
+	 * @param authorities authorities list
+	 * @return spring User
+	 */
 	private org.springframework.security.core.userdetails.User buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
 			return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), 
 				true, true, true, true, authorities);
 	}
 	
 	
+	/**Gets authorities list
+	 * @param userRole role
+	 * @return authorities list
+	 */
 	private List<GrantedAuthority> buildUserAuthority(Role userRole) {
 		 
 		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();

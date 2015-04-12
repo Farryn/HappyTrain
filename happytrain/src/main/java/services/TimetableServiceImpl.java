@@ -146,7 +146,7 @@ public class TimetableServiceImpl implements TimetableService{
 	 * @param departureTime Departure time
 	 * @throws EmptyResultException 
 	 */
-	@Transactional
+	@Transactional(rollbackFor=EmptyResultException.class)
 	public void addRun(int trainId, String[] stationArray, String[] arrivalTime, String[] departureTime)
 								throws EmptyResultException {
 		if (arrivalTime.length !=  stationArray.length || departureTime.length != stationArray.length) {
@@ -178,9 +178,15 @@ public class TimetableServiceImpl implements TimetableService{
 		runDao.persist(run);
 			
 		int seatsCount = train.getSeatsCount();
+		Date previous = null;
 		for (int i = 0; i < arrivalTime.length; i++) {
 			LOG.info("Creating new Timetable and adding it to DB");
 			Timetable timetable = createTimetable(stationArray[i], trainId, run, arrivalTime[i], departureTime[i], seatsCount);
+			if (i > 0) {
+				Date current = timetable.getArrTime();
+				if(current.compareTo(previous) < 0) throw new EmptyResultException("Wrong dates");
+			}
+			previous = timetable.getDepTime();
 			timetableDao.persist(timetable);
 					
 		}
@@ -210,6 +216,7 @@ public class TimetableServiceImpl implements TimetableService{
 		try {
 			arrDate = dateFormatUtil.getFullDateFromString(arrivalTime);
 			depDate = dateFormatUtil.getFullDateFromString(departureTime);
+			if (arrDate.compareTo(depDate) > 0) throw new EmptyResultException("Arrival time is later than departure");
 		} catch (ParseException e) {
 			LOG.warn("Can't convert Date from String");
 			throw new EmptyResultException("Can't convert Date from String");

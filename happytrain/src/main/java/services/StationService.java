@@ -7,6 +7,7 @@ import java.util.List;
 
 import dao.StationDAO;
 import dao.StationDAOImpl;
+import util.EmptyResultException;
 import valueobjects.StationVO;
 import entities.Station;
 
@@ -17,6 +18,6 @@ import entities.Station;
 public interface StationService {
 	public List<Station> getAllStations();
 	public List<StationVO> getAllStationVO();
-	public void addStation(String stationName);
+	public void addStation(String stationName) throws EmptyResultException;
 	public void setStationDao(StationDAO stationDAO); 
 }

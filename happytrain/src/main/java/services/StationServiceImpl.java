@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import util.EmptyResultException;
 import valueobjects.StationVO;
 import dao.StationDAO;
 import entities.Station;
@@ -72,11 +73,14 @@ public class StationServiceImpl implements StationService{
 	
 	/**Add station into DB.
 	 * @param stationName
+	 * @throws EmptyResultException 
 	 */
 	@Transactional
-	public void addStation(String stationName) {
+	public void addStation(String stationName) throws EmptyResultException {
 		LOG.info("Creating Station and adding it into DB");
 		Station station = new Station(stationName);
+		List<Station> check = stationDao.findByName(stationName);
+		if (!check.isEmpty()) throw new EmptyResultException("Station already exists");
 		stationDao.persist(station);
 			
 	}

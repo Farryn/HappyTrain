@@ -24,7 +24,7 @@
 		<%@include file="Header.jsp" %>
 	
 		<div id="portfolio" class="container">
-			<form  action="showtrain" method="POST" id="main-form">
+			<form  action="showtrain" method="GET" id="main-form">
 			    <label><!-- От станции --> <spring:message code="main-form.fromStation"  /></label>
 			 	<select name="stationFrom" >
 				    		  <c:forEach var="item" items="${stationList}">

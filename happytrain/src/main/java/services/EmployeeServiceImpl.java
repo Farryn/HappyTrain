@@ -50,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 	 * @param stationArray Station array
 	 * @throws EmptyResultException 
 	 */
-	@Transactional
+	@Transactional(rollbackFor = EmptyResultException.class)
 	public void addTrain(String name, int seatsCount, String[] stationArray) throws EmptyResultException {
 		
 		LOG.info("Creating new Train with name " + name);
@@ -61,8 +61,10 @@ public class EmployeeServiceImpl implements EmployeeService{
 		
 		LOG.info("Adding Route to DB");
 		int count = 0;
-		
+		String previous = "";
 		for (String stationName: stationArray) {
+			if(previous.equals(stationName)) throw new EmptyResultException("Two same stations");
+			previous = stationName;
 			count++;
 			routeService.addRoute(train, stationName, count);
 		}
